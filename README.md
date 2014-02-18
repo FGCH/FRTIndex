@@ -5,6 +5,8 @@ Source code to create the Financial Regulatory Transparency Index
 
 ---
 
+## This is a work in progress. ##
+
 The estimation model is based on:
 
 Hollyer, James R. ; Rosendorff, B. Peter; Vreeland, James Raymond, 2014, 
