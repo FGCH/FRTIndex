@@ -71,7 +71,7 @@ beta9[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
   sd.trans <- sd(transinit[1:203])
 
   for (n in 1:203){
-    transcentered[n] <- (transinit[n] - mean.trans)*pow(sd.trans, -1)
+    transcentered[n] <- (transinit[n] - mean.trans)*pow(sd.trans, 1)
   }
 
   for (n in 1:203){

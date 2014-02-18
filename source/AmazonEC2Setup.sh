@@ -23,3 +23,6 @@ sudo gdebi rstudio-server-0.98.501-amd64.deb
 
 # Verify RStudio installation
 sudo rstudio-server verify-installation
+
+
+# Access with http:// PUBLIC DNS :8787

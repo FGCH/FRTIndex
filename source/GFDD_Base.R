@@ -114,7 +114,7 @@ paste0('
   sd.trans <- sd(transinit[1:', NCountry, '])
 
   for (n in 1:', NCountry, '){
-    transcentered[n] <- (transinit[n] - mean.trans)*pow(sd.trans, -1)
+    transcentered[n] <- (transinit[n] - mean.trans)*pow(sd.trans, 1)
   }
 
   for (n in 1:', NCountry, '){
@@ -152,14 +152,21 @@ Betas <- paste0('beta', VarCount)
 parameters <- c("transparency", "tau", Betas)
 
 # Send to JAGS
-Est1 <- jags(data = DataList, inits = NULL, parameters, model.file = "BasicModel1.bug",
-             n.chains = 2, n.iter = 1000, n.burnin = 50)
+# Est1 <- jags(data = DataList, inits = NULL, parameters, model.file = "BasicModel1.bug",
+#             n.chains = 2, n.iter = 1000, n.burnin = 50)
 
 Est1 <- jags.model('BasicModel1.bug', data = DataList)
 
+save(Est1, file = '~/Dropbox/AMCProject/FinTransp/ModelPlay.rda')
+
 update(Est1, 1000)
 
-jags.samples(Est1, parameters, 1000)
+save(Est1, file = '~/Dropbox/AMCProject/FinTransp/ModelPlay2.rda')
+
+
+Test <- coda.samples(Est1, parameters, 1000)
+
+save(Test, file = '~/Dropbox/AMCProject/FinTransp/ModelPlay3.rda')
 
 detach(BaseJagsReady)
 
