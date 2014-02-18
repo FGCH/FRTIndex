@@ -136,12 +136,30 @@ year <- BaseJagsReady$year
 
 DataList <- append(list('countrynum', 'year'), as.list(VarVec))
 
+DataList <- list('countrynum' = countrynum, 'year' = year, 
+                        "Reported_GFDD.AI.01" = BaseJagsReady$Reported_GFDD.AI.01,
+                        "Reported_GFDD.AI.02" = BaseJagsReady$Reported_GFDD.AI.02,
+                        "Reported_GFDD.AM.03" = BaseJagsReady$Reported_GFDD.AM.03,
+                        'Reported_GFDD.DI.01' = BaseJagsReady$Reported_GFDD.DI.01,
+                        'Reported_GFDD.DI.02' = BaseJagsReady$Reported_GFDD.DI.02,
+                        'Reported_GFDD.DI.03' = BaseJagsReady$Reported_GFDD.DI.03,
+                        'Reported_GFDD.DI.04' = BaseJagsReady$Reported_GFDD.DI.04,
+                        'Reported_GFDD.DI.05' = BaseJagsReady$Reported_GFDD.DI.05,
+                        'Reported_GFDD.DI.06' = BaseJagsReady$Reported_GFDD.DI.06)
+
+
 Betas <- paste0('beta', VarCount)
 parameters <- c("transparency", "tau", Betas)
 
 # Send to JAGS
 Est1 <- jags(data = DataList, inits = NULL, parameters, model.file = "BasicModel1.bug",
              n.chains = 2, n.iter = 1000, n.burnin = 50)
+
+Est1 <- jags.model('BasicModel1.bug', data = DataList)
+
+update(Est1, 1000)
+
+jags.samples(Est1, parameters, 1000)
 
 detach(BaseJagsReady)
 
