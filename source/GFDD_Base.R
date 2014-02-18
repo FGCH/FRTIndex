@@ -10,7 +10,7 @@
 # http://dx.doi.org/10.7910/DVN/24274 UNF:5:Mj2tZ0rivXJPhuFqdQS0JA== IQSS Dataverse Network 
 # [Distributor] V1 [Version]
 
-setwd('~/Dropbox/AMCProject//FinTransp/')
+setwd('/git_repositories/FRTIndex/source/')
 
 # Load packages
 library(WDI)
