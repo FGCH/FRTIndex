@@ -1,7 +1,7 @@
 ##############
 # Play with Global Financial Development Data
 # Christopher Gandrud
-# 18 February 2014
+# 19 February 2014
 #############
 
 ## Inspired by:
@@ -19,19 +19,28 @@ library(arm)
 library(rjags)
 library(R2jags)
 
+#### Create Indicator Data Set ####
 # Download GFDD data
-Indicators <- c('GFDD.AI.01', 'GFDD.AI.02', 'GFDD.AM.03', 'GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04',
-                'GFDD.DI.05', 'GFDD.DI.06', 
-                'GFDD.OI.19') # final value is Laeven and Valencia crisis variable
+Indicators <- c('GFDD.AM.03', 'GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04', 'GFDD.DI.05', 'GFDD.DI.06',
+                'GFDD.DI.07', 'GFDD.DI.08', 'GFDD.DI.11', 'GFDD.DI.12', 'GFDD.DI.13', 'GFDD.DI.14', 'GFDD.DM.03',
+                'GFDD.DM.04', 'GFDD.DM.05', 'GFDD.DM.06', 'GFDD.DM.07', 'GFDD.DM.08', 'GFDD.DM.09', 'GFDD.DM.10',
+                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.OI.07', 'GFDD.OI.08', 'GFDD.OI.09',
+                'GFDD.OI.10', 'GFDD.OI.11', 'GFDD.OI.12', 'GFDD.OI.13', 'GFDD.SI.02', 'GFDD.SI.03',
+                'GFDD.SI.04', 'GFDD.SI.05', 'GFDD.SI.07',
+                'SP.POP.TOTL', # total population
+                'GFDD.OI.19') # Laeven and Valencia crisis variable
 
-Base <- WDI(indicator = Indicators, start = 2005)
+# Unable to download 'GFDD.DM.011', 'GFDD.OI.14'
+
+Base <- WDI(indicator = Indicators, start = 1998, end = 2011)
 
 # Use Laeven and Valencia data as an indicator of whether or not observation is a country
 BaseSub <- DropNA(Base, 'GFDD.OI.19')
+BaseSub <- subset(BaseSub, SP.POP.TOTL > 500000)
 
 # Create missingness indicators
-Last <- length(Indicators)
-IndSub <- Indicators[-Last]
+KeeperLength <- length(Indicators) - 2
+IndSub <- Indicators[1:KeeperLength]
 VarVec <- vector()
 
 for (i in IndSub){
@@ -44,11 +53,19 @@ for (i in IndSub){
 
 # Create country numbers
 BaseSub$countrynum <- as.numeric(as.factor(BaseSub$iso2c)) 
-BaseSub$year <- as.numeric(as.factor(BaseSub$year)) 
+BaseSub$yearnum <- as.numeric(as.factor(BaseSub$year)) 
 
+# Create keys
+CountryKey <- BaseSub[, c('countrynum', 'iso2c', 'country')]
+CountryKey <- CountryKey[!duplicated(CountryKey$countrynum), ]
+
+YearKey <- BaseSub[, c('yearnum', 'year')]
+YearKey <- YearKey[!duplicated(YearKey$yearnum), ]
+
+InidicatorKey <- read.csv('IndicatorDescript/IndicatorDescription.csv')
 
 # Keep only complete variables
-BaseJagsReady <- BaseSub[, c('countrynum', 'year', VarVec)]
+BaseJagsReady <- BaseSub[, c('countrynum', 'yearnum', VarVec)]
 
 # Create vector of parameters to estimate
 VarCount <- 1:length(VarVec)
@@ -56,9 +73,9 @@ Betas <- paste0('beta', VarCount)
 ParamsEst <- c("transparency", "tau", Betas)
 Num <- nrow(BaseJagsReady)
 NCountry <- max(BaseJagsReady$countrynum)
-Nyear <- max(BaseJagsReady$year)
+Nyear <- max(BaseJagsReady$yearnum)
 
-# Write JAGS model
+#### Write JAGS model ####
 Xs <- as.character()
 Ps <- as.character()
 Qs <- as.character()
@@ -66,7 +83,7 @@ Vs <- as.character()
 Bs <- as.character()
 
 for (n in VarCount){
-  temp <- paste0('x', n, '[n] <- beta', n, '[1] + transparency[countrynum[n], year[n]]*beta', n,'[2]')
+  temp <- paste0('x', n, '[n] <- beta', n, '[1] + transparency[countrynum[n], yearnum[n]]*beta', n,'[2]')
   Xs <- paste(Xs, temp, sep = '\n') 
   
   temp <- paste0('p', n, '[n] <- 1/(1 + exp(-x', n, '[n]))')
@@ -129,14 +146,15 @@ paste0('
 
 
 
+#### Run JAGS Model #### 
 attach(BaseJagsReady)
 # Create list of data objects used by the model
 countrynum <- BaseJagsReady$countrynum
-year <- BaseJagsReady$year
+yearnum <- BaseJagsReady$yeanum
 
 DataList <- append(list('countrynum', 'year'), as.list(VarVec))
 
-DataList <- list('countrynum' = countrynum, 'year' = year, 
+DataList <- list('countrynum' = countrynum, 'yearnum' = year, 
                         "Reported_GFDD.AI.01" = BaseJagsReady$Reported_GFDD.AI.01,
                         "Reported_GFDD.AI.02" = BaseJagsReady$Reported_GFDD.AI.02,
                         "Reported_GFDD.AM.03" = BaseJagsReady$Reported_GFDD.AM.03,
@@ -155,7 +173,7 @@ parameters <- c("transparency", "tau", Betas)
 # Est1 <- jags(data = DataList, inits = NULL, parameters, model.file = "BasicModel1.bug",
 #             n.chains = 2, n.iter = 1000, n.burnin = 50)
 
-Est1 <- jags.model('BasicModel1.bug', data = DataList)
+Est1 <- jags.model('BasicModel1.bug', data = DataList, n.chains = 2)
 
 save(Est1, file = '~/Dropbox/AMCProject/FinTransp/ModelPlay.rda')
 
