@@ -18,6 +18,7 @@ library(DataCombine)
 library(arm)
 library(rjags)
 library(R2jags)
+library(xtable)
 
 #### Create Indicator Data Set ####
 # Download GFDD data
@@ -30,8 +31,8 @@ Indicators <- c('GFDD.AM.03', 'GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI
                 'SP.POP.TOTL', # total population
                 'GFDD.OI.19') # Laeven and Valencia crisis variable
 
+# Download indicators
 # Unable to download 'GFDD.DM.011', 'GFDD.OI.14'
-
 Base <- WDI(indicator = Indicators, start = 1998, end = 2011)
 
 # Use Laeven and Valencia data as an indicator of whether or not observation is a country
@@ -44,10 +45,10 @@ IndSub <- Indicators[1:KeeperLength]
 VarVec <- vector()
 
 for (i in IndSub){
-  BaseSub[, paste0('Reported_', i)] <- 1
-  BaseSub[, paste0('Reported_', i)][is.na(BaseSub[, i])] <- 0
+  BaseSub[, paste0('Rep_', i)] <- 1
+  BaseSub[, paste0('Rep_', i)][is.na(BaseSub[, i])] <- 0
   
-  temp <- paste0('Reported_', i)
+  temp <- paste0('Rep_', i)
   VarVec <- append(VarVec, temp)
 }
 
@@ -62,7 +63,9 @@ CountryKey <- CountryKey[!duplicated(CountryKey$countrynum), ]
 YearKey <- BaseSub[, c('yearnum', 'year')]
 YearKey <- YearKey[!duplicated(YearKey$yearnum), ]
 
-InidicatorKey <- read.csv('IndicatorDescript/IndicatorDescription.csv')
+IndicatorKey <- read.csv('IndicatorDescript/IndicatorDescription.csv')
+IndicatorKey <- subset(IndicatorKey, SeriesCode %in% IndSub)
+write.csv(IndicatorKey, file = 'IndicatorDescript/IncludedIndicators.csv', row.names = FALSE)
 
 # Keep only complete variables
 BaseJagsReady <- BaseSub[, c('countrynum', 'yearnum', VarVec)]
@@ -99,7 +102,6 @@ for (n in VarCount){
   Bs <- paste(Bs, temp, sep = '\n')
   
 }
-
 
 cat(paste0('
 model{
@@ -147,44 +149,50 @@ paste0('
 
 
 #### Run JAGS Model #### 
-attach(BaseJagsReady)
 # Create list of data objects used by the model
-countrynum <- BaseJagsReady$countrynum
-yearnum <- BaseJagsReady$yeanum
+# DataList <- append(list('countrynum', 'year'), as.list(VarVec))
 
-DataList <- append(list('countrynum', 'year'), as.list(VarVec))
+DataList <- list('countrynum' = BaseJagsReady$countrynum, 'yearnum' = BaseJagsReady$yearnum, 
+                 'Rep_GFDD.AM.03' = BaseJagsReady$Rep_GFDD.AM.03, 'Rep_GFDD.DI.01' = BaseJagsReady$Rep_GFDD.DI.01, 
+                 'Rep_GFDD.DI.02' = BaseJagsReady$Rep_GFDD.DI.02, 'Rep_GFDD.DI.03' = BaseJagsReady$Rep_GFDD.DI.03,
+                 'Rep_GFDD.DI.04' = BaseJagsReady$Rep_GFDD.DI.04, 'Rep_GFDD.DI.05' = BaseJagsReady$Rep_GFDD.DI.05, 
+                 'Rep_GFDD.DI.06' = BaseJagsReady$Rep_GFDD.DI.06, 'Rep_GFDD.DI.07' = BaseJagsReady$Rep_GFDD.DI.07, 
+                 'Rep_GFDD.DI.08' = BaseJagsReady$Rep_GFDD.DI.08, 'Rep_GFDD.DI.11' = BaseJagsReady$Rep_GFDD.DI.11,
+                 'Rep_GFDD.DI.12' = BaseJagsReady$Rep_GFDD.DI.12, 'Rep_GFDD.DI.13' = BaseJagsReady$Rep_GFDD.DI.13,
+                 'Rep_GFDD.DI.14' = BaseJagsReady$Rep_GFDD.DI.14, 'Rep_GFDD.DM.03' = BaseJagsReady$Rep_GFDD.DM.03,
+                 'Rep_GFDD.DM.04' = BaseJagsReady$Rep_GFDD.DM.04, 'Rep_GFDD.DM.05' = BaseJagsReady$Rep_GFDD.DM.05,
+                 'Rep_GFDD.DM.06' = BaseJagsReady$Rep_GFDD.DM.06, 'Rep_GFDD.DM.07' = BaseJagsReady$Rep_GFDD.DM.07,
+                 'Rep_GFDD.DM.08' = BaseJagsReady$Rep_GFDD.DM.08, 'Rep_GFDD.DM.09' = BaseJagsReady$Rep_GFDD.DM.09,
+                 'Rep_GFDD.DM.10' = BaseJagsReady$Rep_GFDD.DM.10, 'Rep_GFDD.EI.02' = BaseJagsReady$Rep_GFDD.EI.02,
+                 'Rep_GFDD.EI.08' = BaseJagsReady$Rep_GFDD.EI.08, 'Rep_GFDD.OI.02' = BaseJagsReady$Rep_GFDD.OI.02,
+                 'Rep_GFDD.OI.07' = BaseJagsReady$Rep_GFDD.OI.07, 'Rep_GFDD.OI.08' = BaseJagsReady$Rep_GFDD.OI.08,
+                 'Rep_GFDD.OI.09' = BaseJagsReady$Rep_GFDD.OI.09, 'Rep_GFDD.OI.10' = BaseJagsReady$Rep_GFDD.OI.10,
+                 'Rep_GFDD.OI.11' = BaseJagsReady$Rep_GFDD.OI.11, 'Rep_GFDD.OI.12' = BaseJagsReady$Rep_GFDD.OI.12,
+                 'Rep_GFDD.OI.13' = BaseJagsReady$Rep_GFDD.OI.13, 'Rep_GFDD.SI.02' = BaseJagsReady$Rep_GFDD.SI.02,
+                 'Rep_GFDD.SI.03' = BaseJagsReady$Rep_GFDD.SI.03, 'Rep_GFDD.SI.04' = BaseJagsReady$Rep_GFDD.SI.04,
+                 'Rep_GFDD.SI.05' = BaseJagsReady$Rep_GFDD.SI.05, 'Rep_GFDD.SI.07' = BaseJagsReady$Rep_GFDD.SI.07)
 
-DataList <- list('countrynum' = countrynum, 'yearnum' = year, 
-                        "Reported_GFDD.AI.01" = BaseJagsReady$Reported_GFDD.AI.01,
-                        "Reported_GFDD.AI.02" = BaseJagsReady$Reported_GFDD.AI.02,
-                        "Reported_GFDD.AM.03" = BaseJagsReady$Reported_GFDD.AM.03,
-                        'Reported_GFDD.DI.01' = BaseJagsReady$Reported_GFDD.DI.01,
-                        'Reported_GFDD.DI.02' = BaseJagsReady$Reported_GFDD.DI.02,
-                        'Reported_GFDD.DI.03' = BaseJagsReady$Reported_GFDD.DI.03,
-                        'Reported_GFDD.DI.04' = BaseJagsReady$Reported_GFDD.DI.04,
-                        'Reported_GFDD.DI.05' = BaseJagsReady$Reported_GFDD.DI.05,
-                        'Reported_GFDD.DI.06' = BaseJagsReady$Reported_GFDD.DI.06)
 
-
-Betas <- paste0('beta', VarCount)
+# Betas <- paste0('beta', VarCount)
 parameters <- c("transparency", "tau", Betas)
 
 # Send to JAGS
 # Est1 <- jags(data = DataList, inits = NULL, parameters, model.file = "BasicModel1.bug",
 #             n.chains = 2, n.iter = 1000, n.burnin = 50)
 
-Est1 <- jags.model('BasicModel1.bug', data = DataList, n.chains = 2)
+Est12 <- jags.model('BasicModel1.bug', data = DataList, n.chains = 2)
 
-save(Est1, file = '~/Dropbox/AMCProject/FinTransp/ModelPlay.rda')
+#save(Est1, file = '~/Dropbox/AMCProject/FinTransp/ModelPlay.rda')
 
 update(Est1, 1000)
 
-save(Est1, file = '~/Dropbox/AMCProject/FinTransp/ModelPlay2.rda')
+#save(Est1, file = '~/Dropbox/AMCProject/FinTransp/ModelPlay2.rda')
 
+#### Examine Simulations ####
 
 Test <- coda.samples(Est1, parameters, 1000)
 
-save(Test, file = '~/Dropbox/AMCProject/FinTransp/ModelPlay3.rda')
+#save(Test, file = '~/Dropbox/AMCProject/FinTransp/ModelPlay3.rda')
 
-detach(BaseJagsReady)
+
 
