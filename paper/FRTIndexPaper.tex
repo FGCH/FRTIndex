@@ -26,6 +26,7 @@
 \usepackage{todonotes}
 \usepackage[utf8]{inputenc} 
 \usepackage{graphicx}
+\usepackage{longtable}
 
 %%%%%%%%% Title
 \title{Measuring Financial Regulatory Transparency}
@@ -64,9 +65,12 @@ In addition we did not include countries with gross domestic products per capita
 
 \section*{Supplementary Materials}
 
-\begin{table}
-
-
+\begin{table}[h]
+    \caption{Indicators included in the FRT Index from the World Bank's Global Financial Development data set}
+    \label{IndTable}
+    \vspace{0.3cm}
+        \input{tables/IndicatorDescript}
+    }
 \end{table}
 
 

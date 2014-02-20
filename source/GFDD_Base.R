@@ -62,10 +62,24 @@ YearKey <- BaseSub[, c('yearnum', 'year')]
 YearKey <- YearKey[!duplicated(YearKey$yearnum), ]
 
 if (getwd() == "/git_repositories/FRTIndex/source"){
-  IndicatorKey <- read.csv('IndicatorDescript/IndicatorDescription.csv')
+  IndicatorKey <- read.csv('IndicatorDescript/IndicatorDescription.csv', encoding = 'latin1', stringsAsFactors = FALSE)
   IndicatorKey <- subset(IndicatorKey, SeriesCode %in% IndSub)
   write.csv(IndicatorKey, file = 'IndicatorDescript/IncludedIndicators.csv', row.names = FALSE)
-  print(xtable(IndicatorKey), size = 'scriptsize', include.rownames = FALSE, floating = FALSE,
+  
+  # Clean up for latex version 
+  IndicatorKey$Source <- gsub(pattern = 'International Financial Statistics \\(IFS\\), International Monetary Fund \\(IMF\\)', 
+                             replacement = 'IFS/IMF', x = IndicatorKey$Source)
+  IndicatorKey$Source <- gsub(pattern = 'Financial Soundness Indicators Database \\(fsi\\.imf\\.org\\), International Monetary Fund \\(IMF\\)', 
+                              replacement = 'IFSI/IMF', x = IndicatorKey$Source) 
+  IndicatorKey$Source <- gsub(pattern = 'World Development Indicators \\(WDI\\), World Bank', 
+                              replacement = 'World Bank', x = IndicatorKey$Source)  
+  IndicatorKey$Source <- gsub(pattern = 'World Bank - Non banking financial database', 
+                              replacement = 'World Bank', x = IndicatorKey$Source)  
+  IndicatorKey$Source <- gsub(pattern = 'Nonbanking financial database, World Bank', 
+                              replacement = 'World Bank', x = IndicatorKey$Source)  
+  IndicatorKey$Periodicity <- gsub('Annual: ', '', IndicatorKey$Periodicity)
+  
+  print(xtable(IndicatorKey), size = 'scriptsize', include.rownames = FALSE, floating = FALSE, 
         file = '/git_repositories/FRTIndex/paper/tables/IndicatorDescript.tex')
 }
 
