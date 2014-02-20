@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Explanation of the motivation and construction of the FRT Index
 % Christopher Gandrud
-% 19 February 2014
+% 20 February 2014
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -30,8 +30,8 @@
 %%%%%%%%% Title
 \title{Measuring Financial Regulatory Transparency}
 
-\author{Christopher Gandrud \\ 
-    {\emph{Hertie School of Governance}}\footnote{Friedrichstra{\ss}e 180. 10117 Berlin, Germany. Contact email: \href{mailto:gandrud@hertie-school.org}{gandrud@hertie-school.org}.}}
+\author{Mark Copelovich \\ \emph{University of Wisconsin, Madison} \\[0.5cm] Christopher Gandrud and Mark Hallerberg \\ 
+    {\emph{Hertie School of Governance}}\footnote{Friedrichstra{\ss}e 180. 10117 Berlin, Germany. Contact email: \href{mailto:gandrud@hertie-school.org}{gandrud@hertie-school.org}. All material for replicating the FRT Index and the analysis in this paper can be found at: \url{https://github.com/FGCH/FRTIndex}.}}
 
 
 \begin{document}
@@ -41,16 +41,33 @@
 %%%%%%%%% Abstract
 \begin{abstract}
 \noindent \emph{Early working draft. Comments welcome.} \\
-For financial supervision to be effective, supervisors need accurate information about financial sector activities. For financial supervisors to be accountable  
+For financial supervision to be effective, regulators need have accurate information about financial sector activities. For the public to be able to hold supervisors accountable then need access to the information financial supervisors have about the health of the banking system. In this paper we use Bayesian item response theory techniques to create a global and comparable Financial Regulatory Transparency Index.  
 \end{abstract}
 
+[INTRODUCTION]
 
-\subsection{Data}
+In previous research we have found that even within the relatively homogeneous European Union with supranational authorities tasked with gathering and reporting aggregate financial data from member states there is considerable variation in what is actually reported \cite[see][]{Gandrud2014a}.  
 
-To measure financial supervisory transparency we first gathered data on whether or governments reported data on a number of indicators included in the World Bank's Global Financial Development Data set first created by \cite{Cihak2012}.\footnote{Access to the most updated version of the data set is available through \url{http://data.worldbank.org/data-catalog/global-financial-development}. Accessed February 2014.} We followed Hollyer et al.`s \citeyearpar{Hollyer2014} criteria for inclusion of variables and countries. First, we only include indicators that are reported by at least one country for each year in the period 1998-2011. This gave us the greatest coverage of indicators that are comparable across countries. Second, we excluded all indicators that were explicitly gathered for only a subset of countries. As such we avoided including data where the primary source was the Bank for International Settlements. Third, we did not include any indicator that was primarily from a non-governmental source. This included both indicators from World Bank Sponsored surveys, such as the Global Financial Inclusion Survey and the Enterprise Survey. It also included data primarily derived from sources such as Swiss Re's Sigma Reports, Standard \& Poor, Bankscope, and Bloomberg. Fourth, we did not include variables that are linear combinations of other variables. Fifth, we did not include variables that were simply references to the same quantity in different units. [CHECK TO SEE IF 4 AND 5 ARE RELEVANT] Sixth, we excluded small countries with populations less than 500,000 [Is this appropriate? Maybe this excludes some offshore centers?]
+\section{Creating the FRT Index}
+
+We treat financial regulatory transparency as an unobserved latent variable that effectively summarizes countries likelihood of reporting yearly data that is included in the World Bank's Global Financial Development data set first created by \cite{Cihak2012}.\footnote{Access to the most updated version of the data set is available through \url{http://data.worldbank.org/data-catalog/global-financial-development} Accessed February 2014.}
+
+\subsection{Included indicators}
+
+To measure financial supervisory transparency we first gathered data on whether or governments reported data on a number of indicators included in the World Bank's Global Financial Development data set. For a full list of the indicators included, please see the Supplementary Materials. We followed Hollyer et al.`s \citeyearpar{Hollyer2014} criteria for inclusion of variables and countries. First, we only include indicators that are reported by at least one country for each year in the period 1998-2011. This gave us the greatest coverage of indicators that are comparable across countries. Second, we excluded all indicators that were explicitly gathered for only a subset of countries. As such we avoided including data where the primary source was the Bank for International Settlements. Third, we did not include any indicator that was primarily from a non-governmental source. This included both indicators from World Bank Sponsored surveys, such as the Global Financial Inclusion Survey and the Enterprise Survey. It also included data primarily derived from sources such as Swiss Re's Sigma Reports, Standard \& Poor, Bankscope, and Bloomberg. Fourth, we did not include variables that are linear combinations of other variables. Fifth, we did not include variables that were simply references to the same quantity in different units. [CHECK TO SEE IF 4 AND 5 ARE RELEVANT] Sixth, we excluded small countries with populations less than 500,000. [Is this appropriate? Maybe this excludes some offshore centers?] 
+
+In addition we did not include countries with gross domestic products per capita of less than 200 US dollars.\footnote{The population and GDP per capita data was gathered from the World Bank's development indicators \citeyearpar{WDIMain}} Countries with levels of income this low likely do not have financial systems sophisticated enough to have the quantities reported in the indicators. 
 
 
 \bibliographystyle{apsr}
 \bibliography{FRTIndex}
+
+\section*{Supplementary Materials}
+
+\begin{table}
+
+
+\end{table}
+
 
 \end{document}

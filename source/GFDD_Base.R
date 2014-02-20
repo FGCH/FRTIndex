@@ -1,7 +1,7 @@
 ##############
 # Play with Global Financial Development Data
 # Christopher Gandrud
-# 19 February 2014
+# 20 February 2014
 #############
 
 ## Inspired by:
@@ -22,7 +22,7 @@ library(xtable)
 
 #### Create Indicator Data Set ####
 # Download GFDD data
-Indicators <- c('GFDD.AM.03', 'GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04', 'GFDD.DI.05', 'GFDD.DI.06',
+Indicators <- c('GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04', 'GFDD.DI.05', 'GFDD.DI.06',
                 'GFDD.DI.07', 'GFDD.DI.08', 'GFDD.DI.11', 'GFDD.DI.12', 'GFDD.DI.13', 'GFDD.DI.14', 
                 'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.OI.07', 'GFDD.OI.13', 'GFDD.SI.02', 'GFDD.SI.03',
                 'GFDD.SI.04', 'GFDD.SI.05', 'GFDD.SI.07',
@@ -61,9 +61,13 @@ CountryKey <- CountryKey[!duplicated(CountryKey$countrynum), ]
 YearKey <- BaseSub[, c('yearnum', 'year')]
 YearKey <- YearKey[!duplicated(YearKey$yearnum), ]
 
-IndicatorKey <- read.csv('IndicatorDescript/IndicatorDescription.csv')
-IndicatorKey <- subset(IndicatorKey, SeriesCode %in% IndSub)
-write.csv(IndicatorKey, file = 'IndicatorDescript/IncludedIndicators.csv', row.names = FALSE)
+if (getwd() == "/git_repositories/FRTIndex/source"){
+  IndicatorKey <- read.csv('IndicatorDescript/IndicatorDescription.csv')
+  IndicatorKey <- subset(IndicatorKey, SeriesCode %in% IndSub)
+  write.csv(IndicatorKey, file = 'IndicatorDescript/IncludedIndicators.csv', row.names = FALSE)
+  print(xtable(IndicatorKey), size = 'scriptsize', include.rownames = FALSE, floating = FALSE,
+        file = '/git_repositories/FRTIndex/paper/tables/IndicatorDescript.tex')
+}
 
 # Keep only complete variables
 BaseJagsReady <- BaseSub[, c('countrynum', 'yearnum', VarVec)]
@@ -151,7 +155,7 @@ paste0('
 # DataList <- append(list('countrynum', 'year'), as.list(VarVec))
 
 DataList <- list('countrynum' = BaseJagsReady$countrynum, 'yearnum' = BaseJagsReady$yearnum, 
-                 'Rep_GFDD.AM.03' = BaseJagsReady$Rep_GFDD.AM.03, 'Rep_GFDD.DI.01' = BaseJagsReady$Rep_GFDD.DI.01, 
+                 'Rep_GFDD.DI.01' = BaseJagsReady$Rep_GFDD.DI.01, 
                  'Rep_GFDD.DI.02' = BaseJagsReady$Rep_GFDD.DI.02, 'Rep_GFDD.DI.03' = BaseJagsReady$Rep_GFDD.DI.03,
                  'Rep_GFDD.DI.04' = BaseJagsReady$Rep_GFDD.DI.04, 'Rep_GFDD.DI.05' = BaseJagsReady$Rep_GFDD.DI.05, 
                  'Rep_GFDD.DI.06' = BaseJagsReady$Rep_GFDD.DI.06, 'Rep_GFDD.DI.07' = BaseJagsReady$Rep_GFDD.DI.07, 
