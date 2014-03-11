@@ -27,3 +27,7 @@
 *.mtc1
 *.out
 *.synctex.gz
+
+# R project files
+.Rproj.user
+FRTIndex.Rproj
