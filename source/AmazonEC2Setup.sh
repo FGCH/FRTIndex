@@ -18,6 +18,8 @@ sudo apt-get install r-base-dev jags r-cran-rjags
 # Install git
 sudo apt-get install git
 
+# Configure git
+
 # Install RStudio
 ## for latest version of RStudio see http://www.rstudio.com/ide/download/server
 sudo apt-get install gdebi-core
