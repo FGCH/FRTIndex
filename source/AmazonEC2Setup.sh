@@ -19,6 +19,8 @@ sudo apt-get install r-base-dev jags r-cran-rjags
 sudo apt-get install git
 
 # Configure git
+git config --global user.name 'USER NAME'
+git config --global user.email 'USER EMAIL'
 
 # Install RStudio
 ## for latest version of RStudio see http://www.rstudio.com/ide/download/server

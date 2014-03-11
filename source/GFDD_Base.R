@@ -1,7 +1,7 @@
 ##############
 # Play with Global Financial Development Data
 # Christopher Gandrud
-# 20 February 2014
+# 11 March 2014
 #############
 
 ## Inspired by:
@@ -10,12 +10,12 @@
 # http://dx.doi.org/10.7910/DVN/24274 UNF:5:Mj2tZ0rivXJPhuFqdQS0JA== IQSS Dataverse Network 
 # [Distributor] V1 [Version]
 
-setwd('/git_repositories/FRTIndex/source/')
+setwd('~/FRTOutFiles/')
 
 # Load packages
 library(WDI)
 library(DataCombine)
-library(arm)
+# library(arm)
 library(rjags)
 library(R2jags)
 library(xtable)
@@ -24,18 +24,17 @@ library(xtable)
 # Download GFDD data
 Indicators <- c('GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04', 'GFDD.DI.05', 'GFDD.DI.06',
                 'GFDD.DI.07', 'GFDD.DI.08', 'GFDD.DI.11', 'GFDD.DI.12', 'GFDD.DI.13', 'GFDD.DI.14', 
-                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.OI.07', 'GFDD.OI.13', 'GFDD.SI.02', 'GFDD.SI.03',
-                'GFDD.SI.04', 'GFDD.SI.05', 'GFDD.SI.07',
-                'SP.POP.TOTL', # total population
-                'GFDD.OI.19') # Laeven and Valencia crisis variable
+                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.OI.07', 'GFDD.OI.13', 'GFDD.SI.02', 
+                'GFDD.SI.03', 'GFDD.SI.04', 'GFDD.SI.05', 'GFDD.SI.07') 
 
 # Download indicators
 # Unable to download 'GFDD.DM.011', 'GFDD.OI.14'
-Base <- WDI(indicator = Indicators, start = 1998, end = 2011)
+Base <- WDI(indicator = Indicators, start = 1998, end = 2011, extra = TRUE)
 
-# Use Laeven and Valencia data as an indicator of whether or not observation is a country
-BaseSub <- DropNA(Base, 'GFDD.OI.19')
-BaseSub <- subset(BaseSub, SP.POP.TOTL > 500000)
+# Keep countries with 'High income' (OECD and non-OECD classification)
+BaseSub <- grepl.sub(data = Base, Var = 'income', patterns = 'High income')
+Droppers <- c("iso3c", "region",  "capital", "longitude", "latitude", "income", "lending")
+BaseSub <- BaseSub[, !(names(BaseSub) %in% Droppers)]
 
 # Create missingness indicators
 KeeperLength <- length(Indicators) - 2
@@ -160,9 +159,11 @@ paste0('
       transparency[n,j] ~ dnorm(transparency[n,(j-1)], tau[n])
     }
   }'), 
-'\n}'), file = 'BasicModel1.bug')
+'\n}'), file = 'BasicModel_V1.bug')
 
-
+# Copy file into git repo for version control
+file.copy(from = 'BasicModel_V1.bug',
+          to = '/home/cjg/FRTIndex/source/BasicModel_V1.bug')
 
 #### Run JAGS Model #### 
 # Create list of data objects used by the model
@@ -190,19 +191,19 @@ parameters <- c("transparency", "tau", Betas)
 # Est1 <- jags(data = DataList, inits = NULL, parameters, model.file = "BasicModel1.bug",
 #             n.chains = 2, n.iter = 1000, n.burnin = 50)
 
-Est12 <- jags.model('BasicModel1.bug', data = DataList, n.chains = 2)
+Est12 <- jags.model('BasicModel_V1.bug', data = DataList, n.chains = 2)
 
-#save(Est1, file = '~/Dropbox/AMCProject/FinTransp/ModelPlay.rda')
+#save(Est1, file = 'ModelPlay.rda')
 
 update(Est1, 1000)
 
-#save(Est1, file = '~/Dropbox/AMCProject/FinTransp/ModelPlay2.rda')
+#save(Est1, file = 'ModelPlay2.rda')
 
 #### Examine Simulations ####
 
 Test <- coda.samples(Est1, parameters, 1000)
 
-#save(Test, file = '~/Dropbox/AMCProject/FinTransp/ModelPlay3.rda')
+#save(Test, file = 'ModelPlay3.rda')
 
 
 
