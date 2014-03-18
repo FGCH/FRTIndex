@@ -191,15 +191,15 @@ parameters <- c("transparency", "tau", Betas)
 # Est1 <- jags(data = DataList, inits = NULL, parameters, model.file = "BasicModel1.bug",
 #             n.chains = 2, n.iter = 1000, n.burnin = 50)
 
+# Estimate model
 Est1 <- jags.model('BasicModel_V1.bug', data = DataList, 
                    n.chains = 2, n.adapt = 5000)
 
-#save(Est1, file = 'ModelPlay.rda')
-load('ModelPlay.rda')
+save.image()
 
-Samps <- jags.samples
+# Draw random samples from the posterior
+Samp1 <- jags.samples(Est1, variable.names = parameters, n.iter = 1000) 
 
-#save(Est1, file = 'ModelPlay2.rda')
 
 #### Examine Simulations ####
 
