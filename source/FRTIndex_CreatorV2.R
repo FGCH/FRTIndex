@@ -197,7 +197,7 @@ Est1 <- jags.model('BasicModel_V1.bug', data = DataList,
 #save(Est1, file = 'ModelPlay.rda')
 load('ModelPlay.rda')
 
-# update(Est1, 5000)
+Samps <- jags.samples
 
 #save(Est1, file = 'ModelPlay2.rda')
 
