@@ -17,7 +17,7 @@ library(WDI)
 library(DataCombine)
 # library(arm)
 library(rjags)
-library(R2jags)
+# library(R2jags)
 library(xtable)
 
 #### Create Indicator Data Set ####
@@ -191,7 +191,7 @@ parameters <- c("transparency", "tau", Betas)
 #             n.chains = 2, n.iter = 1000, n.burnin = 50)
 
 Est1 <- jags.model('BasicModel_V1.bug', data = DataList, 
-                   n.chains = 2, n.adapt = 1000)
+                   n.chains = 2, n.adapt = 5000)
 
 #save(Est1, file = 'ModelPlay.rda')
 load('ModelPlay.rda')
