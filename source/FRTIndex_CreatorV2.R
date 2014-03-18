@@ -11,6 +11,7 @@
 # [Distributor] V1 [Version]
 
 setwd('~/FRTOutFiles/')
+# setwd('/git_repositories/FRTIndex/source')
 
 # Load packages
 library(WDI)
