@@ -8,16 +8,27 @@
 # Add a user
 sudo adduser name
 
+# Get all programs up to date
 sudo apt-get update
 
 # Install R and JAGSS
 sudo add-apt-repository ppa:marutter/rrutter
 sudo apt-get install r-base-dev jags r-cran-rjags
 
+# Check that you have the latest R instal
+## see also: http://askubuntu.com/questions/218708/installing-latest-version-of-r-base
+apt-cache showpkg r-base
+
+sudo apt-get install -f r-base= PACKAGE_VERSION
+
 # Install git
 sudo apt-get install git
 
 sudo apt-get update
+
+# Configure git
+git config --global user.name 'USER NAME'
+git config --global user.email 'USER EMAIL'
 
 # Install RStudio
 ## for latest version of RStudio see http://www.rstudio.com/ide/download/server
