@@ -18,6 +18,7 @@ library(WDI)
 library(DataCombine)
 library(rjags)
 library(xtable)
+library(ggmcmc)
 # library(arm)
 # library(R2jags)
 
@@ -204,4 +205,9 @@ system.time(
   Samp1 <- coda.samples(Est1, parameters, n.iter = 1000)
 )
 
-save.image(file = 'workspaceImages/SampOut.RData')
+# Convert to ggs data frame and save
+system.time(
+  Set <- ggs(Samp1)  
+)
+
+save(Set, file = 'SetOut.RData')
