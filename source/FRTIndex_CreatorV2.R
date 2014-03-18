@@ -1,5 +1,5 @@
 ##############
-# Play with Global Financial Development Data
+# Financial Regulatory Transparency Index V2
 # Christopher Gandrud
 # 18 March 2014
 #############
@@ -11,20 +11,21 @@
 # [Distributor] V1 [Version]
 
 setwd('~/FRTOutFiles/')
+# setwd('/git_repositories/FRTIndex/source')
 
 # Load packages
 library(WDI)
 library(DataCombine)
-# library(arm)
 library(rjags)
-library(R2jags)
 library(xtable)
+# library(arm)
+# library(R2jags)
 
 #### Create Indicator Data Set ####
 # Download GFDD data
 Indicators <- c('GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04', 'GFDD.DI.05', 'GFDD.DI.06',
                 'GFDD.DI.07', 'GFDD.DI.08', 'GFDD.DI.11', 'GFDD.DI.12', 'GFDD.DI.13', 'GFDD.DI.14', 
-                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.OI.07', 'GFDD.OI.13', 'GFDD.SI.02',
+                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.OI.07', 'GFDD.SI.02',
                 'GFDD.SI.03', 'GFDD.SI.04', 'GFDD.SI.05', 'GFDD.SI.07') 
 
 # Download indicators
@@ -178,7 +179,7 @@ DataList <- list('countrynum' = BaseJagsReady$countrynum, 'yearnum' = BaseJagsRe
                  'Rep_GFDD.DI.12' = BaseJagsReady$Rep_GFDD.DI.12, 'Rep_GFDD.DI.13' = BaseJagsReady$Rep_GFDD.DI.13,
                  'Rep_GFDD.DI.14' = BaseJagsReady$Rep_GFDD.DI.14, 'Rep_GFDD.EI.02' = BaseJagsReady$Rep_GFDD.EI.02,
                  'Rep_GFDD.EI.08' = BaseJagsReady$Rep_GFDD.EI.08, 'Rep_GFDD.OI.02' = BaseJagsReady$Rep_GFDD.OI.02,
-                 'Rep_GFDD.OI.07' = BaseJagsReady$Rep_GFDD.OI.07, 'Rep_GFDD.OI.13' = BaseJagsReady$Rep_GFDD.OI.13, 
+                 'Rep_GFDD.OI.07' = BaseJagsReady$Rep_GFDD.OI.07,  
                  'Rep_GFDD.SI.02' = BaseJagsReady$Rep_GFDD.SI.02, 'Rep_GFDD.SI.03' = BaseJagsReady$Rep_GFDD.SI.03,
                  'Rep_GFDD.SI.04' = BaseJagsReady$Rep_GFDD.SI.04, 'Rep_GFDD.SI.05' = BaseJagsReady$Rep_GFDD.SI.05,
                  'Rep_GFDD.SI.07' = BaseJagsReady$Rep_GFDD.SI.07)
@@ -191,16 +192,12 @@ parameters <- c("transparency", "tau", Betas)
 #             n.chains = 2, n.iter = 1000, n.burnin = 50)
 
 Est1 <- jags.model('BasicModel_V1.bug', data = DataList, 
-<<<<<<< HEAD
-                   n.chains = 2, nadapt = 100)
-=======
-                   n.chains = 2, n.adapt = 1000)
->>>>>>> 72df51a467d5129fb597afc601dee7aa394004c5
+                   n.chains = 2, n.adapt = 5000)
 
 #save(Est1, file = 'ModelPlay.rda')
 load('ModelPlay.rda')
 
-update(Est1, 5000)
+# update(Est1, 5000)
 
 #save(Est1, file = 'ModelPlay2.rda')
 

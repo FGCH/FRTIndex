@@ -15,8 +15,16 @@ sudo apt-get update
 sudo add-apt-repository ppa:marutter/rrutter
 sudo apt-get install r-base-dev jags r-cran-rjags
 
+# Check that you have the latest R instal
+## see also: http://askubuntu.com/questions/218708/installing-latest-version-of-r-base
+apt-cache showpkg r-base
+
+sudo apt-get install -f r-base= PACKAGE_VERSION
+
 # Install git
 sudo apt-get install git
+
+sudo apt-get update
 
 # Configure git
 git config --global user.name 'USER NAME'
