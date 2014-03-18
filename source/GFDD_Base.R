@@ -195,7 +195,7 @@ Est1 <- jags.model('BasicModel_V1.bug', data = DataList, n.chains = 2)
 #save(Est1, file = 'ModelPlay.rda')
 load('ModelPlay.rda')
 
-update(Est1, 10000)
+update(Est1, 5000)
 
 #save(Est1, file = 'ModelPlay2.rda')
 
