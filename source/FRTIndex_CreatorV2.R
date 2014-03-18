@@ -192,13 +192,16 @@ parameters <- c("transparency", "tau", Betas)
 #             n.chains = 2, n.iter = 1000, n.burnin = 50)
 
 # Estimate model
-Est1 <- jags.model('BasicModel_V1.bug', data = DataList, 
+system.time(
+  Est1 <- jags.model('BasicModel_V1.bug', data = DataList, 
                    n.chains = 2, n.adapt = 5000)
-
-save.image()
+)
+save.image(file = 'workspaceImages/SampOut.RData')
 
 # Draw random samples from the posterior
 # Samp1 <- jags.samples(Est1, variable.names = parameters, n.iter = 1000) 
-Samp1 <- coda.samples(Est1, parameters, n.iter = 1000)
+system.time(
+  Samp1 <- coda.samples(Est1, parameters, n.iter = 1000)
+)
 
 save.image(file = 'workspaceImages/SampOut.RData')
