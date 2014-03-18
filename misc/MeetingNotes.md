@@ -6,5 +6,5 @@
 
 - [ ] Focus on basic market structure variables
 
-- [x] Limited country sample (OECD countries & wealthty countries, World Bank cuts: high income countries)
+- [ ] Limited country sample (OECD countries & wealthty countries, World Bank cuts: high income countries)
 
