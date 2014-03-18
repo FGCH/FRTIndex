@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Explanation of the motivation and construction of the FRT Index
 % Christopher Gandrud
-% 20 February 2014
+% 18 March 2014
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -42,22 +42,37 @@
 %%%%%%%%% Abstract
 \begin{abstract}
 \noindent \emph{Early working draft. Comments welcome.} \\
-For financial supervision to be effective, regulators need have accurate information about financial sector activities. For the public to be able to hold supervisors accountable then need access to the information financial supervisors have about the health of the banking system. In this paper we use Bayesian item response theory techniques to create a global and comparable Financial Regulatory Transparency ((FRT) Index.  
+For financial supervision to be effective, regulators need have accurate information about financial sector activities. For the public to be able to hold supervisors accountable then need access to the information financial supervisors have about the health of the banking system. In this paper we use Bayesian item response theory techniques to create a global and comparable Financial Regulatory Transparency (FRT) Index. The Index captures high income country's reporting to the World Bank and International Monetary Fund's Global Financial Development data set. 
 \end{abstract}
 
-[INTRODUCTION]
-
-In previous research we have found that even within the relatively homogeneous European Union with supranational authorities tasked with gathering and reporting aggregate financial data from member states there is considerable variation in what is actually reported \cite[see][]{Gandrud2014a}.  
+In previous research we have found that even within the relatively homogeneous European Union with supranational authorities tasked with gathering and reporting aggregate financial data from member states there is considerable variation in what is actually reported \cite[see][]{Gandrud2014a}. We currently lack a comparable cross-national way of measuring country's level of financial regulatory transparency. In this paper we use a Bayesian Item Response Theory (IRT) approach
 
 \section{Creating the FRT Index}
 
-We treat financial regulatory transparency as an unobserved latent variable that effectively summarizes countries likelihood of reporting yearly data that is included in the World Bank's Global Financial Development data set first created by \cite{Cihak2012}.\footnote{Access to the most updated version of the data set is available through \url{http://data.worldbank.org/data-catalog/global-financial-development} Accessed February 2014.}
+We treat financial regulatory transparency as an unobserved latent variable that effectively summarizes countries likelihood of reporting yearly data that is included in the World Bank's Global Financial Development data (GFDD) set first created by \cite{Cihak2012}.\footnote{Access to the most updated version of the data set is available through \url{http://data.worldbank.org/data-catalog/global-financial-development} Accessed February 2014.}
 
 \subsection{Included indicators}
 
-To measure financial supervisory transparency we first gathered data on whether or governments reported data on a number of indicators included in the World Bank's Global Financial Development data set. For a full list of the indicators included, please see the Supplementary Materials. We followed Hollyer et al.`s \citeyearpar{Hollyer2014} criteria for inclusion of variables and countries. First, we only include indicators that are reported by at least one country for each year in the period 1998-2011. This gave us the greatest coverage of indicators that are comparable across countries. Second, we excluded all indicators that were explicitly gathered for only a subset of countries. As such we avoided including data where the primary source was the Bank for International Settlements. Third, we did not include any indicator that was primarily from a non-governmental source. This included both indicators from World Bank Sponsored surveys, such as the Global Financial Inclusion Survey and the Enterprise Survey. It also included data primarily derived from sources such as Swiss Re's Sigma Reports, Standard \& Poor, Bankscope, and Bloomberg. Fourth, we did not include variables that are linear combinations of other variables. Fifth, we did not include variables that were simply references to the same quantity in different units. [CHECK TO SEE IF 4 AND 5 ARE RELEVANT] Sixth, we excluded small countries with populations less than 500,000. [Is this appropriate? Maybe this excludes some offshore centers?] 
+To measure financial supervisory transparency we first gathered data on whether or not governments reported data on a subset of indicators that are included in the World Bank's Global Financial Development data set. For a full list of the indicators included, please see Table~\ref{IndTable} in the Supplementary Materials. We followed Hollyer et al.`s \citeyearpar{Hollyer2014} criteria for inclusion of variables and countries. First, we only include indicators that are reported by at least one country for each year in the period 1998-2011. This gave us the greatest coverage of indicators that are comparable across countries. Second, we excluded all indicators that were explicitly gathered for only a subset of countries. As such we avoided including data where the primary source was the Bank for International Settlements. Third, we did not include any indicator that was primarily from a non-governmental source. This included both indicators from World Bank Sponsored surveys, such as the Global Financial Inclusion Survey and the Enterprise Survey. It also included data primarily derived from sources such as Swiss Re's Sigma Reports, Standard \& Poor, Bankscope, and Bloomberg. Fourth, we did not include variables that are linear combinations of other variables. Fifth, we did not include variables that were simply references to the same quantity in different units. [CHECK TO SEE IF 4 AND 5 ARE RELEVANT] Sixth, we excluded small countries with populations less than 500,000. [Is this appropriate? Maybe this excludes some offshore centers?] 
 
 In addition we did not include countries with gross domestic products per capita of less than 200 US dollars.\footnote{The population and GDP per capita data was gathered from the World Bank's development indicators \citeyearpar{WDIMain}} Countries with levels of income this low likely do not have financial systems sophisticated enough to have the quantities reported in the indicators. 
+
+\subsection{The model}
+
+As in \cite{Hollyer2014} we let $y_{j,c,t} \in \{0,\; 1\}$ indicate a variable that is 1 when a country $c$ reports a GFDD variable $j$ in year$t$. It is 0 otherwise. We then estimate the model:
+
+\[
+    \mathrm{Pr}(y_{j,c,t} = 1|transparency_{c,t} = \mathrm{logit}(\delta_{j} + \beta{j}transparency_{c,t})
+\]
+
+The following parameters are estimated in the model:
+
+\begin{itemize}
+    \item $\delta_{j}$ is the difficulty parameter of item $j$,
+    \item $\beta_{j}$ the discrimination parameter for item $j$,
+    \item $transparency_{c,t}$ is the estimated propensity of a given country-year $c,t$ to disclose financial regulatory data
+\end{itemize}
+
 
 \section{Validity}
 
