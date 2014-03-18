@@ -200,13 +200,4 @@ save.image()
 # Draw random samples from the posterior
 Samp1 <- jags.samples(Est1, variable.names = parameters, n.iter = 1000) 
 
-save.image()
-
-
-#### Examine Simulations ####
-
-# Test <- coda.samples(Est1, parameters, 1000)
-
-
-
-
+save.image(file = 'workspaceImages/SampOut.RData')
