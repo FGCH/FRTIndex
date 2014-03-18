@@ -198,6 +198,7 @@ Est1 <- jags.model('BasicModel_V1.bug', data = DataList,
 save.image()
 
 # Draw random samples from the posterior
-Samp1 <- jags.samples(Est1, variable.names = parameters, n.iter = 1000) 
+# Samp1 <- jags.samples(Est1, variable.names = parameters, n.iter = 1000) 
+Samp1 <- coda.samples(Est1, parameters, n.iter = 1000)
 
 save.image(file = 'workspaceImages/SampOut.RData')
