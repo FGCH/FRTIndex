@@ -190,7 +190,8 @@ parameters <- c("transparency", "tau", Betas)
 # Est1 <- jags(data = DataList, inits = NULL, parameters, model.file = "BasicModel1.bug",
 #             n.chains = 2, n.iter = 1000, n.burnin = 50)
 
-Est1 <- jags.model('BasicModel_V1.bug', data = DataList, n.chains = 2)
+Est1 <- jags.model('BasicModel_V1.bug', data = DataList, 
+                   n.chains = 2, n.adapt = 1000)
 
 #save(Est1, file = 'ModelPlay.rda')
 load('ModelPlay.rda')
