@@ -46,7 +46,7 @@ SetReName <- FindReplace(Set, Var = 'Parameter', replaceData = ReplaceCountry, e
 SetReName$Parameter <- gsub('FRT_', ' ')
 
 # 2000 (yearnum 3)
-ggs_caterpillar(SetReName, family = 'FRT.*3') + 
+ggs_caterpillar(SetReName, family = 'FRT.*[a-z]3') + 
   ylab('') + xlab('\nFRT Index (HPD)') + ggtitle('2000\n') +
   theme_bw()
 
@@ -55,7 +55,7 @@ ggs_caterpillar(SetReName, family = 'FRT.*10') +
   ylab('') + xlab('\nFRT Index (HPD)') + ggtitle('2007\n') +
   theme_bw()
 
-# 2007 (yearnum 14)
+# 2011 (yearnum 14)
 ggs_caterpillar(SetReName, family = 'FRT.*14') + 
   ylab('') + xlab('\nFRT Index (HPD)') + ggtitle('2011\n') +
   theme_bw()
