@@ -59,12 +59,12 @@ BaseSub$yearnum <- as.numeric(as.factor(BaseSub$year))
 CountryKey <- BaseSub[, c('countrynum', 'iso2c', 'country')]
 CountryKey <- CountryKey[!duplicated(CountryKey$countrynum), ]
 
-# Country name/number list
-write.csv(CountryKey, file = '~/FRTIndex/source/ParameterDescript/CountryNumbers.csv')
-
-
 YearKey <- BaseSub[, c('yearnum', 'year')]
 YearKey <- YearKey[!duplicated(YearKey$yearnum), ]
+
+# Country name/number list
+write.csv(CountryKey, file = '~/FRTIndex/source/ParameterDescript/CountryNumbers.csv')
+write.csv(CountryKey, file = '~/FRTIndex/source/ParameterDescript/YearNumbers.csv')
 
 if (getwd() == "/git_repositories/FRTIndex/source"){
   IndicatorKey <- read.csv('IndicatorDescript/IndicatorDescription.csv', encoding = 'latin1', stringsAsFactors = FALSE)
