@@ -10,6 +10,7 @@
 # http://dx.doi.org/10.7910/DVN/24274 UNF:5:Mj2tZ0rivXJPhuFqdQS0JA== IQSS Dataverse Network 
 # [Distributor] V1 [Version]
 
+# --------------------------------------------------- #
 setwd('~/FRTOutFiles/')
 # setwd('/git_repositories/FRTIndex/source')
 
@@ -22,6 +23,7 @@ library(ggmcmc)
 # library(arm)
 # library(R2jags)
 
+# --------------------------------------------------- #
 #### Create Indicator Data Set ####
 # Download GFDD data
 Indicators <- c('GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04', 'GFDD.DI.05', 'GFDD.DI.06',
@@ -38,7 +40,9 @@ BaseSub <- grepl.sub(data = Base, Var = 'income', patterns = 'High income')
 Droppers <- c("iso3c", "region",  "capital", "longitude", "latitude", "income", "lending")
 BaseSub <- BaseSub[, !(names(BaseSub) %in% Droppers)]
 
-# Create missingness indicators
+
+# --------------------------------------------------- #
+#### Create missingness indicators ####
 KeeperLength <- length(Indicators)
 IndSub <- Indicators[1:KeeperLength]
 VarVec <- vector()
@@ -51,6 +55,8 @@ for (i in IndSub){
   VarVec <- append(VarVec, temp)
 }
 
+# --------------------------------------------------- #
+#### Data description ####
 # Create country numbers
 BaseSub$countrynum <- as.numeric(as.factor(BaseSub$iso2c)) 
 BaseSub$yearnum <- as.numeric(as.factor(BaseSub$year)) 
@@ -88,6 +94,8 @@ if (getwd() == "/git_repositories/FRTIndex/source"){
         file = '/git_repositories/FRTIndex/paper/tables/IndicatorDescript.tex')
 }
 
+# --------------------------------------------------- #
+#### Clean up ####
 # Keep only complete variables
 BaseJagsReady <- BaseSub[, c('countrynum', 'yearnum', VarVec)]
 
@@ -99,6 +107,7 @@ Num <- nrow(BaseJagsReady)
 NCountry <- max(BaseJagsReady$countrynum)
 Nyear <- max(BaseJagsReady$yearnum)
 
+# --------------------------------------------------- #
 #### Write JAGS model ####
 Xs <- as.character()
 Ps <- as.character()
@@ -172,6 +181,7 @@ file.copy(from = 'BasicModel_V1.bug',
           to = '/home/cjg/FRTIndex/source/BasicModel_V1.bug',
           overwrite = TRUE)
 
+# --------------------------------------------------- #
 #### Run JAGS Model #### 
 # Create list of data objects used by the model
 # DataList <- append(list('countrynum', 'year'), as.list(VarVec))
@@ -193,11 +203,7 @@ DataList <- list('countrynum' = BaseJagsReady$countrynum, 'yearnum' = BaseJagsRe
 # Betas <- paste0('beta', VarCount)
 parameters <- c("transparency", "tau", Betas)
 
-# Send to JAGS
-# Est1 <- jags(data = DataList, inits = NULL, parameters, model.file = "BasicModel1.bug",
-#             n.chains = 2, n.iter = 1000, n.burnin = 50)
-
-# Estimate model
+# Compile model
 system.time(
   Est1 <- jags.model('BasicModel_V1.bug', data = DataList, 
                    n.chains = 2, n.adapt = 5000)
@@ -205,7 +211,6 @@ system.time(
 save.image(file = 'workspaceImages/SampOut.RData')
 
 # Draw random samples from the posterior
-# Samp1 <- jags.samples(Est1, variable.names = parameters, n.iter = 1000) 
 system.time(
   Samp1 <- coda.samples(Est1, parameters, n.iter = 1000)
 )
@@ -214,5 +219,4 @@ system.time(
 system.time(
   Set <- ggs(Samp1)  
 )
-
 save(Set, file = 'SetOut.RData')

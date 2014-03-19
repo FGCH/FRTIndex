@@ -32,7 +32,10 @@
 *.out
 *.synctex.gz
 *.synctex.gz\(busy\)
+*.fdb_latexmk
 
 # R project files
 .Rproj.user
 FRTIndex.Rproj
+
+.DS_Store
