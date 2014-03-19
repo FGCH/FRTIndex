@@ -27,6 +27,7 @@
 *.mtc1
 *.out
 *.synctex.gz
+*.synctex.gz\(busy\)
 
 # R project files
 .Rproj.user
