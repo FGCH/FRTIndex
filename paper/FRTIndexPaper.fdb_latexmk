@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex FRTIndexPaper"] 1395150864 "FRTIndexPaper.aux" "FRTIndexPaper.bbl" "FRTIndexPaper" 1395238750
+["bibtex FRTIndexPaper"] 1395240748 "FRTIndexPaper.aux" "FRTIndexPaper.bbl" "FRTIndexPaper" 1395240750
   "/usr/local/texlive/2013/texmf-dist/bibtex/bst/harvard/apsr.bst" 1136766823 25357 c990a86d1a60aa9370f76a9507b609ec ""
-  "FRTIndex.bib" 1392886715 1388 e019a61c7b13cee6b85680f4babcb8ec ""
-  "FRTIndexPaper.aux" 1395238748 2137 472635b014a20732bf11e53a5679056c ""
+  "FRTIndex.bib" 1395240729 1419 c7c6bc8a320aeb91db1725c85c7de88b ""
+  "FRTIndexPaper.aux" 1395240750 2064 ae11588926c88bb4cd73792f2a79f522 ""
   "FRTIndexPaper.bcf" 0 -1 0 ""
   (generated)
   "FRTIndexPaper.bbl"
   "FRTIndexPaper.blg"
-["pdflatex"] 1395238745 "FRTIndexPaper.tex" "FRTIndexPaper.pdf" "FRTIndexPaper" 1395238750
+["pdflatex"] 1395240749 "FRTIndexPaper.tex" "FRTIndexPaper.pdf" "FRTIndexPaper" 1395240750
   "/usr/local/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii" 1337017135 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "/usr/local/texlive/2013/texmf-dist/tex/generic/ifxetex/ifxetex.sty" 1284331290 1458 43ab4710dc82f3edeabecd0d099626b2 ""
   "/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/gettitlestring.sty" 1303254447 8237 52810bdb4db2270e717422560a104aea ""
@@ -112,10 +112,10 @@
   "/usr/local/texlive/2013/texmf-dist/tex/latex/url/url.sty" 1264379145 21932 e3a9cf32ee9b853b42be14c2f25b873c ""
   "/usr/local/texlive/2013/texmf-dist/tex/latex/xcolor/xcolor.sty" 1169481954 55224 a43bab84e0ac5e6efcaf9a98bde73a94 ""
   "/usr/local/texlive/2013/texmf-dist/tex/latex/xkeyval/xkeyval.sty" 1350473462 4934 09bb8eb3760faa4ffb6107a36e5b3d76 ""
-  "FRTIndexPaper.aux" 1395238748 2137 472635b014a20732bf11e53a5679056c ""
-  "FRTIndexPaper.bbl" 1395150865 1270 21cc92b6b7a790886e5b2bd3299ef162 "bibtex FRTIndexPaper"
-  "FRTIndexPaper.out" 1395238748 420 afb44791d55c0a6051fa38f24be25a15 ""
-  "FRTIndexPaper.tex" 1395238741 6399 be2cc79026514b4b81b1ebbbb78a03aa ""
+  "FRTIndexPaper.aux" 1395240750 2064 ae11588926c88bb4cd73792f2a79f522 ""
+  "FRTIndexPaper.bbl" 1395240749 1115 ed208e7486059f5f153ad46fa1ef49d8 "bibtex FRTIndexPaper"
+  "FRTIndexPaper.out" 1395240750 420 afb44791d55c0a6051fa38f24be25a15 ""
+  "FRTIndexPaper.tex" 1395240732 6303 65de35d6038026283d7112e9ac632542 ""
   "tables/IndicatorDescript.tex" 1395141277 2020 ac2b8b853048d66695fca71f4e64540e ""
   (generated)
   "FRTIndexPaper.pdf"
