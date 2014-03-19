@@ -1,61 +1,15 @@
-"","countrynum","iso2c","country"
-"57",1,"AD","Andorra"
-"71",2,"AE","United Arab Emirates"
-"169",3,"AT","Austria"
-"183",4,"AU","Australia"
-"197",5,"AW","Aruba"
-"239",6,"BB","Barbados"
-"267",7,"BE","Belgium"
-"309",8,"BH","Bahrain"
-"351",9,"BM","Bermuda"
-"365",10,"BN","Brunei Darussalam"
-"407",11,"BS","Bahamas, The"
-"477",12,"CA","Canada"
-"533",13,"CH","Switzerland"
-"659",14,"CW","Curacao"
-"673",15,"CY","Cyprus"
-"687",16,"CZ","Czech Republic"
-"701",17,"DE","Germany"
-"729",18,"DK","Denmark"
-"799",19,"EE","Estonia"
-"841",20,"ES","Spain"
-"869",21,"FI","Finland"
-"911",22,"FO","Faeroe Islands"
-"925",23,"FR","France"
-"953",24,"GB","United Kingdom"
-"1037",25,"GQ","Equatorial Guinea"
-"1051",26,"GR","Greece"
-"1107",27,"HK","Hong Kong SAR, China"
-"1135",28,"HR","Croatia"
-"1163",29,"HU","Hungary"
-"1191",30,"IE","Ireland"
-"1205",31,"IL","Israel"
-"1219",32,"IM","Isle of Man"
-"1275",33,"IS","Iceland"
-"1289",34,"IT","Italy"
-"1331",35,"JP","Japan"
-"1443",36,"KR","Korea, Rep."
-"1471",37,"KW","Kuwait"
-"1485",38,"KY","Cayman Islands"
-"1555",39,"LI","Liechtenstein"
-"1625",40,"LU","Luxembourg"
-"1681",41,"MC","Monaco"
-"1807",42,"MO","Macao SAR, China"
-"1835",43,"MT","Malta"
-"1947",44,"NC","New Caledonia"
-"2003",45,"NL","Netherlands"
-"2017",46,"NO","Norway"
-"2045",47,"NZ","New Zealand"
-"2059",48,"OM","Oman"
-"2101",49,"PF","French Polynesia"
-"2157",50,"PL","Poland"
-"2185",51,"PT","Portugal"
-"2227",52,"QA","Qatar"
-"2297",53,"SA","Saudi Arabia"
-"2353",54,"SE","Sweden"
-"2367",55,"SG","Singapore"
-"2381",56,"SI","Slovenia"
-"2395",57,"SK","Slovak Republic"
-"2423",58,"SM","San Marino"
-"2661",59,"TT","Trinidad and Tobago"
-"2731",60,"US","United States"
+"","yearnum","year"
+"57",1,1998
+"58",2,1999
+"59",3,2000
+"60",4,2001
+"61",5,2002
+"62",6,2003
+"63",7,2004
+"64",8,2005
+"65",9,2006
+"66",10,2007
+"67",11,2008
+"68",12,2009
+"69",13,2010
+"70",14,2011

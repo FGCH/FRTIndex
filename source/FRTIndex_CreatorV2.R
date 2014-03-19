@@ -1,7 +1,7 @@
 ##############
 # Financial Regulatory Transparency Index V2
 # Christopher Gandrud
-# 18 March 2014
+# 19 March 2014
 #############
 
 ## Inspired by:
@@ -169,7 +169,8 @@ paste0('
 
 # Copy file into git repo for version control
 file.copy(from = 'BasicModel_V1.bug',
-          to = '/home/cjg/FRTIndex/source/BasicModel_V1.bug')
+          to = '/home/cjg/FRTIndex/source/BasicModel_V1.bug',
+          overwrite = TRUE)
 
 #### Run JAGS Model #### 
 # Create list of data objects used by the model
