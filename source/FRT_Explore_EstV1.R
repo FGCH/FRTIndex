@@ -1,7 +1,7 @@
 ############
 # Explore FRT Index Estimates V1
 # Christopher Gandrud
-# 18 March 2014
+# 19 March 2014
 ############
 
 # Set working directory
@@ -43,20 +43,29 @@ Countries$country <- paste0('FRT_', Countries$country)
 
 ReplaceCountry <- data.frame(from = Countries$countrynum, to = Countries$country)
 SetReName <- FindReplace(Set, Var = 'Parameter', replaceData = ReplaceCountry, exact = FALSE)
-SetReName$Parameter <- gsub('FRT_', ' ')
+# SetReName$Parameter <- gsub('FRT_', '', SetReName$Parameter)
+save.image('~/Desktop/Plots.rda')
 
+
+svg(file = '~/Desktop/FRT_Index_V0_1/Plot2000.svg', width = 12, height = 12)
 # 2000 (yearnum 3)
 ggs_caterpillar(SetReName, family = 'FRT.*[a-z]3') + 
   ylab('') + xlab('\nFRT Index (HPD)') + ggtitle('2000\n') +
   theme_bw()
+dev.off()
 
+
+svg(file = '~/Desktop/FRT_Index_V0_1/Plot2007.svg', width = 12, height = 12)
 # 2007 (yearnum 10)
 ggs_caterpillar(SetReName, family = 'FRT.*10') + 
   ylab('') + xlab('\nFRT Index (HPD)') + ggtitle('2007\n') +
   theme_bw()
+dev.off()
 
+svg(file = '~/Desktop/FRT_Index_V0_1/Plot2011.svg', width = 12, height = 12)
 # 2011 (yearnum 14)
 ggs_caterpillar(SetReName, family = 'FRT.*14') + 
   ylab('') + xlab('\nFRT Index (HPD)') + ggtitle('2011\n') +
   theme_bw()
+dev.off()
 
