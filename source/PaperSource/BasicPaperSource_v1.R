@@ -28,13 +28,34 @@ load('modelOut/SetOut.RData')
 Countries <- read.csv('source/ParameterDescript/CountryNumbers.csv',
                       stringsAsFactors = FALSE)
 
-
 # --------------------------------------------------- #
 #### Transparency plots ####
-Countries$countrynum <- paste0('transparency\\[', Countries$countrynum, ',10.*')
+# Create country number identifier
+Countries$countrynum <- paste0('transparency\\[', Countries$countrynum, ',.*')
 
+pdf(file = 'paper/figures/FRT_1998.pdf', width = 12, height = 12)
+ggs_caterpillar_label(Set, family = 'transparency.*,1\\].*',
+                      param_label_from = Countries$countrynum,
+                      param_label_to = Countries$country) +
+  scale_x_continuous(limits = c(-17, 10)) + 
+  ylab('') + xlab('\nFRT Index (HPD)') +
+  theme_bw()
+dev.off()
+
+pdf(file = 'paper/figures/FRT_2007.pdf', width = 12, height = 12)
 ggs_caterpillar_label(Set, family = 'transparency.*,10.*',
                       param_label_from = Countries$countrynum,
                       param_label_to = Countries$country) +
-  ylab('') + xlab('\nFRT Index (HPD)') + ggtitle('2007\n') +
+  scale_x_continuous(limits = c(-17, 10)) + 
+  ylab('') + xlab('\nFRT Index (HPD)') +
   theme_bw()
+dev.off()
+
+pdf(file = 'paper/figures/FRT_2011.pdf', width = 12, height = 12)
+ggs_caterpillar_label(Set, family = 'transparency.*,14.*',
+                      param_label_from = Countries$countrynum,
+                      param_label_to = Countries$country) +
+  scale_x_continuous(limits = c(-17, 10)) + 
+  ylab('') + xlab('\nFRT Index (HPD)') +
+  theme_bw()
+dev.off()

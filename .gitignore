@@ -33,6 +33,7 @@
 *.synctex.gz
 *.synctex.gz\(busy\)
 *.fdb_latexmk
+paper/figures/*
 
 # R project files
 .Rproj.user

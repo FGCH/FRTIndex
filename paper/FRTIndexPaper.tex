@@ -63,6 +63,9 @@ Using these criteria our model has 60 countries, 21 items, and 12 years (1998-20
     \scalebox{0.95}{
         \input{tables/IndicatorDescript}
     }
+    {\scriptsize{Sources:\\ 
+    IFS = International Financial Statistics\\
+    IMF = International Monetary Fund}}
 \end{table}
 
 \subsection{The model}
@@ -82,13 +85,55 @@ The following parameters are estimated in the model:
 \end{itemize}
 
 
-\section{Validity}
+\section{Description and Validity}
 
-[OTHER TRANSPARENCY INDICATORS TO COMPARE AGAINST?]
 
 \subsection{The FRT Index}
 
+Figures \ref{FRT_1998}, \ref{FRT_2007}, and \ref{FRT_2011} provide snapshots of the Financial Regulatory Transparency Index in the years 1998 (the Index's first year), 2007, and 2011 (the Index's current end year). Higher scores on the FRT Index indicate higher financial regulatory transparency.
+
+We should first notice that the index passes a face validity test. There is a noticeable cluster of countries with very low FRT scores. These countries include the Bermuda, Cayman Islands, the Isle of Man, and Monaco. All of these jurisdictions are known for their banking secrecy, often as explicit policy decisions to attract capital from those seeking to avoid paying taxes in their home jurisdictions. At the high end of the scale we also see countries that have been known for their transparency. \cite{Gandrud2014a} noted a high level of financial regulatory transparency in the United States' financial regulatory reporting practices relative to practices among many European Union countries. As we would expect from this work, the United States is regularly placed among the countries with the highest FRT score.  
+
+Changes in countries' FRT scores over time also reflect substantively meaningful policy changes. Hungary is a prime example, in 1998 it is estimated to have one of the highest FRT scores. [Mark H. COULD YOU WRITE THIS UP?]
+
+It's important to also note that the FRT Index provides distinct information 
+
+COMPARE COUNTRY PLACEMENT TO HRV INDEX, ESPECIALLY SWEDEN.
+
+\begin{figure}
+    \caption{Financial Regulatory Transparency Index in 1998}
+    \label{FRT_1998}
+    \begin{center}
+        \includegraphics[scale=0.45]{figures/FRT_1998}
+    \end{center}
+    {\scriptsize{Thin lines represent the 95\% highest posterior density interval. Thick lines represent the 90\%.}}
+\end{figure}
+
+\begin{figure}
+    \caption{Financial Regulatory Transparency Index in 2007}
+    \label{FRT_2007}
+    \begin{center}
+        \includegraphics[scale=0.45]{figures/FRT_2007}
+    \end{center}
+    {\scriptsize{Thin lines represent the 95\% highest posterior density interval. Thick lines represent the 90\%.}}
+\end{figure}
+
+\begin{figure}
+    \caption{Financial Regulatory Transparency Index in 2011}
+    \label{FRT_2011}
+    \begin{center}
+        \includegraphics[scale=0.45]{figures/FRT_2011}
+    \end{center}
+    {\scriptsize{Thin lines represent the 95\% highest posterior density interval. Thick lines represent the 90\%.}}
+\end{figure}
+
+
+\subsection{Indicator difficulty}
+
 \subsection{Indicator discrimination}
+
+
+[OTHER TRANSPARENCY INDICATORS TO COMPARE AGAINST?]
 
 \section{Preliminary Associations}
 
@@ -101,6 +146,8 @@ To demonstrate the potential usefulness of the FRT Index we examine a number of 
 \bibliography{FRTIndex}
 
 \section*{Supplementary Materials}
+
+[TRACE PLOTS AND OTHER DIAGNOSTICS]
 
 
 \end{document}
