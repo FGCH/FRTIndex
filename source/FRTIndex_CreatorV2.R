@@ -64,7 +64,7 @@ YearKey <- YearKey[!duplicated(YearKey$yearnum), ]
 
 # Country name/number list
 write.csv(CountryKey, file = '~/FRTIndex/source/ParameterDescript/CountryNumbers.csv')
-write.csv(CountryKey, file = '~/FRTIndex/source/ParameterDescript/YearNumbers.csv')
+write.csv(YearKey, file = '~/FRTIndex/source/ParameterDescript/YearNumbers.csv')
 
 if (getwd() == "/git_repositories/FRTIndex/source"){
   IndicatorKey <- read.csv('IndicatorDescript/IndicatorDescription.csv', encoding = 'latin1', stringsAsFactors = FALSE)
