@@ -4,8 +4,6 @@
 # 19 March 2014
 ############
 
-# Set working directory
-
 # Load libraries
 library(ggmcmc)
 library(DataCombine)
