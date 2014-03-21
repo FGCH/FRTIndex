@@ -75,7 +75,7 @@ dev.off()
 # Hungary identifyier
 Hung <- Countries$countrynumMod[Countries$country == 'Hungary']
 
-pdf(file = 'paper/figures/FRT_Hungary.pdf', width = 12, height = 10)
+pdf(file = 'paper/figures/FRT_Hungary.pdf')
 ggs_caterpillar_label(Set, family = Hung,
                       horizontal = FALSE,
                       param_label_from = Years$yearnumMod,
