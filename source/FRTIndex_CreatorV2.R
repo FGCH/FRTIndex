@@ -1,14 +1,14 @@
 ##############
 # Financial Regulatory Transparency Index V2
 # Christopher Gandrud
-# 19 March 2014
+# 21 March 2014
 #############
 
 ## Inspired by:
 # Hollyer, James R. ; Rosendorff, B. Peter; Vreeland, James Raymond, 2014, 
 # "Replication data for: Measuring Transparency", 
-# http://dx.doi.org/10.7910/DVN/24274 UNF:5:Mj2tZ0rivXJPhuFqdQS0JA== IQSS Dataverse Network 
-# [Distributor] V1 [Version]
+# http://dx.doi.org/10.7910/DVN/24274 UNF:5:Mj2tZ0rivXJPhuFqdQS0JA== 
+# IQSS Dataverse Network [Distributor] V1 [Version]
 
 # --------------------------------------------------- #
 setwd('~/FRTOutFiles/')
@@ -26,10 +26,12 @@ library(ggmcmc)
 # --------------------------------------------------- #
 #### Create Indicator Data Set ####
 # Download GFDD data
-Indicators <- c('GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04', 'GFDD.DI.05', 'GFDD.DI.06',
-                'GFDD.DI.07', 'GFDD.DI.08', 'GFDD.DI.11', 'GFDD.DI.12', 'GFDD.DI.13', 'GFDD.DI.14', 
-                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.OI.07', 'GFDD.SI.02',
-                'GFDD.SI.03', 'GFDD.SI.04', 'GFDD.SI.05', 'GFDD.SI.07') 
+Indicators <- c('GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04', 
+                'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07', 'GFDD.DI.08', 
+                'GFDD.DI.11', 'GFDD.DI.12', 'GFDD.DI.13', 'GFDD.DI.14', 
+                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.OI.07', 
+                'GFDD.SI.02', 'GFDD.SI.03', 'GFDD.SI.04', 'GFDD.SI.05', 
+                'GFDD.SI.07') 
 
 # Download indicators
 # Unable to download 'GFDD.DM.011', 'GFDD.OI.14'
@@ -37,7 +39,8 @@ Base <- WDI(indicator = Indicators, start = 1998, end = 2011, extra = TRUE)
 
 # Keep countries with 'High income' (OECD and non-OECD classification)
 BaseSub <- grepl.sub(data = Base, Var = 'income', patterns = 'High income')
-Droppers <- c("iso3c", "region",  "capital", "longitude", "latitude", "income", "lending")
+Droppers <- c("iso3c", "region",  "capital", "longitude", "latitude", 
+              "income", "lending")
 BaseSub <- BaseSub[, !(names(BaseSub) %in% Droppers)]
 
 
@@ -69,13 +72,17 @@ YearKey <- BaseSub[, c('yearnum', 'year')]
 YearKey <- YearKey[!duplicated(YearKey$yearnum), ]
 
 # Country name/number list
-write.csv(CountryKey, file = '~/FRTIndex/source/ParameterDescript/CountryNumbers.csv')
-write.csv(YearKey, file = '~/FRTIndex/source/ParameterDescript/YearNumbers.csv')
+write.csv(CountryKey, row.names = FALSE, 
+  file = '~/FRTIndex/source/ParameterDescript/CountryNumbers.csv')
+write.csv(YearKey, row.names = FALSE,
+          file = '~/FRTIndex/source/ParameterDescript/YearNumbers.csv')
 
 if (getwd() == "/git_repositories/FRTIndex/source"){
-  IndicatorKey <- read.csv('IndicatorDescript/IndicatorDescription.csv', encoding = 'latin1', stringsAsFactors = FALSE)
+  IndicatorKey <- read.csv('IndicatorDescript/IndicatorDescription.csv', 
+                    encoding = 'latin1', stringsAsFactors = FALSE)
   IndicatorKey <- subset(IndicatorKey, SeriesCode %in% IndSub)
-  write.csv(IndicatorKey, file = 'IndicatorDescript/IncludedIndicators.csv', row.names = FALSE)
+  write.csv(IndicatorKey, file = 'IndicatorDescript/IncludedIndicators.csv', 
+            row.names = FALSE)
   
   # Clean up for latex version 
   IndicatorKey$Source <- gsub(pattern = 'International Financial Statistics \\(IFS\\), International Monetary Fund \\(IMF\\)', 
@@ -90,8 +97,9 @@ if (getwd() == "/git_repositories/FRTIndex/source"){
                               replacement = 'World Bank', x = IndicatorKey$Source)  
   IndicatorKey$Periodicity <- gsub('Annual: ', '', IndicatorKey$Periodicity)
   
-  print(xtable(IndicatorKey), size = 'scriptsize', include.rownames = FALSE, floating = FALSE, 
-        file = '/git_repositories/FRTIndex/paper/tables/IndicatorDescript.tex')
+  print(xtable(IndicatorKey), size = 'scriptsize', 
+      include.rownames = FALSE, floating = FALSE, 
+      file = '/git_repositories/FRTIndex/paper/tables/IndicatorDescript.tex')
 }
 
 # --------------------------------------------------- #
@@ -116,7 +124,8 @@ Vs <- as.character()
 Bs <- as.character()
 
 for (n in VarCount){
-  temp <- paste0('x', n, '[n] <- beta', n, '[1] + transparency[countrynum[n], yearnum[n]]*beta', n,'[2]')
+  temp <- paste0('x', n, '[n] <- beta', n, 
+            '[1] + transparency[countrynum[n], yearnum[n]]*beta', n,'[2]')
   Xs <- paste(Xs, temp, sep = '\n') 
   
   temp <- paste0('p', n, '[n] <- 1/(1 + exp(-x', n, '[n]))')
@@ -186,18 +195,28 @@ file.copy(from = 'BasicModel_V1.bug',
 # Create list of data objects used by the model
 # DataList <- append(list('countrynum', 'year'), as.list(VarVec))
 
-DataList <- list('countrynum' = BaseJagsReady$countrynum, 'yearnum' = BaseJagsReady$yearnum, 
+DataList <- list('countrynum' = BaseJagsReady$countrynum, 
+                 'yearnum' = BaseJagsReady$yearnum, 
                  'Rep_GFDD.DI.01' = BaseJagsReady$Rep_GFDD.DI.01, 
-                 'Rep_GFDD.DI.02' = BaseJagsReady$Rep_GFDD.DI.02, 'Rep_GFDD.DI.03' = BaseJagsReady$Rep_GFDD.DI.03,
-                 'Rep_GFDD.DI.04' = BaseJagsReady$Rep_GFDD.DI.04, 'Rep_GFDD.DI.05' = BaseJagsReady$Rep_GFDD.DI.05, 
-                 'Rep_GFDD.DI.06' = BaseJagsReady$Rep_GFDD.DI.06, 'Rep_GFDD.DI.07' = BaseJagsReady$Rep_GFDD.DI.07, 
-                 'Rep_GFDD.DI.08' = BaseJagsReady$Rep_GFDD.DI.08, 'Rep_GFDD.DI.11' = BaseJagsReady$Rep_GFDD.DI.11,
-                 'Rep_GFDD.DI.12' = BaseJagsReady$Rep_GFDD.DI.12, 'Rep_GFDD.DI.13' = BaseJagsReady$Rep_GFDD.DI.13,
-                 'Rep_GFDD.DI.14' = BaseJagsReady$Rep_GFDD.DI.14, 'Rep_GFDD.EI.02' = BaseJagsReady$Rep_GFDD.EI.02,
-                 'Rep_GFDD.EI.08' = BaseJagsReady$Rep_GFDD.EI.08, 'Rep_GFDD.OI.02' = BaseJagsReady$Rep_GFDD.OI.02,
+                 'Rep_GFDD.DI.02' = BaseJagsReady$Rep_GFDD.DI.02, 
+                 'Rep_GFDD.DI.03' = BaseJagsReady$Rep_GFDD.DI.03,
+                 'Rep_GFDD.DI.04' = BaseJagsReady$Rep_GFDD.DI.04, 
+                 'Rep_GFDD.DI.05' = BaseJagsReady$Rep_GFDD.DI.05, 
+                 'Rep_GFDD.DI.06' = BaseJagsReady$Rep_GFDD.DI.06, 
+                 'Rep_GFDD.DI.07' = BaseJagsReady$Rep_GFDD.DI.07, 
+                 'Rep_GFDD.DI.08' = BaseJagsReady$Rep_GFDD.DI.08, 
+                 'Rep_GFDD.DI.11' = BaseJagsReady$Rep_GFDD.DI.11,
+                 'Rep_GFDD.DI.12' = BaseJagsReady$Rep_GFDD.DI.12, 
+                 'Rep_GFDD.DI.13' = BaseJagsReady$Rep_GFDD.DI.13,
+                 'Rep_GFDD.DI.14' = BaseJagsReady$Rep_GFDD.DI.14, 
+                 'Rep_GFDD.EI.02' = BaseJagsReady$Rep_GFDD.EI.02,
+                 'Rep_GFDD.EI.08' = BaseJagsReady$Rep_GFDD.EI.08, 
+                 'Rep_GFDD.OI.02' = BaseJagsReady$Rep_GFDD.OI.02,
                  'Rep_GFDD.OI.07' = BaseJagsReady$Rep_GFDD.OI.07,  
-                 'Rep_GFDD.SI.02' = BaseJagsReady$Rep_GFDD.SI.02, 'Rep_GFDD.SI.03' = BaseJagsReady$Rep_GFDD.SI.03,
-                 'Rep_GFDD.SI.04' = BaseJagsReady$Rep_GFDD.SI.04, 'Rep_GFDD.SI.05' = BaseJagsReady$Rep_GFDD.SI.05,
+                 'Rep_GFDD.SI.02' = BaseJagsReady$Rep_GFDD.SI.02, 
+                 'Rep_GFDD.SI.03' = BaseJagsReady$Rep_GFDD.SI.03,
+                 'Rep_GFDD.SI.04' = BaseJagsReady$Rep_GFDD.SI.04, 
+                 'Rep_GFDD.SI.05' = BaseJagsReady$Rep_GFDD.SI.05,
                  'Rep_GFDD.SI.07' = BaseJagsReady$Rep_GFDD.SI.07)
 
 # Betas <- paste0('beta', VarCount)
