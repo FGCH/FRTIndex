@@ -75,10 +75,13 @@ dev.off()
 # Hungary identifyier
 Hung <- Countries$countrynumMod[Countries$country == 'Hungary']
 
+pdf(file = 'paper/figures/FRT_Hungary.pdf', width = 12, height = 10)
 ggs_caterpillar_label(Set, family = Hung,
                       horizontal = FALSE,
                       param_label_from = Years$yearnumMod,
                       param_label_to = Years$year,
                       order = FALSE) +
   xlab('FRT Index (HPD)\n') + ylab('') +
+  scale_y_discrete(breaks = c(1998, 2003, 2008, 2011)) +
   theme_bw()
+dev.off()
