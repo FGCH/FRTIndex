@@ -91,7 +91,7 @@ As \cite{Hollyer2014} note, simply taking the fraction of items a country report
 
 In order to fix the scale and location of the the FRT Index we followed \cite{Hollyer2014} by subtracting it by the mean and dividing by the standard deviation of the first year of the data set (1998) at each iteration. 
 
-The Index values in 1998 are draw from a diffuse normal prior ($Transparency_{c,1980} \sim N(0,\:100)$) before recentering. For each transparency value after 1998 we used a system of random-walk priors such that $transparency_{c,t} \sim N(transparency_{c,t-1,\frac{1}{\tau_{c}}}) \forall t > 1$, where $\tau_{c}$ acts as a country-specific smoothing parameter. Each $\tau_{c}$ is estimated with the prior $\tau_{c} \sim Gamma(20,\:0.25)$ \citep[for more details see][8]{Jackman2009,Hollyer2014}. Finally, we used diffuse priors when estimating the discrimination and difficulty parameters:
+The Index values in 1998 are draw from a diffuse normal prior ($Transparency_{c,1980} \sim N(0,\:100)$) before recentering. For each transparency value after 1998 we used a system of random-walk priors such that $transparency_{c,t} \sim N(transparency_{c,t-1},\: \frac{1}{\tau_{c}}) \forall t > 1$, where $\tau_{c}$ acts as a country-specific smoothing parameter. Each $\tau_{c}$ is estimated with the prior $\tau_{c} \sim Gamma(20,\:0.25)$ \citep[for more details see][8]{Jackman2009,Hollyer2014}. Finally, we used diffuse priors when estimating the discrimination and difficulty parameters:
 
 \begin{equation}
     \begin{pmatrix}
@@ -125,7 +125,7 @@ Figures \ref{FRT_1998}, \ref{FRT_2007}, and \ref{FRT_2011} provide snapshots of 
 
 We should first notice that the index passes a face validity test. There is a noticeable cluster of countries with very low FRT scores. These countries include the Bermuda, Cayman Islands, the Isle of Man, and Monaco. All of these jurisdictions are known for their banking secrecy, often as explicit policy decisions to attract capital from those seeking to avoid paying taxes in their home jurisdictions. At the high end of the scale we also see countries that have been known for their transparency. \cite{Gandrud2014a} noted a high level of financial regulatory transparency in the United States' financial regulatory reporting practices relative to practices among many European Union countries. As we would expect from this work, the United States is regularly placed among the countries with the highest FRT score.  
 
-Changes in countries' FRT scores over time also reflect substantively meaningful policy changes. Hungary is a prime example. Figure~\ref{FRTHungary} shows Hungary's FRT Index across all of the years in the sample. In 1998 it is estimated to have one of the highest FRT scores, with a median well above 5. However, this declines over time with a clear break to very low transparency levels starting in 2009. The 2009 figures would have been reported to international institutions in 2010, the year that Viktor Orb\'{a}n's Christian Democratic People's Party entered government. \todo{Mark H. could you finish writing this up?}
+Changes in countries' FRT scores over time also reflect substantively meaningful policy changes. Hungary is a prime example. Figure~\ref{FRTHungary} shows Hungary's FRT Index across all of the years in the sample. In 1998 it is estimated to have one of the highest FRT scores, with a median well above 5. However, this declines over time with a clear break to very low transparency levels starting in 2009. The 2009 figures would have been reported to international institutions in 2010, the year that Viktor Orb\'{a}n's Christian Democratic People's Party entered government. This government introduced a number of major economic and financial policy changes that sometimes directly contradicted Hungary's international commitments, including reducing the independence of the central bank. \todo{Mark H. could you add some thoughts on this?}
 
 \begin{figure}
     \caption{Financial Regulatory Transparency Index in 1998}
@@ -169,10 +169,31 @@ It's important to also note that the FRT Index provides distinct information fro
 
 \subsection{Indicator difficulty}
 
+A less computationally intensive method for developing a financial regulatory transparency index include would be to examine item reporting frequencies with sum-scores (summing the number of items reported per country-year) or some normalizing transformation of this like finding the proportion of items a country reported in a year. These approaches implicitly assume that reporting any one item is equivalent to reporting any other item. This may not be the case. Reporting one item may be `more difficult' than reporting another. Using IRT allows us to adjust for the fact that some items may be more readily reported than others. 
+
+If reporting one item is actually equivalent to reporting any other item then we would expect the estimated difficulty and discrimination parameters to be the same across all items. Figures \ref{DifficultyFig} and \ref{DiscrimFig} show the estimated difficulty and discrimination parameter estimates for all of the included items, respectively.    
+
+
+\begin{figure}
+    \caption{Estimated Item Difficulty Parameters}
+    \label{DifficultyFig}
+    \begin{center}
+        \includegraphics[scale=0.5]{figures/difficultyPlot}
+    \end{center}
+\end{figure}
+
+
 \subsection{Indicator discrimination}
 
 
-[OTHER TRANSPARENCY INDICATORS TO COMPARE AGAINST?]
+\begin{figure}
+    \caption{Estimated Item Discrimination Parameters}
+    \label{DiscrimFig}
+    \begin{center}
+        \includegraphics[scale=0.5]{figures/discriminationPlot}
+    \end{center}
+\end{figure}
+
 
 \section{Preliminary Associations}
 
