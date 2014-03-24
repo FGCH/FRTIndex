@@ -84,6 +84,7 @@ FRT <- merge(ParamSplit, FRT, by = 'ID')
 
 # Clean final data
 FRT <- FRT[, -1]
+FRT <- FRT[order(FRT$country, FRT$year), ]
 
 FRT <- MoveFront(FRT, c('country', 'iso2c'))
 names(FRT) <- c('country', 'iso2c', 'year', 'lower_95', 'lower_90', 'median', 
