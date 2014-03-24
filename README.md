@@ -3,9 +3,9 @@ Financial Regulatory Transparency Index
 
 Financial Regulatory Transparency (FRT) Index, as well as documentation and source code to create the Index.
 
-Version 0.1
+**Version:** 0.1
 
-[Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
+**Maintainer:** [Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
 
 Funding generously provided by the [Deutsche Forschungsgemeinschaft](http://www.dfg.de/en/).
 
@@ -49,16 +49,17 @@ frt_index <- repmis::source_data(URL)
 
 ## Model
 
+The FRT Index is created using a [Bayesian Item Response Theory](http://en.wikipedia.org/wiki/Item_response_theory) model of high income countries's reporting of financial industry indicators to the World Bank's [Global Financial Development Database](http://data.worldbank.org/data-catalog/global-financial-development).
+
+A full write up of our model is in the works. The most recent (incomplete) draft is available for download as a [PDF](https://github.com/FGCH/FRTIndex/blob/master/paper/FRTIndexPaper.pdf?raw=true).
+
 The estimation model is based on:
 
-Hollyer, James R. ; Rosendorff, B. Peter; Vreeland, James Raymond, 2014, 
-"Replication data for: Measuring Transparency", 
+> Hollyer, James R., B. Peter Rosendorff, and James Raymond Vreeland. 2014. "Replication data for: Measuring Transparency". 
 [http://dx.doi.org/10.7910/DVN/24274](http://dx.doi.org/10.7910/DVN/24274)
-
-A full write up of our model is in the works. The most recent draft is available for download as a [PDF](https://github.com/FGCH/FRTIndex/blob/master/paper/FRTIndexPaper.pdf?raw=true).
 
 ---
 
-![](http://fgch.github.io/amc-site/images/dfg.png) 
+<a href="http://www.dfg.de/en/"><img src="http://fgch.github.io/amc-site/images/dfg.png"/></a> 
 
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
