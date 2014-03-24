@@ -41,15 +41,24 @@
 
 %%%%%%%%% Abstract
 \begin{abstract}
-\noindent \emph{Early working draft. Comments welcome.} \\
-    For financial supervision to be effective, regulators need have accurate information about financial sector activities. For the public to be able to hold supervisors accountable they need access to the information financial supervisors have about the health of the banking system in order to judge the quality of their actions. In this paper we use Bayesian item response theory to create a new global and comparable Financial Regulatory Transparency (FRT) Index. The Index currently covers the years 1998 through 2011. It captures high income countries'--those most likely to have developed financial systems--reporting to the World Bank's Global Financial Development Database. The Index is a distinct indicator of governments' willingness to gather and make publicly available information about their financial systems and their regulators' actions. In this paper we establish the value added of the FRT Index and  
+\noindent \emph{Early and incomplete working draft. Comments welcome.} \\
+    For financial supervision to be effective, regulators need have accurate information about financial sector activities. For the public to be able to hold supervisors accountable they need access to the information financial supervisors have about the health of the banking system in order to judge the quality of regulators' actions. In this paper we use Bayesian item response theory to create a new global and comparable Financial Regulatory Transparency (FRT) Index. The Index currently covers the years 1998 through 2011. It captures high income countries'--those most likely to have developed financial systems--reporting to the World Bank's Global Financial Development Database. The Index is a distinct indicator of governments' willingness to gather and make publicly available information about their financial systems and their regulators' actions. In this paper we establish the value added of the FRT Index as a unique and objective measure of financial supervisory transparency. We also begin to explore how financial regulators transparency is related to regulatory quality and financial system stability.  
 \end{abstract}
 
-In previous research we have found that even within the relatively homogeneous European Union with supranational authorities tasked with gathering and reporting aggregate financial data from member states there is considerable variation in what is actually reported \cite[see][]{Gandrud2014a}. We currently lack a comparable cross-national way of measuring country's level of financial regulatory transparency. In this paper we use a Bayesian Item Response Theory (IRT) approach
+In previous research we have found that even within the relatively homogeneous European Union with supranational authorities tasked with gathering and reporting aggregate financial data from member states there is considerable variation in what is actually reported \cite[see][]{Gandrud2014a}. We currently lack a comparable cross-national way of measuring country's level of financial regulatory transparency. In this paper we use a Bayesian Item Response Theory (IRT) approach recently employed by \cite{Hollyer2014} to develop a new Financial Regulatory Transparency (FRT) Index. 
+
+The Index includes 60 high income countries from 1998 through 2011. It measures these countries reporting of financial system items to the World Bank's Global Financial Development Database (GFDD). The Index is a unique indicator of countries' willingness to credibly reveal--the data has to pass minimal World Bank and International Monetary Fund quality checks--the structure of their financial system and regulatory quality, so that they can be scrutinized by market participants and citizens.
+
+In this paper we first discuss why government transparency has been argued and found to be important for good governance and also how previous researchers have attempted to measure it. We then discuss the construction of the FRT Index. In the following section we describe a selection notable features of the Index and demonstrate its `value added' over less computationally intensive methods. Finally, we make preliminary explorations of associates between the Index and measures of financial regulatory quality and financial system stability.  
+
+
+\section{Measuring transparency}
+
+\todo[inline]{Lit. review of (a) why transparency is important and (b) how it has been measured before.}
 
 \section{Creating the FRT Index}
 
-We treat financial regulatory transparency as an unobserved latent variable that effectively summarizes countries likelihood of reporting yearly data that is included in the World Bank's Global Financial Development Database (GFDD) first created by \cite{Cihak2012}.\footnote{Access to the most updated version of the data set is available through \url{http://data.worldbank.org/data-catalog/global-financial-development} Accessed February 2014.}
+We treat financial regulatory transparency as an unobserved latent variable that effectively summarizes countries likelihood of reporting yearly data that is included in the World Bank's Global Financial Development Database first created by \cite{Cihak2012}.\footnote{Access to the most updated version of the data set is available through \url{http://data.worldbank.org/data-catalog/global-financial-development} Accessed February 2014.}
 
 \subsection{Included indicators}
 
@@ -64,7 +73,8 @@ Using these criteria our model has 60 countries, 21 items, and 12 years (1998-20
     \scalebox{0.95}{
         \input{tables/IndicatorDescript}
     }
-    {\scriptsize{Sources Key:\\ 
+    {\scriptsize{SeriesCode is the GFDD variable identifier.\\
+    Sources Key:\\ 
     IFS = International Financial Statistics\\
     IMF = International Monetary Fund}}
 \end{table}
@@ -112,7 +122,7 @@ The Index values in 1998 are draw from a diffuse normal prior ($Transparency_{c,
     \right). 
 \end{equation}
 
-We estimated the model using a Markov Chain Monte Carlo algorithm using Jags 3.3.0 \citep{Plummer2003}.\footnote{The original Jags model can be found at: \url{https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/BasicModel_V1.bug}. The R \citep{RCite} source code needed to download the underlying indicators and run the Jags model is available at: \url{https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/FRTIndex_CreatorV2.R}. The later source code dynamically generates the Jags model.} We estimated two chains using 10,000 iterations each including burn-ins of 5,000 iterations. Please see the Supplementary Materials for convergence diagnostics.\todo{Need to do once the full model has been run.} 
+We estimated the model using a Markov Chain Monte Carlo algorithm using Just Another Gibbs Sampler (JAGS) 3.3.0 \citep{Plummer2003}.\footnote{The original JAGS model can be found at: \url{https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/BasicModel_V1.bug}. The R \citep{RCite} source code needed to download the underlying indicators and run the JAGS model is available at: \url{https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/FRTIndex_CreatorV2.R}. The later source code dynamically generates the JAGS model.} We estimated two chains using 10,000 iterations each including burn-ins of 5,000 iterations. Please see the Supplementary Materials for convergence diagnostics.\todo{Need to do once the full model has been run.} 
 
 \todo[inline]{Model fit discussion here}
 
@@ -123,7 +133,7 @@ We estimated the model using a Markov Chain Monte Carlo algorithm using Jags 3.3
 
 Figures \ref{FRT_1998}, \ref{FRT_2007}, and \ref{FRT_2011} provide snapshots of the Financial Regulatory Transparency Index in the years 1998 (the Index's first year), 2007, and 2011 (the Index's current end year). Higher scores on the FRT Index indicate higher financial regulatory transparency.
 
-We should first notice that the index passes a face validity test. There is a noticeable cluster of countries with very low FRT scores. These countries include the Bermuda, Cayman Islands, the Isle of Man, and Monaco. All of these jurisdictions are known for their banking secrecy, often as explicit policy decisions to attract capital from those seeking to avoid paying taxes in their home jurisdictions. At the high end of the scale we also see countries that have been known for their transparency. \cite{Gandrud2014a} noted a high level of financial regulatory transparency in the United States' financial regulatory reporting practices relative to practices among many European Union countries. As we would expect from this work, the United States is regularly placed among the countries with the highest FRT score.  
+We should first notice that the index passes a face validity test. There is a noticeable cluster of countries with very low FRT scores. These countries include the Bermuda, Cayman Islands, the Isle of Man, and Monaco. All of these jurisdictions are known for their banking secrecy, often as explicit policy decisions to attract capital from those seeking to avoid paying taxes in their home jurisdictions. At the high end of the scale we also see countries that have been known for their transparency. \cite{Gandrud2014a} noted a high level of financial regulatory transparency in the United States' financial regulatory reporting practices relative to practices among many European Union countries. As we would expect from this work, the United States is regularly placed among the countries with the highest FRT scores.  
 
 Changes in countries' FRT scores over time also reflect substantively meaningful policy changes. Hungary is a prime example. Figure~\ref{FRTHungary} shows Hungary's FRT Index across all of the years in the sample. In 1998 it is estimated to have one of the highest FRT scores, with a median well above 5. However, this declines over time with a clear break to very low transparency levels starting in 2009. The 2009 figures would have been reported to international institutions in 2010, the year that Viktor Orb\'{a}n's Christian Democratic People's Party entered government. This government introduced a number of major economic and financial policy changes that sometimes directly contradicted Hungary's international commitments, including reducing the independence of the central bank. \todo{Mark H. could you add some thoughts on this?}
 
@@ -211,8 +221,8 @@ In addition to comparing the FRT Index to proportions of items reported, we can 
 
 To demonstrate the potential usefulness of the FRT Index we examine a number of associations between the Index and the occurrence and potential occurrence of financial crisis.
 
-[ASSOCIATION WITH ECONOMIC BUREAUCRATIC CAPACITY]
-[Z-SCORE (PROB. OF BANK DEFAULT) AS DEPENDENT VARIABLE]
+\todo[inline]{[ASSOCIATION WITH ECONOMIC BUREAUCRATIC CAPACITY]
+[Z-SCORE (PROB. OF BANK DEFAULT) AS DEPENDENT VARIABLE]}
 
 \begin{figure}
     \caption{Initial Associations}
@@ -225,6 +235,8 @@ To demonstrate the potential usefulness of the FRT Index we examine a number of 
 \section*{Conclusion}
 
 In this paper we have introduced a new Financial Regulatory Transparency Index.
+
+\todo[inline]{Complete}
 
 \bibliographystyle{apsr}
 \bibliography{FRTIndex}

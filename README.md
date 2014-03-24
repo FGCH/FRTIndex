@@ -15,10 +15,13 @@ Funding generously provided by the [Deutsche Forschungsgemeinschaft](http://www.
 
 ## Motivation
 
+For financial supervision to be **effective**, regulators need have accurate information about financial sector activities. For the public to be able to hold supervisors **accountable** they need access to the information financial supervisors have about the health of the banking system in order to judge the quality of regulators' actions. 
 
-## Index Data
+We are developing a **Financial Regulatory Transparency Index**. The new Index we make it possible to compare the willingness of governments to credibly reveal the structure of their financial systems and regulatory quality, so that they can be scrutinized by market participants and citizens.
 
-The current draft version of the index is located in the *IndexData* directory. The current version is in a CSV formatted file called: [FRTIndex_v0_1.csv](https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex_v0_1.csv).
+## The FRT Index
+
+The current draft version of the Index is located in the *IndexData* directory. The current version is in a CSV formatted file called: [FRTIndex_v0_1.csv](https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex_v0_1.csv).
 
 It covers the **60 countries** classified by the World Bank as '**High Income**' for the years **1998 through 2011**.
 
