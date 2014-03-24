@@ -10,6 +10,7 @@
 # Load libraries and functions
 library(ggmcmc)
 
+# Load ggs_caterpillar_label (a modified version of ggmcmc's ggs_caterpillar)
 CatURL <- 'https://gist.githubusercontent.com/christophergandrud/9640110/raw/4a34144becd94bdbb2259a32410b21b7d3705c52/ggs_caterpillar_label.R'
 devtools::source_url(CatURL)
 
@@ -24,7 +25,7 @@ setwd(WDir)
 # Load main estimation model
 load('modelOut/SetOut.RData')
 
-# Load country identifyer data
+# Load country/year/difficulty/discrimination number data
 Countries <- read.csv('source/ParameterDescript/CountryNumbers.csv',
                       stringsAsFactors = FALSE)
 
@@ -37,8 +38,9 @@ Indicators$ID <- 1:nrow(Indicators)
 
 # --------------------------------------------------- #
 #### Build identifiers ####
-# Create country number identifier
-Countries$countrynumMod <- paste0('transparency\\[', Countries$countrynum, ',.*')
+# Create country/year/difficulty/discrimination number identifiers
+Countries$countrynumMod <- paste0('transparency\\[', 
+                                  Countries$countrynum, ',.*')
 
 # Create year identifiers
 Years$yearnumMod <- paste0('transparency\\[.*,', Years$yearnum, '\\]')
@@ -70,13 +72,21 @@ ggs_caterpillar_label(Set, family = 'transparency.*,10.*',
   theme_bw()
 dev.off()
 
+FRT2011 <- ggs_caterpillar_label(Set, family = 'transparency.*,14.*',
+                                 param_label_from = Countries$countrynumMod,
+                                 param_label_to = Countries$country) +
+    scale_x_continuous(limits = c(-17, 10)) + 
+    ylab('') + xlab('\nFRT Index (HPD)') +
+    theme_bw()
+
+# For the paper
 pdf(file = 'paper/figures/FRT_2011.pdf', width = 12, height = 12)
-ggs_caterpillar_label(Set, family = 'transparency.*,14.*',
-                      param_label_from = Countries$countrynumMod,
-                      param_label_to = Countries$country) +
-  scale_x_continuous(limits = c(-17, 10)) + 
-  ylab('') + xlab('\nFRT Index (HPD)') +
-  theme_bw()
+FRT2011
+dev.off()
+
+# For GitHub README
+png(file = 'FRT_2011.png', width = 700, height = 600)
+FRT2011
 dev.off()
 
 # --------------------------------------------------- #
