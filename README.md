@@ -5,9 +5,10 @@ Financial Regulatory Transparency (FRT) Index as well as documentation and sourc
 
 Version 0.1
 
+**This is a work in progress.**
+
 ---
 
-> **This is a work in progress.**
 
 ## Index Data
 
