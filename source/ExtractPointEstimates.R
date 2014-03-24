@@ -104,3 +104,20 @@ Diff <- FindReplace(Diff, Var = 'Parameter', replaceData = Indicators,
 names(Diff) <- c('Parameter', 'lower_95', 'lower_90', 'median', 'upper_90',
                  'upper_95')
 
+write.csv(Diff, file = 'IndexData/OtherParameters/DifficultyParams.csv',
+          row.names = FALSE)
+
+# --------------------------------------------------- #
+#### Discrimination Parameters ####
+Disc <- ggs_summary(Set, family = 'beta.*\\[2\\].*')
+Disc$Parameter <- as.character(Disc$Parameter)
+
+Disc <- FindReplace(Disc, Var = 'Parameter', replaceData = Indicators,
+                    from = 'discriminateID', to = 'Indicator.Name',
+                    exact = FALSE)
+
+names(Disc) <- c('Parameter', 'lower_95', 'lower_90', 'median', 'upper_90',
+                 'upper_95')
+
+write.csv(Disc, file = 'IndexData/OtherParameters/DiscriminationParams.csv',
+          row.names = FALSE)
