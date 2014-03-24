@@ -71,6 +71,8 @@ CountryKey <- CountryKey[!duplicated(CountryKey$countrynum), ]
 YearKey <- BaseSub[, c('yearnum', 'year')]
 YearKey <- YearKey[!duplicated(YearKey$yearnum), ]
 
+IndKey <- data.frame(IndID = 1:length(Indicators), Indicator = Indicators)
+
 # Country name/number list
 write.csv(CountryKey, row.names = FALSE, 
   file = '~/FRTIndex/source/ParameterDescript/CountryNumbers.csv')
