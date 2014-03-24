@@ -167,11 +167,25 @@ It's important to also note that the FRT Index provides distinct information fro
     {\scriptsize{Thin lines represent the 95\% highest posterior density interval. Thick lines represent the 90\%. Points represent the median.}}
 \end{figure}
 
-\subsection{Indicator difficulty}
+\subsection{Comparison to frequency methods}
 
 A less computationally intensive method for developing a financial regulatory transparency index include would be to examine item reporting frequencies with sum-scores (summing the number of items reported per country-year) or some normalizing transformation of this like finding the proportion of items a country reported in a year. These approaches implicitly assume that reporting any one item is equivalent to reporting any other item. This may not be the case. Reporting one item may be `more difficult' than reporting another. Using IRT allows us to adjust for the fact that some items may be more readily reported than others. 
 
-If reporting one item is actually equivalent to reporting any other item then we would expect the estimated difficulty and discrimination parameters to be the same across all items. Figures \ref{DifficultyFig} and \ref{DiscrimFig} show the estimated difficulty and discrimination parameter estimates for all of the included items, respectively.    
+A basic test for examining if a frequency method would be just as appropriate and, because it is dramatically less computationally intensive, preferable to Bayesian IRT for constructing a transparency measure is to see if there is a linear association between the Bayesian IRT scores and frequency scores. Figure~\ref{CompFreqFRT} compares the proportion of items used (a frequency measure) in the FRT Index a country reported in a given year to that country-year's FRT score.\footnote{Both are standardized by subtracting their mean and dividing by their standard deviation.} Rather than having a linear relationship, we can see that the FRT Index is much more sensitive to indicator reporting than the frequency measure. This is especially true of countries that report relatively few items. They do substantially worse in the FRT Index than if we measured transparency with proportion of items reported.
+
+\begin{figure}
+    \caption{Comparing Frequency Reported vs. FRT Index}
+    \label{CompFreqFRT}
+    \begin{center}
+        \includegraphics[scale=0.4]{figures/FRT_Prop_Compare} 
+    \end{center}
+    {\scriptsize{Both the Proportion Reported transparency indicator and the FRT Index scores were standardized by subtracting their means and dividing by their standard deviations.}}
+\end{figure}
+
+
+\subsection{Indicator difficulty and discrimination}
+
+In addition to comparing the FRT Index to proportions of items reported, we can also examine the difficulty and discrimination parameters to determine whether or not the FRT has value added. If reporting one item is actually equivalent to reporting any other item then we would expect the estimated difficulty and discrimination parameters to be the same across all items. Figures \ref{DifficultyFig} and \ref{DiscrimFig} show the estimated difficulty and discrimination parameter estimates for all of the included items, respectively. 
 
 
 \begin{figure}
@@ -182,8 +196,6 @@ If reporting one item is actually equivalent to reporting any other item then we
     \end{center}
 \end{figure}
 
-
-\subsection{Indicator discrimination}
 
 
 \begin{figure}

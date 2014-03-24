@@ -1,24 +1,23 @@
 ##############
-# Source for figures and tables in the basic FRT index description paper
+# Source 1 for figures in the basic FRT index description paper
 # Christopher Gandrud
-# 21 March 2014
+# 24 March 2014
 ##############
 
 # Model created using source/FRTIndex_CreatorV2.R
 # Item description table created in source/FRTIndex_CreatorV2.R
-
-# Load libraries and functions
-library(ggmcmc)
-
-# Load ggs_caterpillar_label (a modified version of ggmcmc's ggs_caterpillar)
-CatURL <- 'https://gist.githubusercontent.com/christophergandrud/9640110/raw/4a34144becd94bdbb2259a32410b21b7d3705c52/ggs_caterpillar_label.R'
-devtools::source_url(CatURL)
 
 # --------------------------------------------------- #
 #### Directories ####
 # Set working directory
 WDir <- '/git_repositories/FRTIndex/'
 setwd(WDir)
+
+# Load libraries and functions
+library(ggmcmc)
+
+# Load ggs_caterpillar_label (a modified version of ggmcmc's ggs_caterpillar)
+source('source/miscFunctions/ggs_caterpillar_label.R')
 
 # --------------------------------------------------- #
 #### Load estimates ####
@@ -39,7 +38,7 @@ Indicators$ID <- 1:nrow(Indicators)
 # --------------------------------------------------- #
 #### Build identifiers ####
 # Create country/year/difficulty/discrimination number identifiers
-Countries$countrynumMod <- paste0('transparency\\[', 
+Countries$countrynumMod <- paste0('transparency\\[',
                                   Countries$countrynum, ',.*')
 
 # Create year identifiers
@@ -58,7 +57,7 @@ pdf(file = 'paper/figures/FRT_1998.pdf', width = 12, height = 12)
 ggs_caterpillar_label(Set, family = 'transparency.*,1\\].*',
                       param_label_from = Countries$countrynumMod,
                       param_label_to = Countries$country) +
-  scale_x_continuous(limits = c(-17, 10)) + 
+  scale_x_continuous(limits = c(-17, 10)) +
   ylab('') + xlab('\nFRT Index (HPD)') +
   theme_bw()
 dev.off()
@@ -67,7 +66,7 @@ pdf(file = 'paper/figures/FRT_2007.pdf', width = 12, height = 12)
 ggs_caterpillar_label(Set, family = 'transparency.*,10.*',
                       param_label_from = Countries$countrynumMod,
                       param_label_to = Countries$country) +
-  scale_x_continuous(limits = c(-17, 10)) + 
+  scale_x_continuous(limits = c(-17, 10)) +
   ylab('') + xlab('\nFRT Index (HPD)') +
   theme_bw()
 dev.off()
@@ -75,7 +74,7 @@ dev.off()
 FRT2011 <- ggs_caterpillar_label(Set, family = 'transparency.*,14.*',
                                  param_label_from = Countries$countrynumMod,
                                  param_label_to = Countries$country) +
-    scale_x_continuous(limits = c(-17, 10)) + 
+    scale_x_continuous(limits = c(-17, 10)) +
     ylab('') + xlab('\nFRT Index (HPD)') +
     theme_bw()
 
@@ -117,6 +116,26 @@ ggs_caterpillar_label(Set, family = TestCountry,
   xlab('FRT Index (HPD)\n') + ylab('') +
   scale_y_discrete(breaks = c(1998, 2003, 2008, 2011)) +
   theme_bw()
+
+# --------------------------------------------------- #
+#### Compare FRT to Proportion Reported method ####
+FRT <- read.csv('IndexData/FRTIndex_v0_1.csv', stringsAsFactors = FALSE)
+FRTProp <- read.csv('IndexData/alternate/PropReported.csv',
+                    stringsAsFactors = FALSE)
+
+FRTStand <- (FRT$median - mean(FRT$median))/sd(FRT$median)
+FRTPropStand <- (FRTProp$FRT_PropReport - mean(FRTProp$FRT_PropReport))/sd(FRTProp$FRT_PropReport)
+
+Comb <- data.frame(FRT = FRTStand, FRTPropStand)
+
+pdf(file = 'paper/figures/FRT_Prop_Compare.pdf')
+ggplot(Comb, aes(FRTStand, FRTPropStand)) + geom_point(alpha = 0.5) +
+    stat_smooth(method = 'loess', se = FALSE, size = 1) +
+    stat_smooth(method = 'lm', se = FALSE, linetype = 'dashed', size = 1) +
+    ylab('Proportion Reported (standardized)\n') +
+    xlab('\nMedian FRT Index (standardized)') +
+    theme_bw()
+dev.off()
 
 # --------------------------------------------------- #
 #### Plot difficulty parameter ####

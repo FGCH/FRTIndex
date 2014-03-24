@@ -4,20 +4,20 @@
 # 24 March 2014
 ############
 
+# --------------------------------------------------- #
+#### Directories ####
+# Set working directory
+WDir <- '/git_repositories/FRTIndex/'
+setwd(WDir)
+
+# --------------------------------------------------- #
 # Load packages and functions
 library(stringr)
 library(DataCombine)
 library(countrycode)
 
 # Load ggs_summary function
-SumURL = 'https://gist.githubusercontent.com/christophergandrud/9737980/raw/d1481026e8480fb28cbec4cd938bb1b3eb6f2625/ggs_summary.R'
-devtools::source_url(SumURL)
-
-# --------------------------------------------------- #
-#### Directories ####
-# Set working directory
-WDir <- '/git_repositories/FRTIndex/'
-setwd(WDir)
+source('source/miscFunctions/ggs_summary.R')
 
 # --------------------------------------------------- #
 #### Load estimates ####
@@ -39,7 +39,7 @@ Indicators$ID <- 1:nrow(Indicators)
 # --------------------------------------------------- #
 #### Build identifiers ####
 # Create country/year/difficulty/discrimination number identifiers
-Countries$countrynumMod <- paste0('transparency\\[', 
+Countries$countrynumMod <- paste0('transparency\\[',
                                   Countries$countrynum, '$')
 
 # Create year identifiers
@@ -61,14 +61,14 @@ names(ParamSplit) <- c('country', 'year')
 ParamSplit$ID <- 1:nrow(ParamSplit) # Add merge ID
 
 # Clean country names
-ParamSplit <- FindReplace(ParamSplit, Var = 'country', 
-                          replaceData = Countries, 
+ParamSplit <- FindReplace(ParamSplit, Var = 'country',
+                          replaceData = Countries,
                           from = 'countrynumMod',
                           to = 'country', exact = FALSE)
 
 # Clean years
-ParamSplit <- FindReplace(ParamSplit, Var = 'year', 
-                          replaceData = Years, 
+ParamSplit <- FindReplace(ParamSplit, Var = 'year',
+                          replaceData = Years,
                           from = 'yearnumMod',
                           to = 'year', exact = FALSE)
 
@@ -80,14 +80,14 @@ FRT <- FRT[, -1] # Drop Parameter variable
 FRT$ID <- 1:nrow(FRT) # Add merge ID
 
 # Merge with country-year names
-FRT <- merge(ParamSplit, FRT, by = 'ID') 
+FRT <- merge(ParamSplit, FRT, by = 'ID')
 
 # Clean final data
 FRT <- FRT[, -1]
 FRT <- FRT[order(FRT$country, FRT$year), ]
 
 FRT <- MoveFront(FRT, c('country', 'iso2c'))
-names(FRT) <- c('country', 'iso2c', 'year', 'lower_95', 'lower_90', 'median', 
+names(FRT) <- c('country', 'iso2c', 'year', 'lower_95', 'lower_90', 'median',
                'upper_90', 'upper_95')
 
 # Save output
