@@ -1,15 +1,13 @@
 Financial Regulatory Transparency Index
 ========
 
-Financial Regulatory Transparency (FRT) Index, as well as documentation and source code to create the Index.
-
 **Version:** 0.1
 
 **Maintainer:** [Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
 
 Funding generously provided by the [Deutsche Forschungsgemeinschaft](http://www.dfg.de/en/).
 
-**This is a work in progress. Only Beta Release.**
+**Work In Progress**
 
 ---
 
@@ -17,7 +15,7 @@ Funding generously provided by the [Deutsche Forschungsgemeinschaft](http://www.
 
 For financial supervision to be **effective**, regulators need have accurate information about financial sector activities. For the public to be able to hold supervisors **accountable** they need access to the information financial supervisors have about the health of the banking system in order to judge the quality of regulators' actions. 
 
-We are developing a **Financial Regulatory Transparency Index**. The new Index we make it possible to compare the willingness of governments to credibly reveal the structure of their financial systems and regulatory quality, so that they can be scrutinized by market participants and citizens.
+We are developing a **Financial Regulatory Transparency Index**. The new Index we make it possible to compare the willingness of governments to credibly reveal the structure of their financial systems and their regulatory quality, so that they can be scrutinized by market participants and citizens.
 
 ## The FRT Index
 
@@ -44,7 +42,7 @@ The file `FRTIndex_v0_1.csv` contains the following variables:
 
 ## Download into R
 
-To download the Index directly into R use the [repmis](http://cran.r-project.org/web/packages/repmis/index.html) package:
+To download the Index directly into R as a data frame use the [repmis](http://cran.r-project.org/web/packages/repmis/index.html) package:
 
 ```{S}
 URL <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex_v0_1.csv'
