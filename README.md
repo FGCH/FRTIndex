@@ -18,7 +18,7 @@ Funding generously provided by the [Deutsche Forschungsgemeinschaft](http://www.
 
 The current draft version of the index is located in the *IndexData* directory. The current version is in a CSV formatted file called: [FRTIndex_v0_1.csv](https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex_v0_1.csv).
 
-It covers the **60 countries** classified by the World Bank as '**High Income**' and the years **1998 through 2011**.
+It covers the **60 countries** classified by the World Bank as '**High Income**' for the years **1998 through 2011**.
 
 #### FRT Index Scores for 2011
 
@@ -53,7 +53,7 @@ The FRT Index is created using a [Bayesian Item Response Theory](http://en.wikip
 
 A full write up of our model is in the works. The most recent (incomplete) draft is available for download as a [PDF](https://github.com/FGCH/FRTIndex/blob/master/paper/FRTIndexPaper.pdf?raw=true).
 
-The estimation model is based on:
+Our estimation model is based on:
 
 > Hollyer, James R., B. Peter Rosendorff, and James Raymond Vreeland. 2014. "Replication data for: Measuring Transparency". 
 [http://dx.doi.org/10.7910/DVN/24274](http://dx.doi.org/10.7910/DVN/24274)

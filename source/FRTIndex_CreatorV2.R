@@ -43,7 +43,6 @@ Droppers <- c("iso3c", "region",  "capital", "longitude", "latitude",
               "income", "lending")
 BaseSub <- BaseSub[, !(names(BaseSub) %in% Droppers)]
 
-
 # --------------------------------------------------- #
 #### Create missingness indicators ####
 KeeperLength <- length(Indicators)
@@ -57,6 +56,10 @@ for (i in IndSub){
   temp <- paste0('Rep_', i)
   VarVec <- append(VarVec, temp)
 }
+
+# --------------------------------------------------- #
+#### Find the proportion of itesm reported ####
+
 
 # --------------------------------------------------- #
 #### Data description ####
