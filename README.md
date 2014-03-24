@@ -39,7 +39,7 @@ To download the Index directly into R use:
 ```{S}
 URL <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex_v0_1.csv'
 
-rempis::source_data(URL)
+frt_index <- repmis::source_data(URL)
 ```
 
 ## Model
