@@ -42,7 +42,7 @@
 %%%%%%%%% Abstract
 \begin{abstract}
 \noindent \emph{Early working draft. Comments welcome.} \\
-For financial supervision to be effective, regulators need have accurate information about financial sector activities. For the public to be able to hold supervisors accountable they need access to the information financial supervisors have about the health of the banking system. In this paper we use Bayesian item response theory to create a new global and comparable Financial Regulatory Transparency (FRT) Index. The Index currently covers the years 1998 through 2011. It captures high income countries', those most likely to have developed financial systems, reporting to the World Bank's Global Financial Development Database. The Index is a distinct indicator of governments' willingness to gather and make information about their financial systems and regulators' actions publicly available. 
+    For financial supervision to be effective, regulators need have accurate information about financial sector activities. For the public to be able to hold supervisors accountable they need access to the information financial supervisors have about the health of the banking system in order to judge the quality of their actions. In this paper we use Bayesian item response theory to create a new global and comparable Financial Regulatory Transparency (FRT) Index. The Index currently covers the years 1998 through 2011. It captures high income countries'--those most likely to have developed financial systems--reporting to the World Bank's Global Financial Development Database. The Index is a distinct indicator of governments' willingness to gather and make publicly available information about their financial systems and their regulators' actions. In this paper we establish the value added of the FRT Index and  
 \end{abstract}
 
 In previous research we have found that even within the relatively homogeneous European Union with supranational authorities tasked with gathering and reporting aggregate financial data from member states there is considerable variation in what is actually reported \cite[see][]{Gandrud2014a}. We currently lack a comparable cross-national way of measuring country's level of financial regulatory transparency. In this paper we use a Bayesian Item Response Theory (IRT) approach
@@ -74,7 +74,7 @@ Using these criteria our model has 60 countries, 21 items, and 12 years (1998-20
 As in \cite{Hollyer2014} we let $y_{j,c,t} \in \{0,\; 1\}$ indicate a variable that is 1 when a country $c$ reports a GFDD variable $j$ in year$t$. It is 0 otherwise. We then estimate the model:
 
 \begin{equation}
-    \mathrm{Pr}(y_{j,c,t} = 1|transparency_{c,t} = \mathrm{logit}(\delta_{j} + \beta_{j}transparency_{c,t})
+    \mathrm{Pr}(y_{j,c,t} = 1|transparency_{c,t}) = \mathrm{logit}(\delta_{j} + \beta_{j}transparency_{c,t})
 \end{equation}
 
 The following parameters are estimated in the model:
@@ -214,7 +214,17 @@ To demonstrate the potential usefulness of the FRT Index we examine a number of 
 [ASSOCIATION WITH ECONOMIC BUREAUCRATIC CAPACITY]
 [Z-SCORE (PROB. OF BANK DEFAULT) AS DEPENDENT VARIABLE]
 
+\begin{figure}
+    \caption{Initial Associations}
+    \label{basicAssoc}
+    \begin{center}
+        \includegraphics[scale=0.5]{figures/Associations1}
+    \end{center}
+\end{figure}
+
 \section*{Conclusion}
+
+In this paper we have introduced a new Financial Regulatory Transparency Index.
 
 \bibliographystyle{apsr}
 \bibliography{FRTIndex}
