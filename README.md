@@ -51,4 +51,4 @@ Hollyer, James R. ; Rosendorff, B. Peter; Vreeland, James Raymond, 2014,
 "Replication data for: Measuring Transparency", 
 [http://dx.doi.org/10.7910/DVN/24274](http://dx.doi.org/10.7910/DVN/24274)
 
-A full right up of our model is in the works. The most recent draft is available for download as a [PDF](https://github.com/FGCH/FRTIndex/blob/master/paper/FRTIndexPaper.pdf).
+A full right up of our model is in the works. The most recent draft is available for download as a [PDF](https://github.com/FGCH/FRTIndex/blob/master/paper/FRTIndexPaper.pdf?raw=true).
