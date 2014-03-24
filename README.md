@@ -1,11 +1,15 @@
 Financial Regulatory Transparency Index
 ========
 
-Financial Regulatory Transparency (FRT) Index as well as documentation and source code to create the Index
+Financial Regulatory Transparency (FRT) Index, as well as documentation and source code to create the Index.
 
 Version 0.1
 
-**This is a work in progress.**
+[Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
+
+Funding generously provided by the [Deutsche Forschungsgemeinschaft](http://www.dfg.de/en/).
+
+**This is a work in progress. Only Beta Release.**
 
 ---
 
@@ -14,7 +18,7 @@ Version 0.1
 
 The current draft version of the index is located in the *IndexData* directory. The current version is in a CSV formatted file called: [FRTIndex_v0_1.csv](https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex_v0_1.csv).
 
-It covers the **60 countries** classified by the World Bank as 'High Income' and the years **1998 through 2011**.
+It covers the **60 countries** classified by the World Bank as '**High Income**' and the years **1998 through 2011**.
 
 #### FRT Index Scores for 2011
 
@@ -51,4 +55,10 @@ Hollyer, James R. ; Rosendorff, B. Peter; Vreeland, James Raymond, 2014,
 "Replication data for: Measuring Transparency", 
 [http://dx.doi.org/10.7910/DVN/24274](http://dx.doi.org/10.7910/DVN/24274)
 
-A full right up of our model is in the works. The most recent draft is available for download as a [PDF](https://github.com/FGCH/FRTIndex/blob/master/paper/FRTIndexPaper.pdf?raw=true).
+A full write up of our model is in the works. The most recent draft is available for download as a [PDF](https://github.com/FGCH/FRTIndex/blob/master/paper/FRTIndexPaper.pdf?raw=true).
+
+---
+
+![](http://fgch.github.io/amc-site/images/dfg.png) 
+
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>

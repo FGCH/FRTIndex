@@ -91,3 +91,16 @@ names(FRT) <- c('country', 'iso2c', 'year', 'lower_95', 'lower_90', 'median',
 
 # Save output
 write.csv(FRT, file = 'IndexData/FRTIndex_v0_1.csv', row.names = FALSE)
+
+# --------------------------------------------------- #
+#### Difficulty Parameters ####
+Diff <- ggs_summary(Set, family = 'beta.*\\[1\\].*')
+Diff$Parameter <- as.character(Diff$Parameter)
+
+Diff <- FindReplace(Diff, Var = 'Parameter', replaceData = Indicators,
+                    from = 'difficultyID', to = 'Indicator.Name',
+                    exact = FALSE)
+
+names(Diff) <- c('Parameter', 'lower_95', 'lower_90', 'median', 'upper_90',
+                 'upper_95')
+
