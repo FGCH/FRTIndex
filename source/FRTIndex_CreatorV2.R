@@ -1,7 +1,7 @@
 ##############
 # Financial Regulatory Transparency Index V2
 # Christopher Gandrud
-# 24 March 2014
+# 25 March 2014
 #############
 
 ## Inspired by:
@@ -83,31 +83,35 @@ write.csv(CountryKey, row.names = FALSE,
 write.csv(YearKey, row.names = FALSE,
           file = paste0(GitDir, 'source/ParameterDescript/YearNumbers.csv'))
 
-if (getwd() == "/git_repositories/FRTIndex/source"){
-  IndicatorKey <- read.csv(paste0(GitDir, 'IndicatorDescript/IndicatorDescription.csv'),
-                    encoding = 'latin1', stringsAsFactors = FALSE)
-  IndicatorKey <- subset(IndicatorKey, SeriesCode %in% IndSub)
-  write.csv(IndicatorKey, file = read.csv(paste0(GitDir,
-            'IndicatorDescript/IncludedIndicators.csv'),
-            row.names = FALSE)
+# Create included GFDD indicator .tex table
+IndicatorKey <- read.csv(paste0(GitDir,
+                  'source/IndicatorDescript/IndicatorDescription.csv'),
+                  encoding = 'latin1', stringsAsFactors = FALSE)
+IndicatorKey <- subset(IndicatorKey, SeriesCode %in% IndSub)
+write.csv(IndicatorKey, file = read.csv(paste0(GitDir,
+          'source/IndicatorDescript/IncludedIndicators.csv'),
+          row.names = FALSE)
 
-  # Clean up for latex version
-  IndicatorKey$Source <- gsub(pattern = 'International Financial Statistics \\(IFS\\), International Monetary Fund \\(IMF\\)',
-                             replacement = 'IFS/IMF', x = IndicatorKey$Source)
-  IndicatorKey$Source <- gsub(pattern = 'Financial Soundness Indicators Database \\(fsi\\.imf\\.org\\), International Monetary Fund \\(IMF\\)',
-                              replacement = 'IFSI/IMF', x = IndicatorKey$Source)
-  IndicatorKey$Source <- gsub(pattern = 'World Development Indicators \\(WDI\\), World Bank',
-                              replacement = 'World Bank', x = IndicatorKey$Source)
-  IndicatorKey$Source <- gsub(pattern = 'World Bank - Non banking financial database',
-                              replacement = 'World Bank', x = IndicatorKey$Source)
-  IndicatorKey$Source <- gsub(pattern = 'Nonbanking financial database, World Bank',
-                              replacement = 'World Bank', x = IndicatorKey$Source)
-  IndicatorKey$Periodicity <- gsub('Annual: ', '', IndicatorKey$Periodicity)
+# Clean up for latex version
+IndicatorKey$Source <- gsub(pattern = 'International Financial Statistics \\(IFS\\), International Monetary Fund \\(IMF\\)',
+                           replacement = 'IFS/IMF', x = IndicatorKey$Source)
+IndicatorKey$Source <- gsub(pattern = 'Financial Soundness Indicators Database \\(fsi\\.imf\\.org\\), International Monetary Fund \\(IMF\\)',
+                            replacement = 'IFSI/IMF', x = IndicatorKey$Source)
+IndicatorKey$Source <- gsub(pattern = 'World Development Indicators \\(WDI\\), World Bank',
+                            replacement = 'World Bank', x = IndicatorKey$Source)
+IndicatorKey$Source <- gsub(pattern = 'World Bank - Non banking financial database',
+                            replacement = 'World Bank', x = IndicatorKey$Source)
+IndicatorKey$Source <- gsub(pattern = 'Nonbanking financial database, World Bank',
+                            replacement = 'World Bank', x = IndicatorKey$Source)
+IndicatorKey$Periodicity <- gsub('Annual: ', '', IndicatorKey$Periodicity)
 
-  print(xtable(IndicatorKey), size = 'scriptsize',
-      include.rownames = FALSE, floating = FALSE,
-      file = read.csv(paste0(GitDir, 'paper/tables/IndicatorDescript.tex'))
+if ('X' %in% names(IndicatorKey)){
+    IndicatorKey <- IndicatorKey[, -ncol(IndicatorKey)]
 }
+
+print(xtable(IndicatorKey), size = 'scriptsize',
+    include.rownames = FALSE, floating = FALSE,
+    file = paste0(GitDir, 'paper/tables/IndicatorDescript.tex'))
 
 # --------------------------------------------------- #
 #### Clean up ####
