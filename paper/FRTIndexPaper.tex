@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Motivation and construction of the FRT Index
 % Christopher Gandrud
-% 25 March 2014
+% 27 March 2014
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[a4paper]{article}
@@ -42,15 +42,14 @@
 %%%%%%%%% Abstract
 \begin{abstract}
 \noindent \emph{Early and incomplete working draft. Comments welcome.} \\
-    For financial supervision to be effective, regulators need have accurate information about financial sector activities. For the public to be able to hold supervisors accountable they need access to the information financial supervisors have about the health of the banking system in order to judge the quality of regulators' actions. In this paper we use Bayesian item response theory to create a new global and comparable Financial Regulatory Transparency (FRT) Index. The Index currently covers the years 1998 through 2011. It captures high income countries'--those most likely to have developed financial systems--reporting to the World Bank's Global Financial Development Database. The Index is a distinct indicator of governments' willingness to gather and make publicly available information about their financial systems and their regulators' actions. In this paper we establish the value added of the FRT Index as a unique and objective measure of financial supervisory transparency. We also begin to explore how financial regulators transparency is related to regulatory quality and financial system stability.  
+    For financial supervision to be effective, regulators need to have accurate information about financial sector activities. For the public to be able to hold supervisors accountable they need access to the information financial supervisors have about the health of the banking system. This makes it possible for them to judge the quality of regulators' actions. In this paper we use Bayesian Item Response Theory to create a new global and comparable Financial Regulatory Transparency (FRT) Index. The Index currently covers the years 1998 through 2011. It captures high income countries'--those most likely to have developed financial systems--reporting to the World Bank's Global Financial Development Database. The Index is a distinct indicator of governments' willingness to gather and make publicly available information about their financial systems. In addition to describing the motivation behind and creation of the Index, we establish the value added of the FRT Index as a unique and objective measure of financial supervisory transparency. We also begin to explore how financial regulators transparency is related to regulatory quality and financial system stability.  
 \end{abstract}
 
-In previous research we have found that even within the relatively homogeneous European Union with supranational authorities tasked with gathering and reporting aggregate financial data from member states there is considerable variation in what is actually reported \cite[see][]{Gandrud2014a}. We currently lack a comparable cross-national way of measuring country's level of financial regulatory transparency. In this paper we use a Bayesian Item Response Theory (IRT) approach recently employed by \cite{Hollyer2014} to develop a new Financial Regulatory Transparency (FRT) Index. 
+In previous research a number of us have found that even within the relatively homogeneous European Union where there are supranational authorities tasked with gathering and reporting aggregate financial data from member states that there is considerable variation in what is actually reported \cite[see][]{Gandrud2014a}. We currently lack a comparable cross-national way of measuring country's level of financial regulatory transparency. In this paper we use a Bayesian Item Response Theory (IRT) approach recently employed by \cite{Hollyer2014} to develop a new Financial Regulatory Transparency (FRT) Index. 
 
-The Index includes 60 high income countries from 1998 through 2011. It measures these countries reporting of financial system items to the World Bank's Global Financial Development Database (GFDD). The Index is a unique indicator of countries' willingness to credibly reveal--the data has to pass minimal World Bank and International Monetary Fund quality checks--the structure of their financial system and their regulatory quality, so that they can be scrutinized by market participants and citizens.
+The Index includes 60 high income countries from 1998 through 2011. It measures these countries' reporting of financial system items to the World Bank's Global Financial Development Database (GFDD). The Index is a unique indicator of countries' willingness to credibly--the data has to pass minimal World Bank and International Monetary Fund quality checks--reveal the structure of their financial system and their regulatory quality, so that they can be scrutinized by market participants and citizens.
 
-In this paper we first discuss why government transparency has been argued and found to be important for good governance and also how previous researchers have attempted to measure it. We then discuss the construction of the FRT Index. In the following section we describe a selection notable features of the Index and demonstrate its `value added' over less computationally intensive methods. Finally, we make preliminary explorations of associates between the Index and measures of financial regulatory quality and financial system stability.  
-
+In this paper we first discuss why government transparency has been argued for and found to be important for good governance and also how previous researchers have attempted to measure it. We then discuss the construction of the FRT Index. In the following section we describe a selection of the Index's notable features and demonstrate its `value added' over less computationally intensive methods. Finally, we make preliminary explorations of associates between the Index and measures of financial regulatory quality and financial system stability. These investigations motivate future research.  
 
 \section{Measuring transparency}
 
@@ -58,11 +57,13 @@ In this paper we first discuss why government transparency has been argued and f
 
 \section{Creating the FRT Index}
 
-We treat financial regulatory transparency as an unobserved latent variable that effectively summarizes countries likelihood of reporting yearly data that is included in the World Bank's Global Financial Development Database first created by \cite{Cihak2012}.\footnote{Access to the most updated version of the data set is available through \url{http://data.worldbank.org/data-catalog/global-financial-development} Accessed February 2014.}
+We treat financial regulatory transparency as an unobserved latent variable that effectively summarizes countries likelihood of reporting yearly data that is included in the World Bank's Global Financial Development Database first created by \cite{Cihak2012}.\footnote{Access to the most updated version of the data set is available through \url{http://data.worldbank.org/data-catalog/global-financial-development}. Accessed February 2014.}
 
 \subsection{Included indicators}
 
-To measure financial supervisory transparency we first gathered data on whether or not governments reported data on a subset of indicators that are included in the World Bank's Global Financial Development Database. We followed Hollyer et al.`s \citeyearpar{Hollyer2014} criteria for inclusion of variables and countries. First, we only include indicators that are reported by at least one country for each year in the period 1998-2011. This gave us the greatest coverage of indicators that are comparable across countries. Second, we excluded all indicators that were explicitly gathered for only a subset of countries. As such we avoided including data where the primary source was the Bank for International Settlements. Third, we did not include any indicator that was primarily from a non-governmental source. This included both indicators from World Bank sponsored surveys, such as the Global Financial Inclusion Survey and the Enterprise Survey. It also included data primarily derived from sources such as Swiss Re's Sigma Reports, Standard \& Poor, Bankscope, and Bloomberg. Fourth, we did not include variables that are linear combinations of other variables. Fifth, we did not include variables that were simply references to the same quantity in different units. Sixth, we aim to focus on countries that have relatively highly developed banking systems. As such we include only countries and jurisdictions that the World Bank classifies as 'high income'.\footnote{We include both OECD and non-OECD high income countries.} Countries with levels of income this low likely do not have financial systems sophisticated enough to have the quantities reported in the indicators. 
+To measure financial supervisory transparency we first gather data on whether or not governments reported data on a subset of indicators that are included in the World Bank's GFDD. We follow Hollyer et al.`s \citeyearpar{Hollyer2014} criteria for inclusion of items and country-years. First, we only include indicators that are reported by at least one country for each year in the period 1998-2011. This gave us the greatest coverage of indicators that are comparable across countries. Second, we exclude all indicators that were explicitly gathered for only a subset of countries. As such we avoid including data where the primary source is the Bank for International Settlements. Third, we do not include any indicator that is from a non-governmental source. This included both indicators from World Bank sponsored surveys, such as the Global Financial Inclusion Survey and the Enterprise Survey. This also includes data primarily derived from sources such as Swiss Re's Sigma Reports, Standard \& Poor's, Bankscope, and Bloomberg. Fourth, we do not include variables that are linear combinations of other variables. Fifth, we do not include variables that are simply references to the same quantity in different units. 
+
+Additionally for the FRT Index, sixth, we aim to focus on countries that have relatively highly developed banking systems. As such we include only countries and jurisdictions that the World Bank classifies as `high income'.\footnote{We include both OECD and non-OECD high income countries.} Countries with lower levels of income likely do not have financial systems sophisticated enough to have a number of the quantities reported in the items. 
 
 Using these criteria our model has 60 countries, 21 items, and 12 years (1998-2011). Table~\ref{IndTable} shows the list of indicator items and descriptions.  
 
@@ -81,13 +82,13 @@ Using these criteria our model has 60 countries, 21 items, and 12 years (1998-20
 
 \subsection{The model}
 
-As in \cite{Hollyer2014} we let $y_{j,c,t} \in \{0,\; 1\}$ indicate a variable that is 1 when a country $c$ reports a GFDD variable $j$ in year$t$. It is 0 otherwise. We then estimate the model:
+As in \cite{Hollyer2014} we let $y_{j,c,t} \in \{0,\; 1\}$ indicate a variable that is 1 when a country $c$ reports a GFDD variable $j$ in year $t$. It is 0 otherwise. We then estimate the model:
 
 \begin{equation}
     \mathrm{Pr}(y_{j,c,t} = 1|transparency_{c,t}) = \mathrm{logit}(\delta_{j} + \beta_{j}transparency_{c,t})
 \end{equation}
 
-The following parameters are estimated in the model:
+\noindent The following parameters are estimated in the model:
 
 \begin{itemize}
     \item $\delta_{j}$ is the difficulty parameter of item $j$,
@@ -97,7 +98,7 @@ The following parameters are estimated in the model:
 
 \noindent $\delta_{j}$ indicates on average the degree to which countries report indicator $j$ in the GFDD over the entire time span. $\beta_{j}$ indicates how well reporting item $j$ predicts reporting other items. 
 
-As \cite{Hollyer2014} note, simply taking the fraction of items a country reports in a given year as an indicator of transparency would be equivalent to assuming that $\delta_{j}$ and $\beta_{j}$ are constant across all variables. However, some items are 'harder' to report than others as they reveal information that regulators may find to be more sensitive for whatever reason. The IRT approach here allows us to not have to make this assumption. Instead we directly estimate the degree to which countries find it `difficult' to report items and how reporting an item (or not) is related to non-reporting of other items.
+As \cite{Hollyer2014} note, simply taking the fraction of items a country reports in a given year as an indicator of transparency would be equivalent to assuming that $\delta_{j}$ and $\beta_{j}$ are constant across all variables. However, some items are `harder' to report than others as they reveal information that regulators may find difficult to gather without being more intrusive or, if they do gather it, they may consider it more sensitive for whatever reason. The IRT approach allows us to relax the equivalence assumption. Instead we directly estimate the degree to which countries find it `difficult' to report items and how reporting an item (or not) is related to non-reporting of other items.
 
 In order to fix the scale and location of the the FRT Index we followed \cite{Hollyer2014} by subtracting it by the mean and dividing by the standard deviation of the first year of the data set (1998) at each iteration. 
 
