@@ -50,7 +50,7 @@ URL <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTInde
 frt_index <- repmis::source_data(URL)
 ```
 
-## Model
+## Estimation Model
 
 The FRT Index is created using a [Bayesian Item Response Theory](http://en.wikipedia.org/wiki/Item_response_theory) model of high income countries's reporting of [financial industry indicators](https://github.com/FGCH/FRTIndex/blob/master/source/IndicatorDescript/IncludedIndicators.csv) to the World Bank's [Global Financial Development Database](http://data.worldbank.org/data-catalog/global-financial-development).
 
