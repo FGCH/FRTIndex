@@ -42,7 +42,7 @@ The file `FRTIndex_v0_1.csv` contains the following variables:
 
 ## Download into R
 
-To download the Index directly into R as a data frame use the [repmis](http://cran.r-project.org/web/packages/repmis/index.html) package:
+To download the **working version** of the Index directly into [R](http://www.r-project.org/) as a data frame use the [repmis](http://cran.r-project.org/web/packages/repmis/index.html) package:
 
 ```{S}
 URL <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex_v0_1.csv'
