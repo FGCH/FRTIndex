@@ -36,7 +36,7 @@ Sim1 <- SmoothSimulations(SimIn = Sim1, xaxis = 'median', group = 'Econ_Lag')
 Sim1$Econ_Lag <- factor(Sim1$Econ_Lag, labels = c('low', 'high'))
 
 ggplot(Sim1, aes(FRT_Lag, QI, colour = Econ_Lag)) +
-    geom_line(aes(group = interaction(ID, eEcon_Lag)), alpha = 0.1) +
+    geom_line(aes(group = interaction(ID, Econ_Lag)), alpha = 0.1) +
     scale_color_manual(values = wes.palette(2, "Royal1"), name = 'Economic\nInst. Qual.') +
     scale_alpha(guide = FALSE) +
     guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2))) +
