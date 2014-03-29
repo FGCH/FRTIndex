@@ -28,15 +28,15 @@ M1 <- zelig(ZScore ~ FRT_Lag*Econ_Lag,
 scenarios <- expand.grid(FRT_Lag = seq(from = -1, to = 5, by = 0.1) ,
                          Econ_Lag = c(0.25, 0.9))
 
-Sim1 <- simZelig(M1, scen = scenarios, secondVar = 'economic_abs')
+# Sim1 <- simZelig(M1, scen = scenarios, secondVar = 'economic_abs')
 Sim1 <- simZelig(M1, scen = scenarios)
 
-Sim1 <- SmoothSimulations(SimIn = Sim1, xaxis = 'median', group = 'economic_abs')
+Sim1 <- SmoothSimulations(SimIn = Sim1, xaxis = 'median', group = 'Econ_Lag')
 
-Sim1$economic_abs <- factor(Sim1$economic_abs, labels = c('low', 'high'))
+Sim1$Econ_Lag <- factor(Sim1$Econ_Lag, labels = c('low', 'high'))
 
-ggplot(Sim1, aes(median, QI, colour = economic_abs)) +
-    geom_line(aes(group = interaction(ID, economic_abs)), alpha = 0.1) +
+ggplot(Sim1, aes(FRT_Lag, QI, colour = Econ_Lag)) +
+    geom_line(aes(group = interaction(ID, eEcon_Lag)), alpha = 0.1) +
     scale_color_manual(values = wes.palette(2, "Royal1"), name = 'Economic\nInst. Qual.') +
     scale_alpha(guide = FALSE) +
     guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2))) +
