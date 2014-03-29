@@ -10,6 +10,12 @@ simZelig <- function(obj, scen = NULL, secondVar = NULL, num = 1000, sig = 0.95)
     if (class(scen) != 'data.frame') stop('scen needs to be a data frame',
                                           call. = FALSE)
 
+    CoefNames <- names(coef(obj))
+    if (any(!(names(scen) %in% CoefNames))){
+        stop('At least one variable name was not found in the estimation model.',
+             call. = FALSE)
+    }
+
     # Make sure sig is between 0 and 1.
     if (sig <= 0 | sig > 1){
         stop("sig must be greater than 0 and not greater than 1.")

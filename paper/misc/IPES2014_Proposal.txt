@@ -1,0 +1,10 @@
+
+
+
+# Signaling to International Capital Markets: Financial regulatory transparency, capital flows, and banking system stability
+
+Mark Copelovitch, Christopher Gandrud, and Mark Hallerberg 
+
+Why do countries release data on their financial systems to international organizations such as the IMF and World Bank? What consequences do these releases have for the stability of their financial systems? To answer these questions we use Bayesian Item Response Theory to create a new, global, and comparable Financial Regulatory Transparency (FRT) Index. The Index currently covers the years 1998 through 2011. It captures 60 high income countries'--those most likely to have developed financial systems--reporting to the World Bank's Global Financial Development Database (GFDD). The Index is a distinct indicator of governments' willingness to gather and make available to international investors minimally credible information about their financial systems. We explore why countries release data to the GFDD such that they have higher transparency scores and what consequences higher transparency has for the solvency of their banks. We find that 
+
+
