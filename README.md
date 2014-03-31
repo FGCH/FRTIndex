@@ -1,7 +1,7 @@
 Financial Regulatory Transparency Index
 ========
 
-**Version:** 0.1
+**Version:** 0.2
 
 **Maintainer:** [Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
 
