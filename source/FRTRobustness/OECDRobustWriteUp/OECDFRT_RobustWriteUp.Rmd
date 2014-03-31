@@ -1,0 +1,20 @@
+# Financial Regulatory Transparency Index Robustness Check: Estimating with only OECD countries
+
+```{r include=FALSE}
+    # Set options
+    opts_knit$set(fig.align='center')
+
+    # Load parameter estimates extracted using source/FRTRobustness/ExtractPointEstimatesOECD.R
+    RootD <- '/git_repositories/FRTIndex/'
+    FileP <- paste0(RootD, 'IndexData/alternate/FRTIndex_OECDv0_2.csv')
+    OECD <- read.csv(FileP, stringsAsFactors = FALSE)
+```
+
+
+To examine the robustness of the Financial Regulatory Transparency Index estimates we estimated the FRT with only OECD member states. Perhaps outliers countries are driving the estimates. For example, off-shore financial havens have very low transparency and report very few items. A number of countries are classified by the World Bank as 'high income' due to having high oil revenues, but small populations, such as Equatorial Guinea and Oman. These countries have could have low financial sector administrative capacity and less developed financial sectors generally. Their inclusion may be bias the FRT, such that it captures a lack of administrative capacity or a lack of financial sector development, rather than transparency. Estimating the FRT Index with only OECD countries allows us to examine if the inclusion of extremely nontransparent countries or countries with low administrative capacity and/or less developed financial sectors creates these biases.
+
+The following figures show the FRT Index estimates from a model using only OECD members for the years 1998, 2007, and 2011. 
+
+### Figure 1: Financial Regulatory Transparency Index in 1998 (OECD robustness check)
+
+```
