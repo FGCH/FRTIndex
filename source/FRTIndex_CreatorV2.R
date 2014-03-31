@@ -60,7 +60,8 @@ for (i in IndSub){
 #### Find the proportion of items reported ####
 PropRepor <- PropReported(BaseSub)
 PropRepor <- PropRepor[order(PropRepor$country, PropRepor$year), ]
-write.csv(PropRepor, file = paste0(GitDir, 'IndexData/alternate/PropReported.csv'))
+write.csv(PropRepor, file = paste0(GitDir, 
+          'IndexData/alternate/PropReported.csv'))
 
 # --------------------------------------------------- #
 #### Data description ####
