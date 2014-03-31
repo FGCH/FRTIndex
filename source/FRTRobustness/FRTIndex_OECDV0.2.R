@@ -13,12 +13,12 @@
 # --------------------------------------------------- #
 setwd('~/FRTOutFiles/')
 GitDir <- '/git_repositories/FRTIndex/'
+GitDir <- '/home/cjg/FRTIndex/'
 
 # Load packages
 library(WDI)
 library(DataCombine)
 library(rjags)
-library(xtable)
 library(ggmcmc)
 source(paste0(GitDir, 'source/miscFunctions/PropReported.R'))
 
@@ -35,8 +35,8 @@ Indicators <- c('GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04',
 # Unable to download 'GFDD.DM.011', 'GFDD.OI.14'
 Base <- WDI(indicator = Indicators, start = 1998, end = 2011, extra = TRUE)
 
-# Keep countries with 'High income' (OECD and non-OECD classification)
-BaseSub <- grepl.sub(data = Base, Var = 'income', patterns = 'High income')
+# Keep countries with 'High income' (OECD) classification
+BaseSub <- grepl.sub(data = Base, Var = 'income', patterns = 'High income: OECD')
 Droppers <- c("iso3c", "region",  "capital", "longitude", "latitude",
               "income", "lending")
 BaseSub <- BaseSub[, !(names(BaseSub) %in% Droppers)]
@@ -60,7 +60,7 @@ for (i in IndSub){
 PropRepor <- PropReported(BaseSub)
 PropRepor <- PropRepor[order(PropRepor$country, PropRepor$year), ]
 write.csv(PropRepor, file = paste0(GitDir, 
-          'IndexData/alternate/PropReported.csv'))
+          'IndexData/alternate/PropReportedOECD.csv'))
 
 # --------------------------------------------------- #
 #### Data description ####
@@ -79,18 +79,9 @@ IndKey <- data.frame(IndID = 1:length(Indicators), Indicator = Indicators)
 
 # Country name/number list
 write.csv(CountryKey, row.names = FALSE,
-  file = paste0(GitDir, 'source/ParameterDescript/CountryNumbers.csv'))
+  file = paste0(GitDir, 'source/ParameterDescript/CountryNumbersOECD.csv'))
 write.csv(YearKey, row.names = FALSE,
-          file = paste0(GitDir, 'source/ParameterDescript/YearNumbers.csv'))
-
-# Create included GFDD indicator .tex table
-IndicatorKey <- read.csv(paste0(GitDir,
-                  'source/IndicatorDescript/IndicatorDescription.csv'),
-                  encoding = 'latin1', stringsAsFactors = FALSE)
-IndicatorKey <- subset(IndicatorKey, SeriesCode %in% IndSub)
-write.csv(IndicatorKey, file = read.csv(paste0(GitDir,
-          'source/IndicatorDescript/IncludedIndicators.csv'),
-          row.names = FALSE)
+          file = paste0(GitDir, 'source/ParameterDescript/YearNumbersOECD.csv'))
 
 # --------------------------------------------------- #
 #### Clean up ####
@@ -215,7 +206,7 @@ system.time(
   EstOECD <- jags.model('OECDModel_V0.2.bug', data = DataList,
                    n.chains = 2, n.adapt = 5000)
 )
-save.image(file = 'workspaceImages/OECDSampOut.RData')
+save.image(file = 'OECDSampOut.RData')
 
 # Draw random samples from the posterior
 system.time(

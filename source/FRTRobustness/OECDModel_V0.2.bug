@@ -1,0 +1,230 @@
+
+model{
+    for (n in 1:434){
+
+x1[n] <- beta1[1] + transparency[countrynum[n], yearnum[n]]*beta1[2]
+x2[n] <- beta2[1] + transparency[countrynum[n], yearnum[n]]*beta2[2]
+x3[n] <- beta3[1] + transparency[countrynum[n], yearnum[n]]*beta3[2]
+x4[n] <- beta4[1] + transparency[countrynum[n], yearnum[n]]*beta4[2]
+x5[n] <- beta5[1] + transparency[countrynum[n], yearnum[n]]*beta5[2]
+x6[n] <- beta6[1] + transparency[countrynum[n], yearnum[n]]*beta6[2]
+x7[n] <- beta7[1] + transparency[countrynum[n], yearnum[n]]*beta7[2]
+x8[n] <- beta8[1] + transparency[countrynum[n], yearnum[n]]*beta8[2]
+x9[n] <- beta9[1] + transparency[countrynum[n], yearnum[n]]*beta9[2]
+x10[n] <- beta10[1] + transparency[countrynum[n], yearnum[n]]*beta10[2]
+x11[n] <- beta11[1] + transparency[countrynum[n], yearnum[n]]*beta11[2]
+x12[n] <- beta12[1] + transparency[countrynum[n], yearnum[n]]*beta12[2]
+x13[n] <- beta13[1] + transparency[countrynum[n], yearnum[n]]*beta13[2]
+x14[n] <- beta14[1] + transparency[countrynum[n], yearnum[n]]*beta14[2]
+x15[n] <- beta15[1] + transparency[countrynum[n], yearnum[n]]*beta15[2]
+x16[n] <- beta16[1] + transparency[countrynum[n], yearnum[n]]*beta16[2]
+x17[n] <- beta17[1] + transparency[countrynum[n], yearnum[n]]*beta17[2]
+x18[n] <- beta18[1] + transparency[countrynum[n], yearnum[n]]*beta18[2]
+x19[n] <- beta19[1] + transparency[countrynum[n], yearnum[n]]*beta19[2]
+x1[n] <- beta1[1] + transparency[countrynum[n], yearnum[n]]*beta1[2]
+x2[n] <- beta2[1] + transparency[countrynum[n], yearnum[n]]*beta2[2]
+x3[n] <- beta3[1] + transparency[countrynum[n], yearnum[n]]*beta3[2]
+x4[n] <- beta4[1] + transparency[countrynum[n], yearnum[n]]*beta4[2]
+x5[n] <- beta5[1] + transparency[countrynum[n], yearnum[n]]*beta5[2]
+x6[n] <- beta6[1] + transparency[countrynum[n], yearnum[n]]*beta6[2]
+x7[n] <- beta7[1] + transparency[countrynum[n], yearnum[n]]*beta7[2]
+x8[n] <- beta8[1] + transparency[countrynum[n], yearnum[n]]*beta8[2]
+x9[n] <- beta9[1] + transparency[countrynum[n], yearnum[n]]*beta9[2]
+x10[n] <- beta10[1] + transparency[countrynum[n], yearnum[n]]*beta10[2]
+x11[n] <- beta11[1] + transparency[countrynum[n], yearnum[n]]*beta11[2]
+x12[n] <- beta12[1] + transparency[countrynum[n], yearnum[n]]*beta12[2]
+x13[n] <- beta13[1] + transparency[countrynum[n], yearnum[n]]*beta13[2]
+x14[n] <- beta14[1] + transparency[countrynum[n], yearnum[n]]*beta14[2]
+x15[n] <- beta15[1] + transparency[countrynum[n], yearnum[n]]*beta15[2]
+x16[n] <- beta16[1] + transparency[countrynum[n], yearnum[n]]*beta16[2]
+x17[n] <- beta17[1] + transparency[countrynum[n], yearnum[n]]*beta17[2]
+x18[n] <- beta18[1] + transparency[countrynum[n], yearnum[n]]*beta18[2]
+x19[n] <- beta19[1] + transparency[countrynum[n], yearnum[n]]*beta19[2]
+
+p1[n] <- 1/(1 + exp(-x1[n]))
+p2[n] <- 1/(1 + exp(-x2[n]))
+p3[n] <- 1/(1 + exp(-x3[n]))
+p4[n] <- 1/(1 + exp(-x4[n]))
+p5[n] <- 1/(1 + exp(-x5[n]))
+p6[n] <- 1/(1 + exp(-x6[n]))
+p7[n] <- 1/(1 + exp(-x7[n]))
+p8[n] <- 1/(1 + exp(-x8[n]))
+p9[n] <- 1/(1 + exp(-x9[n]))
+p10[n] <- 1/(1 + exp(-x10[n]))
+p11[n] <- 1/(1 + exp(-x11[n]))
+p12[n] <- 1/(1 + exp(-x12[n]))
+p13[n] <- 1/(1 + exp(-x13[n]))
+p14[n] <- 1/(1 + exp(-x14[n]))
+p15[n] <- 1/(1 + exp(-x15[n]))
+p16[n] <- 1/(1 + exp(-x16[n]))
+p17[n] <- 1/(1 + exp(-x17[n]))
+p18[n] <- 1/(1 + exp(-x18[n]))
+p19[n] <- 1/(1 + exp(-x19[n]))
+p1[n] <- 1/(1 + exp(-x1[n]))
+p2[n] <- 1/(1 + exp(-x2[n]))
+p3[n] <- 1/(1 + exp(-x3[n]))
+p4[n] <- 1/(1 + exp(-x4[n]))
+p5[n] <- 1/(1 + exp(-x5[n]))
+p6[n] <- 1/(1 + exp(-x6[n]))
+p7[n] <- 1/(1 + exp(-x7[n]))
+p8[n] <- 1/(1 + exp(-x8[n]))
+p9[n] <- 1/(1 + exp(-x9[n]))
+p10[n] <- 1/(1 + exp(-x10[n]))
+p11[n] <- 1/(1 + exp(-x11[n]))
+p12[n] <- 1/(1 + exp(-x12[n]))
+p13[n] <- 1/(1 + exp(-x13[n]))
+p14[n] <- 1/(1 + exp(-x14[n]))
+p15[n] <- 1/(1 + exp(-x15[n]))
+p16[n] <- 1/(1 + exp(-x16[n]))
+p17[n] <- 1/(1 + exp(-x17[n]))
+p18[n] <- 1/(1 + exp(-x18[n]))
+p19[n] <- 1/(1 + exp(-x19[n]))
+
+q1[n] <- max(min(p1[n],1),0)
+q2[n] <- max(min(p2[n],1),0)
+q3[n] <- max(min(p3[n],1),0)
+q4[n] <- max(min(p4[n],1),0)
+q5[n] <- max(min(p5[n],1),0)
+q6[n] <- max(min(p6[n],1),0)
+q7[n] <- max(min(p7[n],1),0)
+q8[n] <- max(min(p8[n],1),0)
+q9[n] <- max(min(p9[n],1),0)
+q10[n] <- max(min(p10[n],1),0)
+q11[n] <- max(min(p11[n],1),0)
+q12[n] <- max(min(p12[n],1),0)
+q13[n] <- max(min(p13[n],1),0)
+q14[n] <- max(min(p14[n],1),0)
+q15[n] <- max(min(p15[n],1),0)
+q16[n] <- max(min(p16[n],1),0)
+q17[n] <- max(min(p17[n],1),0)
+q18[n] <- max(min(p18[n],1),0)
+q19[n] <- max(min(p19[n],1),0)
+q1[n] <- max(min(p1[n],1),0)
+q2[n] <- max(min(p2[n],1),0)
+q3[n] <- max(min(p3[n],1),0)
+q4[n] <- max(min(p4[n],1),0)
+q5[n] <- max(min(p5[n],1),0)
+q6[n] <- max(min(p6[n],1),0)
+q7[n] <- max(min(p7[n],1),0)
+q8[n] <- max(min(p8[n],1),0)
+q9[n] <- max(min(p9[n],1),0)
+q10[n] <- max(min(p10[n],1),0)
+q11[n] <- max(min(p11[n],1),0)
+q12[n] <- max(min(p12[n],1),0)
+q13[n] <- max(min(p13[n],1),0)
+q14[n] <- max(min(p14[n],1),0)
+q15[n] <- max(min(p15[n],1),0)
+q16[n] <- max(min(p16[n],1),0)
+q17[n] <- max(min(p17[n],1),0)
+q18[n] <- max(min(p18[n],1),0)
+q19[n] <- max(min(p19[n],1),0)
+
+Rep_GFDD.DI.01[n]~dbern(q1[n])
+Rep_GFDD.DI.02[n]~dbern(q2[n])
+Rep_GFDD.DI.03[n]~dbern(q3[n])
+Rep_GFDD.DI.04[n]~dbern(q4[n])
+Rep_GFDD.DI.05[n]~dbern(q5[n])
+Rep_GFDD.DI.06[n]~dbern(q6[n])
+Rep_GFDD.DI.07[n]~dbern(q7[n])
+Rep_GFDD.DI.08[n]~dbern(q8[n])
+Rep_GFDD.DI.11[n]~dbern(q9[n])
+Rep_GFDD.DI.12[n]~dbern(q10[n])
+Rep_GFDD.DI.13[n]~dbern(q11[n])
+Rep_GFDD.DI.14[n]~dbern(q12[n])
+Rep_GFDD.EI.08[n]~dbern(q13[n])
+Rep_GFDD.OI.02[n]~dbern(q14[n])
+Rep_GFDD.SI.02[n]~dbern(q15[n])
+Rep_GFDD.SI.03[n]~dbern(q16[n])
+Rep_GFDD.SI.04[n]~dbern(q17[n])
+Rep_GFDD.SI.05[n]~dbern(q18[n])
+Rep_GFDD.SI.07[n]~dbern(q19[n])
+Rep_GFDD.DI.01[n]~dbern(q1[n])
+Rep_GFDD.DI.02[n]~dbern(q2[n])
+Rep_GFDD.DI.03[n]~dbern(q3[n])
+Rep_GFDD.DI.04[n]~dbern(q4[n])
+Rep_GFDD.DI.05[n]~dbern(q5[n])
+Rep_GFDD.DI.06[n]~dbern(q6[n])
+Rep_GFDD.DI.07[n]~dbern(q7[n])
+Rep_GFDD.DI.08[n]~dbern(q8[n])
+Rep_GFDD.DI.11[n]~dbern(q9[n])
+Rep_GFDD.DI.12[n]~dbern(q10[n])
+Rep_GFDD.DI.13[n]~dbern(q11[n])
+Rep_GFDD.DI.14[n]~dbern(q12[n])
+Rep_GFDD.EI.08[n]~dbern(q13[n])
+Rep_GFDD.OI.02[n]~dbern(q14[n])
+Rep_GFDD.SI.02[n]~dbern(q15[n])
+Rep_GFDD.SI.03[n]~dbern(q16[n])
+Rep_GFDD.SI.04[n]~dbern(q17[n])
+Rep_GFDD.SI.05[n]~dbern(q18[n])
+Rep_GFDD.SI.07[n]~dbern(q19[n])
+ }
+# Model priors
+
+mu[1] <- 0
+mu[2] <- 0
+
+alpha[1,1] <- 0.01
+alpha[1,2] <- 0
+alpha[2,1] <- 0
+alpha[2,2] <- 0.01
+
+beta1[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta2[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta3[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta4[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta5[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta6[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta7[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta8[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta9[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta10[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta11[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta12[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta13[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta14[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta15[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta16[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta17[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta18[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta19[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta1[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta2[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta3[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta4[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta5[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta6[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta7[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta8[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta9[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta10[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta11[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta12[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta13[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta14[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta15[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta16[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta17[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta18[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+beta19[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
+
+# Transparency priors
+
+  for (n in 1:31){
+    transinit[n] ~ dnorm(0, 0.01)
+  }
+  mean.trans <- mean(transinit[1:31])
+  sd.trans <- sd(transinit[1:31])
+
+  for (n in 1:31){
+    transcentered[n] <- (transinit[n] - mean.trans)*pow(sd.trans, 1)
+  }
+
+  for (n in 1:31){
+    transparency[n,1] <-transcentered[n]
+    tau[n] ~ dgamma(20, 4)
+
+    for (j in 2:14){
+      transparency[n,j] ~ dnorm(transparency[n,(j-1)], tau[n])
+    }
+  }
+}
