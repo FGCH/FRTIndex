@@ -60,7 +60,12 @@ for (i in IndSub){
 PropRepor <- PropReported(BaseSub)
 PropRepor <- PropRepor[order(PropRepor$country, PropRepor$year), ]
 write.csv(PropRepor, file = paste0(GitDir, 
-          'IndexData/alternate/PropReportedOECD.csv'))
+          'IndexData/alternate/PropReportedOECD.csv'), row.names = FALSE)
+
+#### Raw missingness per item ####
+RawMis <- BaseSub[, !(c(names(BaseSub) %in% Indicators))]
+write.csv(RawMis, row.names = FALSE,
+          file = paste0(GitDir, 'IndexData/alternate/RawReportedOECD.csv'))
 
 # --------------------------------------------------- #
 #### Data description ####
