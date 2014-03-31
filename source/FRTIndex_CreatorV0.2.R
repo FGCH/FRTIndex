@@ -1,7 +1,7 @@
 ##############
-# Financial Regulatory Transparency Index V2
+# Financial Regulatory Transparency Index V0.2
 # Christopher Gandrud
-# 25 March 2014
+# 31 March 2014
 #############
 
 ## Inspired by:
@@ -28,9 +28,8 @@ source(paste0(GitDir, 'source/miscFunctions/PropReported.R'))
 Indicators <- c('GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04',
                 'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07', 'GFDD.DI.08',
                 'GFDD.DI.11', 'GFDD.DI.12', 'GFDD.DI.13', 'GFDD.DI.14',
-                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.OI.07',
-                'GFDD.SI.02', 'GFDD.SI.03', 'GFDD.SI.04', 'GFDD.SI.05',
-                'GFDD.SI.07')
+                'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.SI.02', 'GFDD.SI.03', 
+                'GFDD.SI.04', 'GFDD.SI.05', 'GFDD.SI.07')
 
 # Download indicators
 # Unable to download 'GFDD.DM.011', 'GFDD.OI.14'
@@ -195,11 +194,11 @@ paste0('
       transparency[n,j] ~ dnorm(transparency[n,(j-1)], tau[n])
     }
   }'),
-'\n}'), file = 'BasicModel_V1.bug')
+'\n}'), file = 'BasicModel_V0.2.bug')
 
 # Copy file into git repo for version control
-file.copy(from = 'BasicModel_V1.bug',
-          to = '/home/cjg/FRTIndex/source/BasicModel_V1.bug',
+file.copy(from = 'BasicModel_V0.2.bug',
+          to = '/home/cjg/FRTIndex/source/BasicModel_V0.2.bug',
           overwrite = TRUE)
 
 # --------------------------------------------------- #
@@ -221,10 +220,8 @@ DataList <- list('countrynum' = BaseJagsReady$countrynum,
                  'Rep_GFDD.DI.12' = BaseJagsReady$Rep_GFDD.DI.12,
                  'Rep_GFDD.DI.13' = BaseJagsReady$Rep_GFDD.DI.13,
                  'Rep_GFDD.DI.14' = BaseJagsReady$Rep_GFDD.DI.14,
-                 'Rep_GFDD.EI.02' = BaseJagsReady$Rep_GFDD.EI.02,
                  'Rep_GFDD.EI.08' = BaseJagsReady$Rep_GFDD.EI.08,
                  'Rep_GFDD.OI.02' = BaseJagsReady$Rep_GFDD.OI.02,
-                 'Rep_GFDD.OI.07' = BaseJagsReady$Rep_GFDD.OI.07,
                  'Rep_GFDD.SI.02' = BaseJagsReady$Rep_GFDD.SI.02,
                  'Rep_GFDD.SI.03' = BaseJagsReady$Rep_GFDD.SI.03,
                  'Rep_GFDD.SI.04' = BaseJagsReady$Rep_GFDD.SI.04,
@@ -236,18 +233,18 @@ parameters <- c("transparency", "tau", Betas)
 
 # Compile model
 system.time(
-  Est1 <- jags.model('BasicModel_V1.bug', data = DataList,
+  Est02 <- jags.model('BasicModel_V0.2.bug', data = DataList,
                    n.chains = 2, n.adapt = 5000)
 )
-save.image(file = 'workspaceImages/SampOut.RData')
+save.image(file = 'workspaceImages/SampOut2.RData')
 
 # Draw random samples from the posterior
 system.time(
-  Samp1 <- coda.samples(Est1, parameters, n.iter = 1000)
+  Samp02 <- coda.samples(Est02, parameters, n.iter = 1000)
 )
 
 # Convert to ggs data frame and save
 system.time(
-  Set <- ggs(Samp1)
+  Set <- ggs(Samp02)
 )
-save(Set, file = 'SetOut.RData')
+save(Set, file = 'SetOut02.RData')
