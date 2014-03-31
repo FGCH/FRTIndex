@@ -13,7 +13,7 @@
 # --------------------------------------------------- #
 setwd('~/FRTOutFiles/')
 GitDir <- '/git_repositories/FRTIndex/'
-''
+
 # Load packages
 library(WDI)
 library(DataCombine)
@@ -35,7 +35,7 @@ Indicators <- c('GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04',
 # Unable to download 'GFDD.DM.011', 'GFDD.OI.14'
 Base <- WDI(indicator = Indicators, start = 1998, end = 2011, extra = TRUE)
 
-# Keep countries with 'High income' (OECD and non-OECD classification)
+# Keep countries with 'High income' (OECD and non-OECD) classification
 BaseSub <- grepl.sub(data = Base, Var = 'income', patterns = 'High income')
 Droppers <- c("iso3c", "region",  "capital", "longitude", "latitude",
               "income", "lending")

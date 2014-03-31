@@ -13,7 +13,7 @@
 # --------------------------------------------------- #
 setwd('~/FRTOutFiles/')
 GitDir <- '/git_repositories/FRTIndex/'
-''
+
 # Load packages
 library(WDI)
 library(DataCombine)

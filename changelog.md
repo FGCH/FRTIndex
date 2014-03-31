@@ -8,7 +8,7 @@
     -  bank lending-deposit spread
     -  Deposit money bank assets to deposit money bank assets and central bank assets (% of GDP)
 
-- Created FRT Index robustness using OECD countries only.
+- Created FRT Index robustness check using OECD countries only.
 
 ## Version 0.1
 
