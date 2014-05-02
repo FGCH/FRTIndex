@@ -1,7 +1,7 @@
 ##############
 # Financial Regulatory Transparency Index V0.2
 # Christopher Gandrud
-# 31 March 2014
+# 1 May 2014
 #############
 
 ## Inspired by:
@@ -20,6 +20,7 @@ library(DataCombine)
 library(rjags)
 library(xtable)
 library(ggmcmc)
+library(repmis)
 source(paste0(GitDir, 'source/miscFunctions/PropReported.R'))
 
 # --------------------------------------------------- #
@@ -28,14 +29,21 @@ source(paste0(GitDir, 'source/miscFunctions/PropReported.R'))
 Indicators <- c('GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04',
                 'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07', 'GFDD.DI.08',
                 'GFDD.DI.11', 'GFDD.DI.12', 'GFDD.DI.13', 'GFDD.DI.14',
-                'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.SI.02', 'GFDD.SI.03', 
+                'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.SI.02', 'GFDD.SI.03',
                 'GFDD.SI.04', 'GFDD.SI.05', 'GFDD.SI.07')
 
 # Download indicators
 # Unable to download 'GFDD.DM.011', 'GFDD.OI.14'
 Base <- WDI(indicator = Indicators, start = 1998, end = 2011, extra = TRUE)
 
-# Keep countries with 'High income' (OECD and non-OECD) classification
+## Keep countries Bank of International Settlements Members
+
+# Download BIS Members data
+URL <- 'https://raw.githubusercontent.com/christophergandrud/bisMembers/master/bisMembers.csv'
+BIS <- repmis::source_data(URL)
+
+
+
 BaseSub <- grepl.sub(data = Base, Var = 'income', patterns = 'High income')
 Droppers <- c("iso3c", "region",  "capital", "longitude", "latitude",
               "income", "lending")
@@ -59,7 +67,7 @@ for (i in IndSub){
 #### Find the proportion of items reported ####
 PropRepor <- PropReported(BaseSub)
 PropRepor <- PropRepor[order(PropRepor$country, PropRepor$year), ]
-write.csv(PropRepor, file = paste0(GitDir, 
+write.csv(PropRepor, file = paste0(GitDir,
           'IndexData/alternate/PropReported.csv'), row.names = FALSE)
 
 #### Raw missingness per item ####

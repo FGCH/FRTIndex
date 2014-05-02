@@ -13,7 +13,7 @@ Funding generously provided by the [Deutsche Forschungsgemeinschaft](http://www.
 
 ## Motivation
 
-For financial supervision to be **effective**, regulators need have accurate information about financial sector activities. For the public to be able to hold supervisors **accountable** they need access to the information financial supervisors have about the health of the banking system in order to judge the quality of regulators' actions. 
+For financial supervision to be **effective**, regulators need have accurate information about financial sector activities. For the public to be able to hold supervisors **accountable** they need access to the information financial supervisors have about the health of the banking system in order to judge the quality of regulators' actions.
 
 We are developing a **Financial Regulatory Transparency Index**. The new Index we make it possible to compare the willingness of governments to credibly reveal the structure of their financial systems and their regulatory quality, so that they can be scrutinized by market participants and citizens.
 
@@ -58,7 +58,7 @@ A full write up of our model is in the works. The most recent (incomplete) draft
 
 Our estimation model is based on:
 
-> Hollyer, James R., B. Peter Rosendorff, and James Raymond Vreeland. 2014. "Replication data for: Measuring Transparency". 
+> Hollyer, James R., B. Peter Rosendorff, and James Raymond Vreeland. 2014. "Replication data for: Measuring Transparency".
 [http://dx.doi.org/10.7910/DVN/24274](http://dx.doi.org/10.7910/DVN/24274)
 
 ---
