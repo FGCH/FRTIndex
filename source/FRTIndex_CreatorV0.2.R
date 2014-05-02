@@ -12,11 +12,12 @@
 
 # --------------------------------------------------- #
 setwd('~/FRTOutFiles/')
-GitDir <- '/git_repositories/FRTIndex/'
+# GitDir <- '/git_repositories/FRTIndex/'
+GitDir <- '~/FRTIndex/'
 
 # Load packages
 library(WDI)
-library(DataCombine)
+# library(DataCombine)
 library(rjags)
 library(xtable)
 library(ggmcmc)
