@@ -63,4 +63,4 @@ Our estimation model is based on:
 
 ---
 
-<a href="http://www.dfg.de/en/"><img src="http://fgch.github.io/amc-site/images/dfg.png"/></a> <a href="http://nadrosia.tumblr.com/post/53520500877/made-in-berlin-badge-update"><img alt="image" src="http://media.tumblr.com/023c285c14ef01953d3b67ffe789004d/tumblr_inline_mor1uu2OOZ1qz4rgp.png" height = "50"></a> <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/4.0/88x31.png" height = "40" /></a>
+<a href="http://www.dfg.de/en/"><img src="http://fgch.github.io/amc-site/img/dfg.png"/></a> <a href="http://nadrosia.tumblr.com/post/53520500877/made-in-berlin-badge-update"><img alt="image" src="http://media.tumblr.com/023c285c14ef01953d3b67ffe789004d/tumblr_inline_mor1uu2OOZ1qz4rgp.png" height = "50"></a> <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/4.0/88x31.png" height = "40" /></a>
