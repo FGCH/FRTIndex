@@ -35,4 +35,8 @@
 *.fdb_latexmk
 paper/figures/*
 
+# R project files
+.Rproj.user
+FRTIndex.Rproj
+
 .DS_Store
