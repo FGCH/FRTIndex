@@ -12,7 +12,7 @@
 
 # --------------------------------------------------- #
 setwd('~/FRTOutFiles/')
-GitDir <- '/git_repositories/FRTIndex/'
+GitDir <- '~/FRTIndex/'
 
 # Load packages
 library(WDI)
