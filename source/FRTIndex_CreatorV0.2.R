@@ -65,7 +65,7 @@ write.csv(PropRepor, file = paste0(GitDir,
 #### Raw missingness per item ####
 RawMis <- BaseSub[, !(c(names(BaseSub) %in% Indicators))]
 write.csv(RawMis, row.names = FALSE,
-          file = paste0(GitDir, 'IndexData/alternate/RawReportedOECD.csv'))
+          file = paste0(GitDir, 'IndexData/alternate/RawReported.csv'))
 
 # --------------------------------------------------- #
 #### Data description ####
