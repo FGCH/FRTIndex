@@ -40,13 +40,16 @@ Base <- WDI(indicator = Indicators, start = 1998, end = 2011, extra = TRUE)
 
 # Download BIS Members data
 URL <- 'https://raw.githubusercontent.com/christophergandrud/bisMembers/master/bisMembers.csv'
-BIS <- repmis::source_data(URL)
+BIS <- source_data(URL)
 
+BIS$fake <- 1
+BIS <- BIS[, c('iso2c', 'fake')]
 
+Base <- merge(Base, BIS, by = 'iso2c', all.x = TRUE)
 
-BaseSub <- grepl.sub(data = Base, Var = 'income', patterns = 'High income')
+BaseSub <- subset(Base, fake == 1)
 Droppers <- c("iso3c", "region",  "capital", "longitude", "latitude",
-              "income", "lending")
+              "income", "lending", "fake")
 BaseSub <- BaseSub[, !(names(BaseSub) %in% Droppers)]
 
 # --------------------------------------------------- #
