@@ -1,7 +1,7 @@
 ##############
 # Financial Regulatory Transparency Index V0.2
 # Christopher Gandrud
-# 1 May 2014
+# 12 May 2014
 #############
 
 ## Inspired by:
@@ -40,7 +40,7 @@ Base <- WDI(indicator = Indicators, start = 1998, end = 2011, extra = TRUE)
 
 # Download BIS Members data
 URL <- 'https://raw.githubusercontent.com/christophergandrud/bisMembers/master/bisMembers.csv'
-BIS <- source_data(URL)
+BIS <- source_data(URL, cache = TRUE)
 
 BIS$fake <- 1
 BIS <- BIS[, c('iso2c', 'fake')]
@@ -256,7 +256,7 @@ save.image(file = 'workspaceImages/SampOut2.RData')
 
 # Draw random samples from the posterior
 system.time(
-  Samp02 <- coda.samples(Est02, parameters, n.iter = 1000)
+  Samp02 <- coda.samples(Est02, parameters, n.iter = 5000)
 )
 
 # Convert to ggs data frame and save
