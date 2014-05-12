@@ -16,7 +16,7 @@ GitDir <- '~/FRTIndex/'
 
 # Load packages
 library(WDI)
-library(DataCombine)
+# library(DataCombine)
 library(rjags)
 library(xtable)
 library(ggmcmc)

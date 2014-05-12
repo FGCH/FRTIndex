@@ -1,6 +1,6 @@
 
 model{
-    for (n in 1:840){
+for (n in 1:826){
 
 x1[n] <- beta1[1] + transparency[countrynum[n], yearnum[n]]*beta1[2]
 x2[n] <- beta2[1] + transparency[countrynum[n], yearnum[n]]*beta2[2]
@@ -21,8 +21,6 @@ x16[n] <- beta16[1] + transparency[countrynum[n], yearnum[n]]*beta16[2]
 x17[n] <- beta17[1] + transparency[countrynum[n], yearnum[n]]*beta17[2]
 x18[n] <- beta18[1] + transparency[countrynum[n], yearnum[n]]*beta18[2]
 x19[n] <- beta19[1] + transparency[countrynum[n], yearnum[n]]*beta19[2]
-x20[n] <- beta20[1] + transparency[countrynum[n], yearnum[n]]*beta20[2]
-x21[n] <- beta21[1] + transparency[countrynum[n], yearnum[n]]*beta21[2]
 
 p1[n] <- 1/(1 + exp(-x1[n]))
 p2[n] <- 1/(1 + exp(-x2[n]))
@@ -43,8 +41,6 @@ p16[n] <- 1/(1 + exp(-x16[n]))
 p17[n] <- 1/(1 + exp(-x17[n]))
 p18[n] <- 1/(1 + exp(-x18[n]))
 p19[n] <- 1/(1 + exp(-x19[n]))
-p20[n] <- 1/(1 + exp(-x20[n]))
-p21[n] <- 1/(1 + exp(-x21[n]))
 
 q1[n] <- max(min(p1[n],1),0)
 q2[n] <- max(min(p2[n],1),0)
@@ -65,8 +61,6 @@ q16[n] <- max(min(p16[n],1),0)
 q17[n] <- max(min(p17[n],1),0)
 q18[n] <- max(min(p18[n],1),0)
 q19[n] <- max(min(p19[n],1),0)
-q20[n] <- max(min(p20[n],1),0)
-q21[n] <- max(min(p21[n],1),0)
 
 Rep_GFDD.DI.01[n]~dbern(q1[n])
 Rep_GFDD.DI.02[n]~dbern(q2[n])
@@ -80,21 +74,18 @@ Rep_GFDD.DI.11[n]~dbern(q9[n])
 Rep_GFDD.DI.12[n]~dbern(q10[n])
 Rep_GFDD.DI.13[n]~dbern(q11[n])
 Rep_GFDD.DI.14[n]~dbern(q12[n])
-Rep_GFDD.EI.02[n]~dbern(q13[n])
-Rep_GFDD.EI.08[n]~dbern(q14[n])
-Rep_GFDD.OI.02[n]~dbern(q15[n])
-Rep_GFDD.OI.07[n]~dbern(q16[n])
-Rep_GFDD.SI.02[n]~dbern(q17[n])
-Rep_GFDD.SI.03[n]~dbern(q18[n])
-Rep_GFDD.SI.04[n]~dbern(q19[n])
-Rep_GFDD.SI.05[n]~dbern(q20[n])
-Rep_GFDD.SI.07[n]~dbern(q21[n])
+Rep_GFDD.EI.08[n]~dbern(q13[n])
+Rep_GFDD.OI.02[n]~dbern(q14[n])
+Rep_GFDD.SI.02[n]~dbern(q15[n])
+Rep_GFDD.SI.03[n]~dbern(q16[n])
+Rep_GFDD.SI.04[n]~dbern(q17[n])
+Rep_GFDD.SI.05[n]~dbern(q18[n])
+Rep_GFDD.SI.07[n]~dbern(q19[n])
  }
 # Model priors
 
 mu[1] <- 0
 mu[2] <- 0
-
 alpha[1,1] <- 0.01
 alpha[1,2] <- 0
 alpha[2,1] <- 0
@@ -119,27 +110,22 @@ beta16[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
 beta17[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
 beta18[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
 beta19[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
-beta20[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
-beta21[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
 
 # Transparency priors
 
-  for (n in 1:60){
-    transinit[n] ~ dnorm(0, 0.01)
-  }
-  mean.trans <- mean(transinit[1:60])
-  sd.trans <- sd(transinit[1:60])
-
-  for (n in 1:60){
-    transcentered[n] <- (transinit[n] - mean.trans)*pow(sd.trans, 1)
-  }
-
-  for (n in 1:60){
-    transparency[n,1] <-transcentered[n]
-    tau[n] ~ dgamma(20, 4)
-  
-    for (j in 2:14){
-      transparency[n,j] ~ dnorm(transparency[n,(j-1)], tau[n])
-    }
-  }
+for (n in 1:59){
+transinit[n] ~ dnorm(0, 0.01)
+}
+mean.trans <- mean(transinit[1:59])
+sd.trans <- sd(transinit[1:59])
+for (n in 1:59){
+transcentered[n] <- (transinit[n] - mean.trans)*pow(sd.trans, 1)
+}
+for (n in 1:59){
+transparency[n,1] <-transcentered[n]
+tau[n] ~ dgamma(20, 4)
+for (j in 2:14){
+transparency[n,j] ~ dnorm(transparency[n,(j-1)], tau[n])
+}
+}
 }
