@@ -11,6 +11,7 @@
 #### Directories ####
 # Set working directory
 WDir <- '/git_repositories/FRTIndex/'
+VersionNumb <- '_v02'
 setwd(WDir)
 
 # Load libraries and functions
@@ -22,17 +23,17 @@ source('source/miscFunctions/ggs_caterpillar_label.R')
 # --------------------------------------------------- #
 #### Load estimates ####
 # Load main estimation model
-load('modelOut/SetOut02.RData')
+load(paste0('modelOut/SetOut', VersionNumb, '.RData'))
 
 # Load country/year/difficulty/discrimination number data
-Countries <- read.csv('source/ParameterDescript/CountryNumbers.csv',
-                      stringsAsFactors = FALSE)
+Countries <- read.csv(paste0('source/ParameterDescript/CountryNumbers', 
+                             VersionNumb, '.csv'), stringsAsFactors = FALSE)
 
-Years <- read.csv('source/ParameterDescript/YearNumbers.csv',
-                      stringsAsFactors = FALSE)
+Years <- read.csv(paste0('source/ParameterDescript/YearNumbers', VersionNumb, 
+                         '.csv'), stringsAsFactors = FALSE)
 
-Indicators <- read.csv('source/IndicatorDescript/IncludedIndicators.csv',
-                       stringsAsFactors = FALSE)
+Indicators <- read.csv(paste0('source/IndicatorDescript/IncludedIndicators', 
+                                VersionNumb, '.csv'), stringsAsFactors = FALSE)
 Indicators$ID <- 1:nrow(Indicators)
 
 # --------------------------------------------------- #

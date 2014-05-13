@@ -259,18 +259,17 @@ parameters <- c("transparency", "tau", Betas)
 
 # Compile model
 system.time(
-  Est02 <- jags.model(paste0('BasicModel', VersionNumb, '.bug'), data = DataList,
+  Est <- jags.model(paste0('BasicModel', VersionNumb, '.bug'), data = DataList,
                    n.chains = 2, n.adapt = 5000)
 )
-# save.image(file = paste0('workspaceImages/SampOut', VerionNumb, '.RData'))
 
 # Draw random samples from the posterior
 system.time(
-  Samp02 <- coda.samples(Est02, parameters, n.iter = 5000)
+  Samp <- coda.samples(Est, parameters, n.iter = 5000)
 )
 
 # Convert to ggs data frame and save
 system.time(
-  Set <- ggs(Samp02)
+  Set <- ggs(Samp)
 )
-save(Set, file = paste0('SampOut', VersionNumb, '.RData'))
+save(Set, file = paste0('SetOut', VersionNumb, '.RData'))
