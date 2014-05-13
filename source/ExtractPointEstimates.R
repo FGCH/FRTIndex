@@ -1,7 +1,7 @@
 ############
 # Extract FRT Index point estimates
 # Christopher Gandrud
-# 24 March 2014
+# 12 May 2014
 ############
 
 # --------------------------------------------------- #
@@ -22,7 +22,7 @@ source('source/miscFunctions/ggs_summary.R')
 # --------------------------------------------------- #
 #### Load estimates ####
 # Load main estimation model
-load('modelOut/SetOut.RData')
+load('modelOut/SetOut02.RData')
 
 # --------------------------------------------------- #
 #### Load country/year/difficulty/discrimination number data ####
@@ -91,7 +91,7 @@ names(FRT) <- c('country', 'iso2c', 'year', 'lower_95', 'lower_90', 'median',
                'upper_90', 'upper_95')
 
 # Save output
-write.csv(FRT, file = 'IndexData/FRTIndex_v0_1.csv', row.names = FALSE)
+write.csv(FRT, file = 'IndexData/FRTIndex_v0_2.csv', row.names = FALSE)
 
 # --------------------------------------------------- #
 #### Difficulty Parameters ####

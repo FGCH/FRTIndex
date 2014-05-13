@@ -1,7 +1,7 @@
 ##############
 # Financial Regulatory Transparency Index V0.2
 # Christopher Gandrud
-# 12 May 2014
+# 13 May 2014
 #############
 
 ## Inspired by:
@@ -13,10 +13,10 @@
 # --------------------------------------------------- #
 setwd('~/FRTOutFiles/')
 GitDir <- '~/FRTIndex/'
+VersionNumb <- '_v02' # Set version number
 
 # Load packages
 library(WDI)
-# library(DataCombine)
 library(rjags)
 library(xtable)
 library(ggmcmc)
@@ -42,12 +42,17 @@ Base <- WDI(indicator = Indicators, start = 1998, end = 2011, extra = TRUE)
 URL <- 'https://raw.githubusercontent.com/christophergandrud/bisMembers/master/bisMembers.csv'
 BIS <- source_data(URL, cache = TRUE)
 
+# Add offshore banking centres
+OffShore <- data.frame(country = c('Bahamas, The', 'Cayman Islands', 'Monaco'),
+                       iso2c = c('BS', 'KY', 'MC'))
+BIS <- rbind(BIS, OffShore)
+
 BIS$fake <- 1
 BIS <- BIS[, c('iso2c', 'fake')]
 
-Base <- merge(Base, BIS, by = 'iso2c', all.x = TRUE)
+BaseMerged <- merge(Base, BIS, by = 'iso2c', all.x = TRUE)
 
-BaseSub <- subset(Base, fake == 1)
+BaseSub <- subset(BaseMerged, fake == 1)
 Droppers <- c("iso3c", "region",  "capital", "longitude", "latitude",
               "income", "lending", "fake")
 BaseSub <- BaseSub[, !(names(BaseSub) %in% Droppers)]
@@ -66,17 +71,20 @@ for (i in IndSub){
   VarVec <- append(VarVec, temp)
 }
 
+BaseSub <- BaseSub[order(BaseSub$iso2c, BaseSub$year), ]
+
 # --------------------------------------------------- #
 #### Find the proportion of items reported ####
 PropRepor <- PropReported(BaseSub)
 PropRepor <- PropRepor[order(PropRepor$country, PropRepor$year), ]
 write.csv(PropRepor, file = paste0(GitDir,
-          'IndexData/alternate/PropReported.csv'), row.names = FALSE)
+          'IndexData/alternate/PropReported', VersionNumb, '.csv'), row.names = FALSE)
 
 #### Raw missingness per item ####
 RawMis <- BaseSub[, !(c(names(BaseSub) %in% Indicators))]
 write.csv(RawMis, row.names = FALSE,
-          file = paste0(GitDir, 'IndexData/alternate/RawReported.csv'))
+          file = paste0(GitDir, 'IndexData/alternate/RawReported', VersionNumb, 
+                        '.csv'))
 
 # --------------------------------------------------- #
 #### Data description ####
@@ -95,17 +103,19 @@ IndKey <- data.frame(IndID = 1:length(Indicators), Indicator = Indicators)
 
 # Country name/number list
 write.csv(CountryKey, row.names = FALSE,
-  file = paste0(GitDir, 'source/ParameterDescript/CountryNumbers.csv'))
+  file = paste0(GitDir, 'source/ParameterDescript/CountryNumbers', VersionNumb, 
+                '.csv'))
 write.csv(YearKey, row.names = FALSE,
-          file = paste0(GitDir, 'source/ParameterDescript/YearNumbers.csv'))
+          file = paste0(GitDir, 'source/ParameterDescript/YearNumbers', 
+                        VersionNumb, '.csv'))
 
 # Create included GFDD indicator .tex table
 IndicatorKey <- read.csv(paste0(GitDir,
                   'source/IndicatorDescript/IndicatorDescription.csv'),
                   encoding = 'latin1', stringsAsFactors = FALSE)
 IndicatorKey <- subset(IndicatorKey, SeriesCode %in% IndSub)
-write.csv(IndicatorKey, file = read.csv(paste0(GitDir,
-          'source/IndicatorDescript/IncludedIndicators.csv'),
+write.csv(IndicatorKey, file = paste0(GitDir,
+          'source/IndicatorDescript/IncludedIndicators', VersionNumb, '.csv'),
           row.names = FALSE)
 
 # Clean up for latex version
@@ -214,7 +224,7 @@ paste0('
 
 # Copy file into git repo for version control
 file.copy(from = 'BasicModel_V0.2.bug',
-          to = '/home/cjg/FRTIndex/source/BasicModel_V0.2.bug',
+          to = '/home/cjg/FRTIndex/source/BasicModel', VersionNumb, '.bug',
           overwrite = TRUE)
 
 # --------------------------------------------------- #
@@ -249,10 +259,10 @@ parameters <- c("transparency", "tau", Betas)
 
 # Compile model
 system.time(
-  Est02 <- jags.model('BasicModel_V0.2.bug', data = DataList,
+  Est02 <- jags.model(paste0('BasicModel', VersionNumb, '.bug', data = DataList,
                    n.chains = 2, n.adapt = 5000)
 )
-save.image(file = 'workspaceImages/SampOut2.RData')
+# save.image(file = paste0('workspaceImages/SampOut', VerionNumb, '.RData'))
 
 # Draw random samples from the posterior
 system.time(
@@ -263,4 +273,4 @@ system.time(
 system.time(
   Set <- ggs(Samp02)
 )
-save(Set, file = 'SetOut02.RData')
+save(Set, file = paste0('workspaceImages/SampOut', VerionNumb, '.RData'))

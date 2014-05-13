@@ -1,7 +1,7 @@
 ##############
 # Source 1 for figures in the basic FRT index description paper
 # Christopher Gandrud
-# 24 March 2014
+# 13 May 2014
 ##############
 
 # Model created using source/FRTIndex_CreatorV2.R
@@ -22,7 +22,7 @@ source('source/miscFunctions/ggs_caterpillar_label.R')
 # --------------------------------------------------- #
 #### Load estimates ####
 # Load main estimation model
-load('modelOut/SetOut.RData')
+load('modelOut/SetOut02.RData')
 
 # Load country/year/difficulty/discrimination number data
 Countries <- read.csv('source/ParameterDescript/CountryNumbers.csv',
@@ -76,7 +76,7 @@ FRT2011 <- ggs_caterpillar_label(Set, family = 'transparency.*,14.*',
                                  param_label_to = Countries$country) +
     scale_x_continuous(limits = c(-17, 10)) +
     ylab('') + xlab('\nFRT Index (HPD)') +
-    theme_bw()
+    theme_linedraw()
 
 # For the paper
 pdf(file = 'paper/figures/FRT_2011.pdf', width = 12, height = 12)
@@ -119,7 +119,7 @@ ggs_caterpillar_label(Set, family = TestCountry,
 
 # --------------------------------------------------- #
 #### Compare FRT to Proportion Reported method ####
-FRT <- read.csv('IndexData/FRTIndex_v0_1.csv', stringsAsFactors = FALSE)
+FRT <- read.csv('IndexData/FRTIndex_v0_2.csv', stringsAsFactors = FALSE)
 FRTProp <- read.csv('IndexData/alternate/PropReported.csv',
                     stringsAsFactors = FALSE)
 
