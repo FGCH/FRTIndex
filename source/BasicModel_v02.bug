@@ -1,6 +1,6 @@
 
 model{
-for (n in 1:868){
+    for (n in 1:868){
 
 x1[n] <- beta1[1] + transparency[countrynum[n], yearnum[n]]*beta1[2]
 x2[n] <- beta2[1] + transparency[countrynum[n], yearnum[n]]*beta2[2]
@@ -86,6 +86,7 @@ Rep_GFDD.SI.07[n]~dbern(q19[n])
 
 mu[1] <- 0
 mu[2] <- 0
+
 alpha[1,1] <- 0.01
 alpha[1,2] <- 0
 alpha[2,1] <- 0
@@ -113,19 +114,22 @@ beta19[1:2] ~ dmnorm(mu[1:2],alpha[1:2,1:2])
 
 # Transparency priors
 
-for (n in 1:62){
-transinit[n] ~ dnorm(0, 0.01)
-}
-mean.trans <- mean(transinit[1:62])
-sd.trans <- sd(transinit[1:62])
-for (n in 1:62){
-transcentered[n] <- (transinit[n] - mean.trans)*pow(sd.trans, 1)
-}
-for (n in 1:62){
-transparency[n,1] <-transcentered[n]
-tau[n] ~ dgamma(20, 4)
-for (j in 2:14){
-transparency[n,j] ~ dnorm(transparency[n,(j-1)], tau[n])
-}
-}
+  for (n in 1:62){
+    transinit[n] ~ dnorm(0, 0.01)
+  }
+  mean.trans <- mean(transinit[1:62])
+  sd.trans <- sd(transinit[1:62])
+
+  for (n in 1:62){
+    transcentered[n] <- (transinit[n] - mean.trans)*pow(sd.trans, 1)
+  }
+
+  for (n in 1:62){
+    transparency[n,1] <-transcentered[n]
+    tau[n] ~ dgamma(20, 4)
+
+    for (j in 2:14){
+      transparency[n,j] ~ dnorm(transparency[n,(j-1)], tau[n])
+    }
+  }
 }

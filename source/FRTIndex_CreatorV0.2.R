@@ -220,11 +220,11 @@ paste0('
       transparency[n,j] ~ dnorm(transparency[n,(j-1)], tau[n])
     }
   }'),
-'\n}'), file = 'BasicModel_V0.2.bug')
+'\n}'), file = paste0('BasicModel', VersionNumb, '.bug'))
 
 # Copy file into git repo for version control
-file.copy(from = 'BasicModel_V0.2.bug',
-          to = '/home/cjg/FRTIndex/source/BasicModel', VersionNumb, '.bug',
+file.copy(from = paste0('BasicModel', VersionNumb, '.bug'),
+          to = paste0('/home/cjg/FRTIndex/source/BasicModel', VersionNumb, '.bug'),
           overwrite = TRUE)
 
 # --------------------------------------------------- #
@@ -259,7 +259,7 @@ parameters <- c("transparency", "tau", Betas)
 
 # Compile model
 system.time(
-  Est02 <- jags.model(paste0('BasicModel', VersionNumb, '.bug', data = DataList,
+  Est02 <- jags.model(paste0('BasicModel', VersionNumb, '.bug'), data = DataList,
                    n.chains = 2, n.adapt = 5000)
 )
 # save.image(file = paste0('workspaceImages/SampOut', VerionNumb, '.RData'))
@@ -273,4 +273,4 @@ system.time(
 system.time(
   Set <- ggs(Samp02)
 )
-save(Set, file = paste0('workspaceImages/SampOut', VerionNumb, '.RData'))
+save(Set, file = paste0('SampOut', VersionNumb, '.RData'))
