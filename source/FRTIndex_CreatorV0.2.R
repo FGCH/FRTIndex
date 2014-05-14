@@ -1,7 +1,7 @@
 ##############
 # Financial Regulatory Transparency Index V0.2
 # Christopher Gandrud
-# 13 May 2014
+# 14 May 2014
 #############
 
 ## Inspired by:
@@ -263,9 +263,11 @@ system.time(
                    n.chains = 2, n.adapt = 5000)
 )
 
+save(Est, file = paste0('EstOut', VersionNumb, '.RData'))
+
 # Draw random samples from the posterior
 system.time(
-  Samp <- coda.samples(Est, parameters, n.iter = 5000)
+  Samp <- coda.samples(Est, parameters, n.iter = 1000)
 )
 
 # Convert to ggs data frame and save
