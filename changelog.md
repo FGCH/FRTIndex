@@ -4,7 +4,7 @@
 
 - Use a sample of current (May 2014) Bank of International Settlements members.
 
-- Run the model with 2 chains, 10000 iterations with a 5000 iteration burn-in 
+- The model was run with 2 chains, 10000 iterations with a 5000 iteration burn-in 
 period/
 
 - Remove redundant items from the estimation model:
