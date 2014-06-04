@@ -1,7 +1,7 @@
 ##############
 # Financial Regulatory Transparency Index V2
 # Christopher Gandrud
-# 25 March 2014
+# 4 June 2014
 #############
 
 ## Inspired by:
@@ -11,16 +11,16 @@
 # IQSS Dataverse Network [Distributor] V1 [Version]
 
 # --------------------------------------------------- #
-setwd('~/FRTOutFiles/')
-GitDir <- '/git_repositories/FRTIndex/'
-''
+setwd('~/June4Out/')
+GitDir <- '~/FRTIndex/'
+
 # Load packages
 library(WDI)
 library(DataCombine)
 library(rjags)
 library(xtable)
 library(ggmcmc)
-source(paste0(GitDir, 'source/miscFunctions/PropReported.R'))
+source('~/FRTIndex/source/miscFunctions/PropReported.R')
 
 # --------------------------------------------------- #
 #### Create Indicator Data Set ####
@@ -28,12 +28,11 @@ source(paste0(GitDir, 'source/miscFunctions/PropReported.R'))
 Indicators <- c('GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04',
                 'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07', 'GFDD.DI.08',
                 'GFDD.DI.11', 'GFDD.DI.12', 'GFDD.DI.13', 'GFDD.DI.14',
-                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.OI.07',
-                'GFDD.SI.02', 'GFDD.SI.03', 'GFDD.SI.04', 'GFDD.SI.05',
-                'GFDD.SI.07')
+                'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.SI.02', 'GFDD.SI.03',
+                'GFDD.SI.04', 'GFDD.SI.05', 'GFDD.SI.07')
+
 
 # Download indicators
-# Unable to download 'GFDD.DM.011', 'GFDD.OI.14'
 Base <- WDI(indicator = Indicators, start = 1998, end = 2011, extra = TRUE)
 
 # Keep countries with 'High income' (OECD and non-OECD classification)
@@ -85,11 +84,10 @@ write.csv(YearKey, row.names = FALSE,
           file = paste0(GitDir, 'source/ParameterDescript/YearNumbers.csv'))
 
 # Create included GFDD indicator .tex table
-IndicatorKey <- read.csv(paste0(GitDir,
-                  'source/IndicatorDescript/IndicatorDescription.csv'),
+IndicatorKey <- read.csv(paste0('~/FRTIndex/source/IndicatorDescript/IndicatorDescription.csv'),
                   encoding = 'latin1', stringsAsFactors = FALSE)
 IndicatorKey <- subset(IndicatorKey, SeriesCode %in% IndSub)
-write.csv(IndicatorKey, file = read.csv(paste0(GitDir,
+write.csv(IndicatorKey, file = paste0(GitDir,
           'source/IndicatorDescript/IncludedIndicators.csv'),
           row.names = FALSE)
 
@@ -195,11 +193,11 @@ paste0('
       transparency[n,j] ~ dnorm(transparency[n,(j-1)], tau[n])
     }
   }'),
-'\n}'), file = 'BasicModel_V1.bug')
+'\n}'), file = 'BasicModel_V2.bug')
 
 # Copy file into git repo for version control
-file.copy(from = 'BasicModel_V1.bug',
-          to = '/home/cjg/FRTIndex/source/BasicModel_V1.bug',
+file.copy(from = 'BasicModel_V2.bug',
+          to = '/home/cjg/FRTIndex/source/BasicModel_V2.bug',
           overwrite = TRUE)
 
 # --------------------------------------------------- #
@@ -221,10 +219,8 @@ DataList <- list('countrynum' = BaseJagsReady$countrynum,
                  'Rep_GFDD.DI.12' = BaseJagsReady$Rep_GFDD.DI.12,
                  'Rep_GFDD.DI.13' = BaseJagsReady$Rep_GFDD.DI.13,
                  'Rep_GFDD.DI.14' = BaseJagsReady$Rep_GFDD.DI.14,
-                 'Rep_GFDD.EI.02' = BaseJagsReady$Rep_GFDD.EI.02,
                  'Rep_GFDD.EI.08' = BaseJagsReady$Rep_GFDD.EI.08,
                  'Rep_GFDD.OI.02' = BaseJagsReady$Rep_GFDD.OI.02,
-                 'Rep_GFDD.OI.07' = BaseJagsReady$Rep_GFDD.OI.07,
                  'Rep_GFDD.SI.02' = BaseJagsReady$Rep_GFDD.SI.02,
                  'Rep_GFDD.SI.03' = BaseJagsReady$Rep_GFDD.SI.03,
                  'Rep_GFDD.SI.04' = BaseJagsReady$Rep_GFDD.SI.04,
@@ -236,18 +232,18 @@ parameters <- c("transparency", "tau", Betas)
 
 # Compile model
 system.time(
-  Est1 <- jags.model('BasicModel_V1.bug', data = DataList,
+  Est1 <- jags.model('BasicModel_V2.bug', data = DataList,
                    n.chains = 2, n.adapt = 5000)
 )
-save.image(file = 'workspaceImages/SampOut.RData')
+save.image(file = 'SampOutJun4.RData')
 
 # Draw random samples from the posterior
 system.time(
-  Samp1 <- coda.samples(Est1, parameters, n.iter = 1000)
+  Samp1 <- coda.samples(Est1, parameters, n.iter = 5000)
 )
 
 # Convert to ggs data frame and save
 system.time(
   Set <- ggs(Samp1)
 )
-save(Set, file = 'SetOut.RData')
+save(Set, file = 'SetOut4Jun.RData')
