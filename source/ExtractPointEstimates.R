@@ -1,7 +1,7 @@
 ############
 # Extract FRT Index point estimates
 # Christopher Gandrud
-# 24 March 2014
+# 4 June 2014
 ############
 
 # --------------------------------------------------- #
