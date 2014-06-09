@@ -1,7 +1,7 @@
 ##############
 # Source 1 for figures in the basic FRT index description paper
 # Christopher Gandrud
-# 24 March 2014
+# 9 June 2014
 ##############
 
 # Model created using source/FRTIndex_CreatorV2.R
@@ -15,6 +15,7 @@ setwd(WDir)
 
 # Load libraries and functions
 library(ggmcmc)
+library(gridExtra)
 
 # Load ggs_caterpillar_label (a modified version of ggmcmc's ggs_caterpillar)
 source('source/miscFunctions/ggs_caterpillar_label.R')
@@ -105,17 +106,23 @@ ggs_caterpillar_label(Set, family = Hung,
 dev.off()
 
 
-#### Test ####
-TestCountry <- Countries$countrynumMod[Countries$country == 'Portugal']
+#### All countries plot ####
+p <- list()
+for (i in unique(sort(Countries$country))){
+    temp <- Countries$countrynumMod[Countries$country == i]
+    
+    p[[i]] <- ggs_caterpillar_label(Set, family = temp,
+                                    horizontal = FALSE,
+                                    param_label_from = Years$yearnumMod,
+                                    param_label_to = Years$year,
+                                    order = FALSE) +
+        xlab('FRT Index (HPD)\n') + ylab('') + ggtitle(i) +
+        scale_y_discrete(breaks = c(1998, 2003, 2008, 2011)) +
+        theme_bw()
+    print(i)
+}
 
-ggs_caterpillar_label(Set, family = TestCountry,
-                      horizontal = FALSE,
-                      param_label_from = Years$yearnumMod,
-                      param_label_to = Years$year,
-                      order = FALSE) +
-  xlab('FRT Index (HPD)\n') + ylab('') +
-  scale_y_discrete(breaks = c(1998, 2003, 2008, 2011)) +
-  theme_bw()
+do.call(grid.arrange, c(p))
 
 # --------------------------------------------------- #
 #### Compare FRT to Proportion Reported method ####
