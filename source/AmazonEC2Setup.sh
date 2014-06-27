@@ -4,7 +4,7 @@
 # See yhat for EC2 instance set up
 
 # Navigate to key pair
-# ssh -i YOUR_KEYPAIR.pem ubuntu@ PUBLIC DNS
+# ssh -i YOUR_KEYPAIR.pem ubuntu@PUBLIC_DNS
 
 # Add a user
 sudo adduser USER_NAME
