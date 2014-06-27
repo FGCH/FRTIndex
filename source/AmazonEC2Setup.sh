@@ -1,4 +1,5 @@
 # Set up RStudio and JAGS on an Amazon EC2 instance
+# Using Ubuntu 64-bit
 # Partially from http://blog.yhathq.com/posts/r-in-the-cloud-part-1.html 
 # See yhat for EC2 instance set up
 
