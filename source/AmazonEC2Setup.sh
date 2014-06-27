@@ -23,9 +23,6 @@ apt-cache showpkg r-base
 
 sudo apt-get install -f r-base= PACKAGE_VERSION
 
-# Install rcpp package (not sure why, but command line install works better)
-sudo apt-get install r-cran-rcpp 
-
 # Install git
 sudo apt-get install git
 
