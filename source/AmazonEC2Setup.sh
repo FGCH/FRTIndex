@@ -35,8 +35,8 @@ git config --global user.email USER_EMAIL
 ## for latest version of RStudio see http://www.rstudio.com/ide/download/server
 sudo apt-get install gdebi-core
 sudo apt-get install libapparmor1
-wget http://download2.rstudio.org/rstudio-server-0.98.945-i386.deb
-sudo gdebi rstudio-server-0.98.945-i386.deb
+wget http://download2.rstudio.org/rstudio-server-0.98.945-amd64.deb
+sudo gdebi rstudio-server-0.98.945-amd64.deb
 
 # Verify RStudio installation
 sudo rstudio-server verify-installation
