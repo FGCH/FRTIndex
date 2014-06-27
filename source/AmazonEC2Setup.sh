@@ -3,7 +3,7 @@
 # See yhat for EC2 instance set up
 
 # Navigate to key pair
-# ssh -i {yourkey pair}.pem ubuntu@ PUBLIC DNS
+# ssh -i YOUR_KEYPAIR.pem ubuntu@ PUBLIC DNS
 
 # Add a user
 sudo adduser name
@@ -28,8 +28,8 @@ sudo apt-get install git
 sudo apt-get update
 
 # Configure git
-git config --global user.name 'USER NAME'
-git config --global user.email 'USER EMAIL'
+git config --global user.name USER_NAME
+git config --global user.email USER_EMAIL
 
 # Install RStudio
 ## for latest version of RStudio see http://www.rstudio.com/ide/download/server
