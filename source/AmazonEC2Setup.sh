@@ -49,4 +49,4 @@ sudo rstudio-server verify-installation
 # Change owner of the repo to USER_NAME
 sudo chown -R USER_NAME /home/USER_NAME/REPO_NAME
 
-# Access with http:// PUBLIC DNS :8787
+# Access RStudio Server with http://PUBLIC_DNS:8787
