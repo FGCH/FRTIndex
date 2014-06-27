@@ -7,7 +7,7 @@
 # ssh -i YOUR_KEYPAIR.pem ubuntu@ PUBLIC DNS
 
 # Add a user
-sudo adduser name
+sudo adduser USER_NAME
 
 # Get all programs up to date
 sudo apt-get update
@@ -29,8 +29,8 @@ sudo apt-get install git
 sudo apt-get update
 
 # Configure git
-git config --global user.name USER_NAME
-git config --global user.email USER_EMAIL
+git config --global user.name GIT_USER_NAME
+git config --global user.email GIT_USER_EMAIL
 
 # Install RStudio
 ## for latest version of RStudio see http://www.rstudio.com/ide/download/server
@@ -42,11 +42,10 @@ sudo gdebi rstudio-server-0.98.945-amd64.deb
 # Verify RStudio installation
 sudo rstudio-server verify-installation
 
-# Give all users read/write permissions of home directory.
+#### Git clone your repo as usual, ideally into /home/USER_NAME ####
 # This is where Rstudio server looks.
-# If you want to use the home directory for your repositories. 
-## Warning: you might not want to give such permissive permissions
-sudo chmod -R 0777 /home
 
+# Change owner of the repo to USER_NAME
+sudo chown -R USER_NAME /home/USER_NAME/REPO_NAME
 
 # Access with http:// PUBLIC DNS :8787
