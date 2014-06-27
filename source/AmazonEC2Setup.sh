@@ -6,7 +6,8 @@
 # Navigate to key pair
 # ssh -i YOUR_KEYPAIR.pem ubuntu@PUBLIC_DNS
 
-# Add a user
+# Add a user/password.
+# This will become your RStudio username and password.
 sudo adduser USER_NAME
 
 # Get all programs up to date
