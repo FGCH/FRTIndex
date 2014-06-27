@@ -1,7 +1,7 @@
 ##############
 # Financial Regulatory Transparency Index V2
 # Christopher Gandrud
-# 25 March 2014
+# 27 June 2014
 #############
 
 ## Inspired by:
