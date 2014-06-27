@@ -17,6 +17,7 @@ sudo apt-get install r-base-dev jags r-cran-rjags
 
 # Check that you have the latest R instal
 ## see also: http://askubuntu.com/a/352438
+sudo apt-get update
 apt-cache showpkg r-base
 
 sudo apt-get install -f r-base= PACKAGE_VERSION
