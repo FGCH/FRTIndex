@@ -42,5 +42,10 @@ sudo gdebi rstudio-server-0.98.945-amd64.deb
 # Verify RStudio installation
 sudo rstudio-server verify-installation
 
+# Give all users read/write permissions of home directory
+# If you want to use the home directory for your repositories
+## Warning: you might not want to give such permissive permissions
+sudo chmod -R 0777 /home
+
 
 # Access with http:// PUBLIC DNS :8787
