@@ -241,15 +241,15 @@ save.image(file = 'workspaceImages/SampOut.RData')
 
 # Draw random samples from the posterior
 system.time(
-  Samp1 <- coda.samples(Est1, parameters, n.iter = 10000, n)
+  Samp1 <- coda.samples(Est1, parameters, n.iter = 50000, thin = 5)
 )
 
 sink(file = 'Diagnostics.txt')
-  superdiag(Samp1, burnin = 1)
+  superdiag(Samp1, burnin = 1000)
 unlink()
 
 # Convert to ggs data frame and save
 system.time(
   Set <- ggs(Samp1)
 )
-save(Set, file = 'SetOut.RData')
+save(Set, file = 'SetOut28June.RData')
