@@ -26,11 +26,12 @@ source(paste0(GitDir, 'source/miscFunctions/PropReported.R'))
 # --------------------------------------------------- #
 #### Create Indicator Data Set ####
 # Download GFDD data
-Indicators <- c('GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04',
-                'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07', 'GFDD.DI.08',
-                'GFDD.DI.11', 'GFDD.DI.12', 'GFDD.DI.13', 'GFDD.DI.14',
-                'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.SI.02', 'GFDD.SI.03',
-                'GFDD.SI.04', 'GFDD.SI.05', 'GFDD.SI.07')
+Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04',
+                'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07', 
+                'GFDD.DI.08', 'GFDD.DI.11', 'GFDD.DI.13', 
+                'GFDD.DI.14', 'GFDD.EI.08', 'GFDD.OI.02', 
+                'GFDD.SI.02', 'GFDD.SI.03', 'GFDD.SI.04', 
+                'GFDD.SI.05', 'GFDD.SI.07')
 
 # Download indicators
 # Unable to download 'GFDD.DM.011', 'GFDD.OI.14'
@@ -210,7 +211,6 @@ file.copy(from = 'BasicModel_V1.bug',
 DataList <- list('countrynum' = BaseJagsReady$countrynum,
                  'yearnum' = BaseJagsReady$yearnum,
                  'Rep_GFDD.DI.01' = BaseJagsReady$Rep_GFDD.DI.01,
-                 'Rep_GFDD.DI.02' = BaseJagsReady$Rep_GFDD.DI.02,
                  'Rep_GFDD.DI.03' = BaseJagsReady$Rep_GFDD.DI.03,
                  'Rep_GFDD.DI.04' = BaseJagsReady$Rep_GFDD.DI.04,
                  'Rep_GFDD.DI.05' = BaseJagsReady$Rep_GFDD.DI.05,
@@ -218,7 +218,6 @@ DataList <- list('countrynum' = BaseJagsReady$countrynum,
                  'Rep_GFDD.DI.07' = BaseJagsReady$Rep_GFDD.DI.07,
                  'Rep_GFDD.DI.08' = BaseJagsReady$Rep_GFDD.DI.08,
                  'Rep_GFDD.DI.11' = BaseJagsReady$Rep_GFDD.DI.11,
-                 'Rep_GFDD.DI.12' = BaseJagsReady$Rep_GFDD.DI.12,
                  'Rep_GFDD.DI.13' = BaseJagsReady$Rep_GFDD.DI.13,
                  'Rep_GFDD.DI.14' = BaseJagsReady$Rep_GFDD.DI.14,
                  'Rep_GFDD.EI.08' = BaseJagsReady$Rep_GFDD.EI.08,
@@ -241,7 +240,7 @@ save.image(file = 'workspaceImages/SampOut.RData')
 
 # Draw random samples from the posterior
 system.time(
-  Samp1 <- coda.samples(Est1, parameters, n.iter = 50000, thin = 5)
+  Samp1 <- coda.samples(Est1, parameters, n.iter = 50000, thin = 2)
 )
 
 sink(file = 'Diagnostics.txt')
