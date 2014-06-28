@@ -44,7 +44,7 @@ sudo gdebi rstudio-server-0.98.945-amd64.deb
 sudo rstudio-server verify-installation
 
 #### Git clone your repo as usual, ideally into /home/USER_NAME ####
-# This is where Rstudio server looks.
+# This is where RStudio server looks.
 
 # Change owner of the repo to USER_NAME
 sudo chown -R USER_NAME /home/USER_NAME/REPO_NAME
