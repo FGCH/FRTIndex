@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Motivation and construction of the FRT Index
 % Christopher Gandrud
-% 27 March 2014
+% 28 June 2014
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[a4paper]{article}
@@ -102,7 +102,7 @@ As \cite{Hollyer2014} note, simply taking the fraction of items a country report
 
 In order to fix the scale and location of the the FRT Index we followed \cite{Hollyer2014} by subtracting it by the mean and dividing by the standard deviation of the first year of the data set (1998) at each iteration. 
 
-The Index values in 1998 are draw from a diffuse normal prior ($Transparency_{c,1980} \sim N(0,\:100)$) before recentering. For each transparency value after 1998 we used a system of random-walk priors such that $transparency_{c,t} \sim N(transparency_{c,t-1},\: \frac{1}{\tau_{c}}) \forall t > 1$, where $\tau_{c}$ acts as a country-specific smoothing parameter. Each $\tau_{c}$ is estimated with the prior $\tau_{c} \sim Gamma(20,\:0.25)$ \citep[for more details see][8]{Jackman2009,Hollyer2014}. Finally, we used diffuse priors when estimating the discrimination and difficulty parameters:
+The Index values in 1998 are draw from a diffuse normal prior ($Transparency_{c,1998} \sim N(0,\:100)$) before recentering. For each transparency value after 1998 we used a system of random-walk priors such that $transparency_{c,t} \sim N(transparency_{c,t-1},\: \frac{1}{\tau_{c}}) \forall t > 1$, where $\tau_{c}$ acts as a country-specific smoothing parameter. Each $\tau_{c}$ is estimated with the prior $\tau_{c} \sim Gamma(20,\:0.25)$ \citep[for more details see][8]{Jackman2009,Hollyer2014}. Finally, we used diffuse priors when estimating the discrimination and difficulty parameters:
 
 \begin{equation}
     \begin{pmatrix}
@@ -123,7 +123,7 @@ The Index values in 1998 are draw from a diffuse normal prior ($Transparency_{c,
     \right). 
 \end{equation}
 
-We estimated the model using a Markov Chain Monte Carlo algorithm using Just Another Gibbs Sampler (JAGS) 3.3.0 \citep{Plummer2003}.\footnote{The original JAGS model can be found at: \url{https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/BasicModel_V1.bug}. The R \citep{RCite} source code needed to download the underlying indicators and run the JAGS model is available at: \url{https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/FRTIndex_CreatorV2.R}. The later source code dynamically generates the JAGS model.} We estimated two chains using 10,000 iterations each including burn-ins of 5,000 iterations. Please see the Supplementary Materials for convergence diagnostics.\todo{Need to do once the full model has been run.} 
+We estimated the model using a Markov Chain Monte Carlo algorithm using Just Another Gibbs Sampler (JAGS) 3.4.0 \citep{Plummer2003}.\footnote{The original JAGS model can be found at: \url{https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/BasicModel_V1.bug}. The R \citep{RCite} source code needed to download the underlying indicators and run the JAGS model is available at: \url{https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/FRTIndex_CreatorV2.R}. The later source code dynamically generates the JAGS model.} We estimated two chains using 10,000 iterations each including burn-ins of 5,000 iterations. Please see the Supplementary Materials for convergence diagnostics.\todo{Need to do once the full model has been run.} 
 
 \todo[inline]{Model fit discussion here}
 
