@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Motivation and construction of the FRT Index
 % Christopher Gandrud
-% 28 June 2014
+% 29 June 2014
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[a4paper]{article}
@@ -61,11 +61,11 @@ We treat financial regulatory transparency as an unobserved latent variable that
 
 \subsection{Included indicators}
 
-To measure financial supervisory transparency we first gather data on whether or not governments reported data on a subset of indicators that are included in the World Bank's GFDD. We follow Hollyer et al.`s \citeyearpar{Hollyer2014} criteria for inclusion of items and country-years. First, we only include indicators that are reported by at least one country for each year in the period 1998-2011. This gave us the greatest coverage of indicators that are comparable across countries. Second, we exclude all indicators that were explicitly gathered for only a subset of countries. As such we avoid including data where the primary source is the Bank for International Settlements. Third, we do not include any indicator that is from a non-governmental source. This included both indicators from World Bank sponsored surveys, such as the Global Financial Inclusion Survey and the Enterprise Survey. This also includes data primarily derived from sources such as Swiss Re's Sigma Reports, Standard \& Poor's, Bankscope, and Bloomberg. Fourth, we do not include variables that are linear combinations of other variables. Fifth, we do not include variables that are simply references to the same quantity in different units. 
+To measure financial supervisory transparency we first gather data on whether or not governments reported data on a subset of indicators that are included in the World Bank's GFDD. We follow Hollyer et al.`s \citeyearpar{Hollyer2014} criteria for inclusion of items and country-years. First, we only include indicators that are reported by at least one country for each year in the period 1998-2011. This gave us the greatest coverage of indicators that are comparable across countries. Second, we exclude all indicators that were explicitly gathered for only a subset of countries. As such we avoid including data where the primary source is the Bank for International Settlements. Third, we do not include any indicator that is from a non-governmental source. This included both indicators from World Bank sponsored surveys, such as the Global Financial Inclusion Survey and the Enterprise Survey. Other non-government sources that we exclude are data primarily derived from Swiss Re's Sigma Reports, Standard \& Poor's, Bankscope, and Bloomberg. Fourth, we do not include variables that are linear combinations of other variables. Fifth, we do not include variables that are simply references to the same quantity in different units or whose reporting is perfectly linearly correlated.\footnote{Items GFFD.DI.01, GFFD.DI.02, and GFFD.D1.12 reporting was perfectly correlated. These all relate in some way to private credit. As such we only included GFFD.DI.01 (Private credit by deposit money banks to GDP (\%).} 
 
 Additionally for the FRT Index, sixth, we aim to focus on countries that have relatively highly developed banking systems. As such we include only countries and jurisdictions that the World Bank classifies as `high income'.\footnote{We include both OECD and non-OECD high income countries.} Countries with lower levels of income likely do not have financial systems sophisticated enough to have a number of the quantities reported in the items. 
 
-Using these criteria our model has 60 countries, 21 items, and 12 years (1998-2011). Table~\ref{IndTable} shows the list of indicator items and descriptions.  
+Using these criteria our model has 60 countries, 17 items, and 12 years (1998-2011). Table~\ref{IndTable} shows the list of indicator items and descriptions.  
 
 \begin{table}[ht]
     \caption{Indicators included in the FRT Index from the World Bank's Global Financial Development Database}
