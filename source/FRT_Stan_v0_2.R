@@ -75,6 +75,7 @@ frt_code <- '
     data {
         int<lower=1> J;                // number of countries
         int<lower=1> T;                // number of years
+        row_vector[2] JT;
         int<lower=1> K;                // number of items
         int<lower=1> N;                // number of obvservations
         int<lower=1> jj[N];            // country for observation n
@@ -85,7 +86,7 @@ frt_code <- '
 
     parameters {
         real delta;                    // mean transparency
-        real alpha[J,T];               // transparency for j,t - mean
+        real alpha[JT];               // transparency for j,t - mean
         real beta[K];                  // difficulty of item k
         real log_gamma[K];             // discrimination of k
         real<lower=0> sigma_alpha;     // scale of abilities
