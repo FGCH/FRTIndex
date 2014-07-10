@@ -2,6 +2,7 @@
 # FRT Index Stan Test
 # Christopher Gandrud
 # 10 July 2014
+# MIT License
 ##############
 
 # Load packages
@@ -13,7 +14,7 @@ library(rstan)
 
 # --------------------------------------------------- #
 #### Create Indicator Data Set ####
-# Download GFDD data
+# Download GFDD data from the World Bank
 Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04',
                 'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07', 'GFDD.DI.08',
                 'GFDD.DI.11', 'GFDD.DI.13', 'GFDD.DI.14',
@@ -72,7 +73,7 @@ MoltenStanReady$variable <- as.numeric(as.factor(MoltenStanReady$variable))
 MoltenStanReady <- arrange(MoltenStanReady, countrynum, variable)
 
 # --------------------------------------------------- #
-#### Specify Model ###
+#### Specify Model ####
 
 frt_code <- '
     data {
@@ -95,8 +96,8 @@ frt_code <- '
     }
 
 model {
-    alpha ~ normal(0,sigma_alpha); 
-    beta ~ normal(0,sigma_beta);   
+    alpha ~ normal(0,sigma_alpha);
+    beta ~ normal(0,sigma_beta);
     log_gamma ~ normal(0,sigma_gamma);
     delta ~ cauchy(0,5);
     sigma_alpha ~ cauchy(0,5);
