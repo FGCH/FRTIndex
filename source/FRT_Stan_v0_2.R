@@ -94,18 +94,18 @@ frt_code <- '
         real<lower=0> sigma_gamma;     // scale of log discrimiation
     }
 
-model {
-    alpha ~ normal(0,sigma_alpha);
-    beta ~ normal(0,sigma_beta);
-    log_gamma ~ normal(0,sigma_gamma);
-    delta ~ cauchy(0,5);
-    sigma_alpha ~ cauchy(0,5);
-    sigma_beta ~ cauchy(0,5);
-    sigma_gamma ~ cauchy(0,5);
-    for (n in 1:N)
-        y[n] ~ bernoulli_logit( exp(log_gamma[kk[n]])
-                            * (alpha[jj[n],tt[n]] - beta[kk[n]] + delta) );
-}
+    model {
+        alpha ~ normal(0,sigma_alpha);
+        beta ~ normal(0,sigma_beta);
+        log_gamma ~ normal(0,sigma_gamma);
+        delta ~ cauchy(0,5);
+        sigma_alpha ~ cauchy(0,5);
+        sigma_beta ~ cauchy(0,5);
+        sigma_gamma ~ cauchy(0,5);
+        for (n in 1:N)
+            y[n] ~ bernoulli_logit( exp(log_gamma[kk[n]])
+                                * (alpha[jj[n],tt[n]] - beta[kk[n]] + delta) );
+    }
 '
 
 # Create data for Stan
