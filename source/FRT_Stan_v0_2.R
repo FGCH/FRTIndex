@@ -76,7 +76,7 @@ frt_code <- '
         int<lower=1> J;                // number of countries
         int<lower=1> T;                // number of years
         int<lower=1> K;                // number of items
-        int<lower=1> N;                // number of obvservations
+        int<lower=1> N;                // number of observations
         int<lower=1> jj[N];            // country for observation n
         int<lower=1> tt[N];            // time for observation n
         int<lower=1,upper=K> kk[N];    // question for observation n
