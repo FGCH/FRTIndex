@@ -1,7 +1,7 @@
 ##############
 # FRT Index Stan Test
 # Christopher Gandrud
-# 9 July 2014
+# 10 July 2014
 ##############
 
 # Load packages
@@ -120,4 +120,7 @@ frt_data <- list(
 
 # Run model
 fit1 <- stan(model_code = frt_code, data = frt_data,
-            iter = 100, chains = 4)
+            iter = 10000, chains = 4)
+
+fit# Examine results
+print(fit1)
