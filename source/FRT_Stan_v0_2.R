@@ -52,25 +52,21 @@ BaseSub$yearnum <- as.numeric(as.factor(BaseSub$year))
 
 #### Clean up ####
 # Keep only complete variables
-BaseStanReady <- BaseSub[, c('countrynum', 'yearnum', VarVec)]
+BaseStanVars <- BaseSub[, c('countrynum', 'yearnum', VarVec)]
 
 # Data descriptions
-NCountry <- max(BaseStanReady$countrynum)
+NCountry <- max(BaseStanVars$countrynum)
+NYear <- max(BaseStanVars$yearnum)
 NItems <- length(VarVec)
-NYear <- max(BaseStanReady$yearnum)
-
-### !!!!!!!!!!!!!!! Test with no time
-BaseStanReady <- subset(BaseStanReady, yearnum == 10) # !!! This is for the test
-BaseStanReady <- BaseStanReady[, -2] # !!! This is also for the test
 
 # Melt data so that it is easy to enter into Stan data list
-MoltenStanReady <- melt(BaseStanReady, id.vars = 'countrynum')
+MoltenBase <- melt(BaseStanVars, id.vars = c('countrynum', 'yearnum'))
 
 # Convert item names to numeric
-MoltenStanReady$variable <- as.numeric(as.factor(MoltenStanReady$variable))
+MoltenBase$variable <- as.numeric(as.factor(MoltenBase$variable))
 
 # Order data
-MoltenStanReady <- arrange(MoltenStanReady, countrynum, variable)
+MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
 
 # --------------------------------------------------- #
 #### Specify Model ####
@@ -78,16 +74,18 @@ MoltenStanReady <- arrange(MoltenStanReady, countrynum, variable)
 frt_code <- '
     data {
         int<lower=1> J;                // number of countries
+        int<lower=1> T;                // number of years
         int<lower=1> K;                // number of items
         int<lower=1> N;                // number of obvservations
-        int<lower=1,upper=J> jj[N];    // country for observation n
+        int<lower=1> jj[N];            // country for observation n
+        int<lower=1> tt[N];            // time for observation n
         int<lower=1,upper=K> kk[N];    // question for observation n
         int<lower=0,upper=1> y[N];     // correctness for observation n
     }
 
     parameters {
         real delta;                    // mean transparency
-        real alpha[J];                 // transparency for j - mean
+        real alpha[J,T];               // transparency for j,t - mean
         real beta[K];                  // difficulty of item k
         real log_gamma[K];             // discrimination of k
         real<lower=0> sigma_alpha;     // scale of abilities
@@ -105,23 +103,25 @@ model {
     sigma_gamma ~ cauchy(0,5);
     for (n in 1:N)
         y[n] ~ bernoulli_logit( exp(log_gamma[kk[n]])
-                            * (alpha[jj[n]] - beta[kk[n]] + delta) );
+                            * (alpha[jj[n],tt[n]] - beta[kk[n]] + delta) );
 }
 '
 
 # Create data for Stan
 frt_data <- list(
     J = NCountry,
+    T = NYear,
     K = NItems,
-    N = nrow(MoltenStanReady),
-    jj = MoltenStanReady$countrynum,
-    kk = MoltenStanReady$variable,
-    y = MoltenStanReady$value
+    N = nrow(MoltenReady),
+    jj = MoltenReady$countrynum,
+    tt = MoltenReady$yearnum,
+    kk = MoltenReady$variable,
+    y = MoltenReady$value
 )
 
 # Run model
 fit1 <- stan(model_code = frt_code, data = frt_data,
-            iter = 10000, chains = 4)
+            iter = 100, chains = 4)
 
 fit# Examine results
 print(fit1)
