@@ -29,12 +29,13 @@ library(rstan)
 # ---------------------------------------------------------------------------- #
 #### Create Indicator Data Set ####
 # Download GFDD data from the World Bank
-Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04', 'GFDD.DI.05',
-                'GFDD.DI.06', 'GFDD.DI.07', 'GFDD.DI.08',
-                'GFDD.DI.11', 'GFDD.DI.13', 'GFDD.DI.14',
-                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02',
-                'GFDD.OI.07', 'GFDD.SI.02', 'GFDD.SI.03', 'GFDD.SI.04',
-                'GFDD.SI.05', 'GFDD.SI.07')
+Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04',
+                'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07',
+                'GFDD.DI.08', 'GFDD.DI.11', 'GFDD.DI.13',
+                'GFDD.DI.14', 'GFDD.EI.02', 'GFDD.EI.08',
+                'GFDD.OI.02', 'GFDD.OI.07', 'GFDD.SI.02',
+                'GFDD.SI.03', 'GFDD.SI.04', 'GFDD.SI.05',
+                'GFDD.SI.07')
 
 # Download indicators
 Base <- WDI(indicator = Indicators, start = 1998, end = 2011, extra = TRUE)
@@ -136,7 +137,7 @@ frt_data <- list(
 )
 
 ##### Run model ####
-fit1 <- stan(model_code = frt_code, data = frt_data, iter = 100, chains = 4)
+fit1 <- stan(model_code = frt_code, data = frt_data, iter = 1000, chains = 4)
 
 # Examine results
 print(fit1)
