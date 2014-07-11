@@ -1,9 +1,16 @@
 ##############
 # FRT Index Stan Test (version 0.2): Adding time
 # Christopher Gandrud
-# 10 July 2014
+# 11 July 2014
 # MIT License
 ##############
+
+#### Credits
+# 
+# 
+# Thanks to the Stan Users Group for assistance:
+# https://groups.google.com/forum/?hl=en#!topic/stan-users/j9Ire8EQObY
+
 
 # Load packages
 library(WDI)
@@ -94,7 +101,9 @@ frt_code <- '
     }
 
     model {
-        alpha ~ normal(0,sigma_alpha);
+        for (j in 1:J)
+            for (t in 1:T)
+                alpha[j, t] ~ normal(0, sigma_alpha);
         beta ~ normal(0,sigma_beta);
         log_gamma ~ normal(0,sigma_gamma);
         delta ~ cauchy(0,5);
