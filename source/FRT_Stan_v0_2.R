@@ -11,10 +11,10 @@
 # Stan Development Team. 2014. Stan Modeling Language Users Guide and Reference
 # Manual, Version 2.3. 32-35. http://mc-stan.org/.
 #
-# Hollyer, James R., B. Peter Rosendorff, and James Raymond Vreeland. 2014. 
-# "Replication data for: Measuring Transparency". 
+# Hollyer, James R., B. Peter Rosendorff, and James Raymond Vreeland. 2014.
+# "Replication data for: Measuring Transparency".
 # http://dx.doi.org/10.7910/DVN/24274
-# 
+#
 # Thanks also to the Stan Users Group for syntax assistance:
 # https://groups.google.com/forum/?hl=en#!topic/stan-users/j9Ire8EQObY
 # ---------------------------------------------------------------------------- #
@@ -29,11 +29,11 @@ library(rstan)
 # ---------------------------------------------------------------------------- #
 #### Create Indicator Data Set ####
 # Download GFDD data from the World Bank
-Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04', 'GFDD.DI.05', 
+Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04', 'GFDD.DI.05',
                 'GFDD.DI.06', 'GFDD.DI.07', 'GFDD.DI.08',
                 'GFDD.DI.11', 'GFDD.DI.13', 'GFDD.DI.14',
-                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 
-                'GFDD.OI.07', 'GFDD.SI.02', 'GFDD.SI.03', 'GFDD.SI.04', 
+                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02',
+                'GFDD.OI.07', 'GFDD.SI.02', 'GFDD.SI.03', 'GFDD.SI.04',
                 'GFDD.SI.05', 'GFDD.SI.07')
 
 # Download indicators
@@ -107,8 +107,10 @@ frt_code <- '
 
     model {
         for (j in 1:J)
-            for (t in 1:T)
-                alpha[j, t] ~ normal(0, sigma_alpha);
+            alpha[j,1] ~ normal(0, sigma_alpha);
+        for (j in 1:J)
+            for (t in 2:T)
+                alpha[j,t] ~ normal(alpha[j,t-1], sigma_alpha);
         beta ~ normal(0,sigma_beta);
         log_gamma ~ normal(0,sigma_gamma);
         delta ~ cauchy(0,5);
