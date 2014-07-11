@@ -5,12 +5,19 @@
 # MIT License
 ##############
 
-#### Credits
+#### Credits ----------------------------------------------------------------- #
+# The Stan model is built on two sources:
+# The Multilevel 2PL Model from
+# Stan Development Team. 2014. Stan Modeling Language Users Guide and Reference
+# Manual, Version 2.3. 32-35. http://mc-stan.org/.
+#
+# Hollyer, James R., B. Peter Rosendorff, and James Raymond Vreeland. 2014. 
+# "Replication data for: Measuring Transparency". 
+# http://dx.doi.org/10.7910/DVN/24274
 # 
-# 
-# Thanks to the Stan Users Group for assistance:
+# Thanks also to the Stan Users Group for syntax assistance:
 # https://groups.google.com/forum/?hl=en#!topic/stan-users/j9Ire8EQObY
-
+# ---------------------------------------------------------------------------- #
 
 # Load packages
 library(WDI)
@@ -19,18 +26,17 @@ library(reshape2)
 library(dplyr)
 library(rstan)
 
-# --------------------------------------------------- #
+# ---------------------------------------------------------------------------- #
 #### Create Indicator Data Set ####
 # Download GFDD data from the World Bank
-Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04',
-                'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07', 'GFDD.DI.08',
+Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04', 'GFDD.DI.05', 
+                'GFDD.DI.06', 'GFDD.DI.07', 'GFDD.DI.08',
                 'GFDD.DI.11', 'GFDD.DI.13', 'GFDD.DI.14',
-                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.OI.07',
-                'GFDD.SI.02', 'GFDD.SI.03', 'GFDD.SI.04', 'GFDD.SI.05',
-                'GFDD.SI.07')
+                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 
+                'GFDD.OI.07', 'GFDD.SI.02', 'GFDD.SI.03', 'GFDD.SI.04', 
+                'GFDD.SI.05', 'GFDD.SI.07')
 
 # Download indicators
-# Unable to download 'GFDD.DM.011', 'GFDD.OI.14'
 Base <- WDI(indicator = Indicators, start = 1998, end = 2011, extra = TRUE)
 
 # Keep countries with 'High income' (OECD and non-OECD classification)
@@ -75,9 +81,8 @@ MoltenBase$variable <- as.numeric(as.factor(MoltenBase$variable))
 # Order data
 MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
 
-# --------------------------------------------------- #
+# ---------------------------------------------------------------------------- #
 #### Specify Model ####
-
 frt_code <- '
     data {
         int<lower=1> J;                // number of countries
@@ -116,7 +121,7 @@ frt_code <- '
     }
 '
 
-# Create data for Stan
+#### Create data list for Stan ####
 frt_data <- list(
     J = NCountry,
     T = NYear,
@@ -128,9 +133,8 @@ frt_data <- list(
     y = MoltenReady$value
 )
 
-# Run model
-fit1 <- stan(model_code = frt_code, data = frt_data,
-            iter = 100, chains = 4)
+##### Run model ####
+fit1 <- stan(model_code = frt_code, data = frt_data, iter = 100, chains = 4)
 
-fit# Examine results
+# Examine results
 print(fit1)
