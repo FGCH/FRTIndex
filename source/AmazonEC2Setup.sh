@@ -1,6 +1,6 @@
-# Set up RStudio and JAGS on an Amazon EC2 instance
+# Set up RStudio, JAGS, and Stan on an Amazon EC2 instance
 # Using Ubuntu 64-bit
-# Partially from http://blog.yhathq.com/posts/r-in-the-cloud-part-1.html 
+# Partially from http://blog.yhathq.com/posts/r-in-the-cloud-part-1.html
 # See yhat for EC2 instance set up
 
 # Navigate to key pair
@@ -26,12 +26,14 @@ sudo apt-get install -f r-base= PACKAGE_VERSION
 
 # Install git
 sudo apt-get install git
-
 sudo apt-get update
 
 # Configure git
 git config --global user.name GIT_USER_NAME
 git config --global user.email GIT_USER_EMAIL
+
+# Install g++ (needed for Stan, and generally useful)
+sudo apt-get g++
 
 # Install RStudio
 ## for latest version of RStudio see http://www.rstudio.com/ide/download/server
@@ -48,5 +50,16 @@ sudo rstudio-server verify-installation
 
 # Change owner of the repo to USER_NAME
 sudo chown -R USER_NAME /home/USER_NAME/REPO_NAME
+
+
+# Install Stan
+## See: https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started
+## In the command line check the number of cores
+nproc
+
+## In R set number of course in Sys.setenv
+# Sys.setenv(MAKEFLAGS = "-j4")
+
+# source('http://mc-stan.org/rstan/install.R', echo = TRUE, max.deparse.length = 2000)
 
 # Access RStudio Server with http://PUBLIC_DNS:8787

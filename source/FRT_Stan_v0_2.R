@@ -1,7 +1,7 @@
 ##############
 # FRT Index Stan Test (version 0.2): Adding time
 # Christopher Gandrud
-# 11 July 2014
+# 13 July 2014
 # MIT License
 ##############
 
@@ -137,7 +137,7 @@ frt_data <- list(
 )
 
 ##### Run model ####
-fit1 <- stan(model_code = frt_code, data = frt_data, iter = 1000, chains = 4)
+fit1 <- stan(model_code = frt_code, data = frt_data, iter = 50, chains = 4)
 
 # Examine results
 print(fit1)
