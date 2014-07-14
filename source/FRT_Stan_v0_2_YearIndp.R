@@ -1,7 +1,8 @@
 ##############
-# FRT Index Stan Test (version 0.2): Adding time
+# FRT Index Stan Test (version 0.2): Adding time, but treating years as 
+# independent
 # Christopher Gandrud
-# 13 July 2014
+# 14 July 2014
 # MIT License
 ##############
 
@@ -108,10 +109,7 @@ frt_code <- "
 
     model {
         for (j in 1:J)
-            alpha[j,1] ~ normal(0, sigma_alpha);
-        for (j in 1:J)
-            for (t in 2:T)
-                alpha[j,t] ~ normal(alpha[j,t-1], sigma_alpha);
+            alpha[j] ~ normal(0, sigma_alpha);
         beta ~ normal(0,sigma_beta);
         log_gamma ~ normal(0,sigma_gamma);
         delta ~ cauchy(0,5);
@@ -137,7 +135,7 @@ frt_data <- list(
 )
 
 ##### Run model ####
-fit1 <- stan(model_code = frt_code, data = frt_data, iter = 2000, chains = 4)
+fit_Indp <- stan(model_code = frt_code, data = frt_data, iter = 100, chains = 4)
 
 # Examine results
-print(fit1)
+print(fit_Indp)

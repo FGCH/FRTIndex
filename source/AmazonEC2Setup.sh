@@ -33,7 +33,7 @@ git config --global user.name GIT_USER_NAME
 git config --global user.email GIT_USER_EMAIL
 
 # Install g++ (needed for Stan, and generally useful)
-sudo apt-get g++
+sudo apt-get install g++
 
 # Install RStudio
 ## for latest version of RStudio see http://www.rstudio.com/ide/download/server
