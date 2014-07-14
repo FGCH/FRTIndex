@@ -1,22 +1,26 @@
-##############
-# FRT Index Stan Test (version 0.2): Adding time
+################################################################################
+# FRT Index Stan Test (version 0.2): Adding time, don't treat years as indep.
 # Christopher Gandrud
-# 13 July 2014
+# 14 July 2014
 # MIT License
-##############
+################################################################################
 
 #### Credits ----------------------------------------------------------------- #
-# The Stan model is built on two sources:
-# The Multilevel 2PL Model from
+# The Stan Multilevel 2PL Model is built from the following sources:
 # Stan Development Team. 2014. Stan Modeling Language Users Guide and Reference
 # Manual, Version 2.3. 32-35. http://mc-stan.org/.
+#
+# Bafumi, J., Gelman, A., Park, D. K., & Kaplan, N. (2005). Practical Issues in
+# Implementing and Understanding Bayesian Ideal Point Estimation. Political
+# Analysis, 13(2), 171–187. doi:10.1093/pan/mpi010
 #
 # Hollyer, James R., B. Peter Rosendorff, and James Raymond Vreeland. 2014.
 # "Replication data for: Measuring Transparency".
 # http://dx.doi.org/10.7910/DVN/24274
 #
-# Thanks also to the Stan Users Group for syntax assistance:
-# https://groups.google.com/forum/?hl=en#!topic/stan-users/j9Ire8EQObY
+# Thanks also to the Stan Users Group:
+# - https://groups.google.com/forum/?hl=en#!topic/stan-users/j9Ire8EQObY
+# - https://groups.google.com/forum/#!topic/stan-users/oSGUrVFCIVw
 # ---------------------------------------------------------------------------- #
 
 # Load packages
@@ -99,8 +103,8 @@ frt_code <- "
     parameters {
         real delta;                    // mean transparency
         real alpha[J,T];               // transparency for j,t - mean
-        real beta[K];                  // difficulty of item k
-        real log_gamma[K];             // discrimination of k
+        vector[K] beta;                // difficulty of item k
+        vector<lower=0>[K] gamma;      // discrimination of k
         real<lower=0> sigma_alpha;     // scale of abilities
         real<lower=0> sigma_beta;      // scale of difficulties
         real<lower=0> sigma_gamma;     // scale of log discrimiation
@@ -113,13 +117,12 @@ frt_code <- "
             for (t in 2:T)
                 alpha[j,t] ~ normal(alpha[j,t-1], sigma_alpha);
         beta ~ normal(0,sigma_beta);
-        log_gamma ~ normal(0,sigma_gamma);
-        delta ~ cauchy(0,5);
-        sigma_alpha ~ cauchy(0,5);
-        sigma_beta ~ cauchy(0,5);
+        delta ~ cauchy(0,5);           // Stan Ref p. 35
         sigma_gamma ~ cauchy(0,5);
+        sigma_alpha ~ normal(0,1);     //see http://bit.ly/1sdn91q
+        sigma_beta ~ cauchy(0,5);
         for (n in 1:N)
-            y[n] ~ bernoulli_logit( exp(log_gamma[kk[n]])
+            y[n] ~ bernoulli_logit( gamma[kk[n]]
                                 * (alpha[jj[n],tt[n]] - beta[kk[n]] + delta) );
     }
 "
@@ -137,7 +140,8 @@ frt_data <- list(
 )
 
 ##### Run model ####
-fit1 <- stan(model_code = frt_code, data = frt_data, iter = 2000, chains = 4)
+fit_NonIndp <- stan(model_code = frt_code, data = frt_data,
+                    iter = 200, chains = 4)
 
 # Examine results
-print(fit1)
+print(fit_NonIndp)

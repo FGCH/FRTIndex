@@ -139,7 +139,8 @@ frt_data <- list(
 )
 
 ##### Run model ####
-fit_Indp <- stan(model_code = frt_code, data = frt_data, iter = 500, chains = 4)
+fit_Indp <- stan(model_code = frt_code, data = frt_data,
+                iter = 2000, chains = 4)
 
 # Examine results
 print(fit_Indp)
