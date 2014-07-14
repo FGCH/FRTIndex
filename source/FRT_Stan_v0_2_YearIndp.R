@@ -108,7 +108,7 @@ frt_code <- "
         vector<lower=0>[K] gamma;      // discrimination of k
         real<lower=0> sigma_alpha;     // scale of abilities
         real<lower=0> sigma_beta;      // scale of difficulties
-        real<lower=0> sigma_gamma;     // scale of log discrimiation
+        real<lower=0> sigma_gamma;     // scale of log discrimination
     }
 
     model {

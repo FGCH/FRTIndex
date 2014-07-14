@@ -107,7 +107,7 @@ frt_code <- "
         vector<lower=0>[K] gamma;      // discrimination of k
         real<lower=0> sigma_alpha;     // scale of abilities
         real<lower=0> sigma_beta;      // scale of difficulties
-        real<lower=0> sigma_gamma;     // scale of log discrimiation
+        real<lower=0> sigma_gamma;     // scale of log discrimination
     }
 
     model {
@@ -141,7 +141,7 @@ frt_data <- list(
 
 ##### Run model ####
 fit_NonIndp <- stan(model_code = frt_code, data = frt_data,
-                    iter = 200, chains = 4)
+                    iter = 50, chains = 4)
 
 # Examine results
 print(fit_NonIndp)
