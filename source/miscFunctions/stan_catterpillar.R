@@ -40,10 +40,10 @@ stan_catterpillar <- function(obj, params, params_labels = NULL,
     
     # Add labels
     if (!is.null(params_labels)) {
-        message("\n Ensure that your parameter labels are in the same order as the parameters.\n")
+        message("\nEnsure that your parameter labels are in the same order as the parameters.\n")
         if (length(params_labels) != 
                 length(unique(sims_subset_molten$variable))) {
-            stop("params_labels must equal the number of plotted parameters",
+            stop("params_labels must equal the number of plotted parameters.",
                 call. = FALSE)
         }
         sims_subset_molten$variable <- factor(sims_subset_molten$variable,
@@ -85,7 +85,7 @@ stan_catterpillar <- function(obj, params, params_labels = NULL,
             geom_segment(aes(x = lower95, xend = upper95, yend = params), 
                             size = 0.5) +
             geom_segment(aes(x = lower90, xend = upper90, 
-                            yend = params, medians), size = 1.5) +
+                            yend = params), size = 1.5) +
             xlab('') + ylab('') +
             theme_bw()
     }
