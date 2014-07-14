@@ -98,11 +98,11 @@ frt_code <- "
         int<lower=1> tt[N];            // time for observation n
         int<lower=1,upper=K> kk[N];    // question for observation n
         int<lower=0,upper=1> y[N];     // correctness for observation n
-    }
+    } 
 
     parameters {
         real delta;                    // mean transparency
-        real alpha[J,T];               // transparency for j,t - mean
+        matrix[J,T] alpha;         // transparency for j,t - mean
         vector[K] beta;                // difficulty of item k
         vector<lower=0>[K] gamma;      // discrimination of k
         real<lower=0> sigma_alpha;     // scale of abilities
@@ -111,11 +111,9 @@ frt_code <- "
     }
 
     model {
-        for (j in 1:J)
-            alpha[j,1] ~ normal(0, sigma_alpha);
-        for (j in 1:J)
-            for (t in 2:T)
-                alpha[j,t] ~ normal(alpha[j,t-1], sigma_alpha);
+        alpha[1] ~ normal(0, sigma_alpha); 
+        for (t in 2:T) 
+            alpha[t] ~ normal(alpha[t-1], sigma_alpha); 
         beta ~ normal(0,sigma_beta);
         delta ~ cauchy(0,5);           // Stan Ref p. 35
         sigma_gamma ~ cauchy(0,5);
