@@ -1,4 +1,4 @@
-#' A function to create catterpillar plots from stanfit objects from rstan
+#' A function to create catterpillar plots rstan's stanfit objects
 #'
 #' @param obj a \code{stanfit} object
 #' @param params character string, vector, or regular expression of paramater
@@ -15,6 +15,8 @@
 #' @details Points plot the simulations' medians, thin lines represent the 95%
 #' credibility intervals, and thick lines represent the 90% credibility
 #' intervals.
+#'
+#' @seealso \link{rstan}, \code{\link{stan}}
 
 stan_catterpillar <- function(obj, params, params_labels = NULL,
                               order_medians = TRUE, horizontal = TRUE){
