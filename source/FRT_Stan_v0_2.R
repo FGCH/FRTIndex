@@ -96,13 +96,13 @@ frt_code <- "
         int<lower=1> N;                // number of observations
         int<lower=1> jj[N];            // country for observation n
         int<lower=1> tt[N];            // time for observation n
-        int<lower=1,upper=K> kk[N];    // question for observation n
-        int<lower=0,upper=1> y[N];     // correctness for observation n
+        int<lower=1,upper=K> kk[N];    // item for observation n
+        int<lower=0,upper=1> y[N];     // response for observation n
     } 
 
     parameters {
         real delta;                    // mean transparency
-        matrix[J,T] alpha;         // transparency for j,t - mean
+        matrix[J,T] alpha;             // transparency for j,t - mean
         vector[K] beta;                // difficulty of item k
         vector<lower=0>[K] gamma;      // discrimination of k
         real<lower=0> sigma_alpha;     // scale of abilities
@@ -111,13 +111,16 @@ frt_code <- "
     }
 
     model {
-        alpha[1] ~ normal(0, sigma_alpha); 
+        //alpha[1] ~ normal(0,sigma_alpha); 
+        alpha[1] ~ normal(0,100); // diffuse normal prior
         for (t in 2:T) 
             alpha[t] ~ normal(alpha[t-1], sigma_alpha); 
         beta ~ normal(0,sigma_beta);
         delta ~ cauchy(0,5);           // Stan Ref p. 35
-        sigma_gamma ~ cauchy(0,5);
-        sigma_alpha ~ normal(0,1);     //see http://bit.ly/1sdn91q
+        sigma_gamma ~ cauchy(0,2.5);   // need half Cauchy Prior, because contrained to be positive (Stan Ref p. 24)
+        sigma_alpha ~ gamma(5,1.25);
+        //sigma_alpha ~ cauchy(0,5);
+        //sigma_alpha ~ normal(0,1);     //see http://bit.ly/1sdn91q
         sigma_beta ~ cauchy(0,5);
         for (n in 1:N)
             y[n] ~ bernoulli_logit( gamma[kk[n]]
