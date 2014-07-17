@@ -117,11 +117,11 @@ frt_code <- "
             alpha[t] ~ normal(alpha[t-1], sigma_alpha); 
         beta ~ normal(0,sigma_beta);
         delta ~ cauchy(0,5);           // Stan Ref p. 35
-        sigma_gamma ~ cauchy(0,5); // need half Cauchy Prior (Stan Ref p. 24)?
-        sigma_alpha ~ gamma(5,1.25);
+        sigma_gamma ~ cauchy(0,0.25);     // need half Cauchy Prior (Stan Ref p. 24)?
+        sigma_alpha ~ gamma(0.25,20);
         //sigma_alpha ~ cauchy(0,5);
-        //sigma_alpha ~ normal(0,1);     //see http://bit.ly/1sdn91q
-        sigma_beta ~ cauchy(0,5);
+        //sigma_alpha ~ normal(0,1);   //see http://bit.ly/1sdn91q
+        sigma_beta ~ cauchy(0,0.25);
         for (n in 1:N)
             y[n] ~ bernoulli_logit( gamma[kk[n]]
                                 * (alpha[jj[n],tt[n]] - beta[kk[n]] + delta) );
@@ -142,7 +142,7 @@ frt_data <- list(
 
 ##### Run model ####
 fit_NonIndp <- stan(model_code = frt_code, data = frt_data,
-                    iter = 50, chains = 4)
+                    iter = 200, chains = 4)
 
 # Examine results
 print(fit_NonIndp)
