@@ -102,6 +102,7 @@ frt_code <- "
 
     parameters {
         real delta;                    // mean transparency
+        vector[J] alpha1;              // initial alpha for t = 1 before recentering
         matrix[J,T] alpha;             // transparency for j,t - mean
         vector[K] beta;                // difficulty of item k
         vector[K] log_gamma;           // discrimination of k
@@ -110,11 +111,24 @@ frt_code <- "
         real<lower=0> sigma_gamma;     // scale of log discrimination
     }
 
+    transformed parameters {
+        vector[J] recentered_alpha1;
+        real mean_alpha1;
+        real<lower=0> sd_alpha1;
+
+        mean_alpha1 <- mean(alpha1);
+        sd_alpha1 <- sd(alpha1);
+        for (j in 1:J)
+            recentered_alpha1[j] <- ( alpha1[j] - mean_alpha1 ) / sd_alpha1;
+    }
+
     model {
-        alpha[1] ~ normal(0,sigma_alpha); 
+        alpha1 ~ normal(0,100); // diffues prior 
+        for (j in 1:J)
+            alpha[1] ~ normal(recentered_alpha1[j],sigma_alpha);
         for (t in 2:T) 
-            // alpha[t] ~ normal(alpha[t-1], sigma_alpha); // with smoothing
-            alpha[t] ~ normal(0, sigma_alpha); // without smoothing
+            alpha[t] ~ normal(alpha[t-1], sigma_alpha); // with smoothing
+           // alpha[t] ~ normal(0, sigma_alpha); // without smoothing
         beta ~ normal(0,sigma_beta);
         log_gamma ~ normal(0,sigma_gamma);
         delta ~ cauchy(0,5);
