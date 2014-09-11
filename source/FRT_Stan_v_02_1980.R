@@ -113,8 +113,8 @@ frt_code <- "
     model {
         alpha[1] ~ normal(0,sigma_alpha); 
         for (t in 2:T) 
-            // alpha[t] ~ normal(alpha[t-1], sigma_alpha); 
-            alpha[t] ~ normal(0, sigma_alpha); 
+            // alpha[t] ~ normal(alpha[t-1], sigma_alpha); // with smoothing
+            alpha[t] ~ normal(0, sigma_alpha); // without smoothing
         beta ~ normal(0,sigma_beta);
         log_gamma ~ normal(0,sigma_gamma);
         delta ~ cauchy(0,5);
@@ -142,7 +142,7 @@ frt_data <- list(
 
 ##### Run model ####
 fit_NonIndp <- stan(model_code = frt_code, data = frt_data,
-                    iter = 100, chains = 4)
+                    iter = 500, chains = 4)
 
 # Examine results
 print(fit_NonIndp)
