@@ -19,9 +19,10 @@ source(paste0(GitDir, 'source/miscFunctions/simZelig.R'))
 Comb <- Comb[order(Comb$country, Comb$year), ]
 Comb <- slide(Comb, Var = 'median', GroupVar = 'country', NewVar = 'FRT_Lag')
 Comb <- slide(Comb, Var = 'economic_abs', GroupVar = 'country', NewVar = 'Econ_Lag')
+Comb <- slide(Comb, Var = 'ZScore', GroupVar = 'country', NewVar = 'Z_Lag')
 
 # Run basic model
-M1 <- zelig(ZScore ~ FRT_Lag*Econ_Lag,
+M1 <- zelig(ZScore ~ Z_Lag + FRT_Lag + Econ_Lag,
             data = Comb, model = 'ls', method = 'weave', cite = FALSE)
 
 
@@ -42,3 +43,5 @@ ggplot(Sim1, aes(FRT_Lag, QI, colour = Econ_Lag)) +
     guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2))) +
     xlab('\nFRT Transparency Level') + ylab('Predicted Z-Score\n') +
     theme_bw(base_size = 15)
+
+
