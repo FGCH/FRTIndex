@@ -2,7 +2,7 @@
 # FRT Index Stan Test (version 0.1): Adding time, don't treat years as indep.
 # Using only variables that are reported back to 1980
 # Christopher Gandrud
-# 12 September 2014
+# 29 September 2014
 # MIT License
 ################################################################################
 
@@ -58,7 +58,7 @@ VarVec <- vector()
 for (i in IndSub){
     BaseSub[, paste0('Rep_', i)] <- 1
     BaseSub[, paste0('Rep_', i)][is.na(BaseSub[, i])] <- 0
-    
+
     temp <- paste0('Rep_', i)
     VarVec <- append(VarVec, temp)
 }
@@ -98,7 +98,7 @@ frt_code <- "
         int<lower=1> tt[N];            // time for observation n
         int<lower=1,upper=K> kk[N];    // item for observation n
         int<lower=0,upper=1> y[N];     // response for observation n
-    } 
+    }
 
     parameters {
         real delta;                    // mean transparency
@@ -123,12 +123,12 @@ frt_code <- "
     }
 
     model {
-        alpha1 ~ normal(0,sigma_alpha); // diffuse prior 
+        alpha1 ~ normal(0,sigma_alpha); // diffuse prior
         for (j in 1:J)
-            alpha[1] ~ normal(recentered_alpha1[j],sigma_alpha);
-        for (t in 2:T) 
+            alpha[j,1] ~ normal(recentered_alpha1[j],sigma_alpha);
+        for (t in 2:T)
             alpha[t] ~ normal(alpha[t-1], sigma_alpha); // with smoothing
-           // alpha[t] ~ normal(0, sigma_alpha); // without smoothing
+            // alpha[t] ~ normal(0, sigma_alpha); // without smoothing
         beta ~ normal(0,sigma_beta);
         log_gamma ~ normal(0,sigma_gamma);
         delta ~ cauchy(0,5);
@@ -136,7 +136,7 @@ frt_code <- "
         sigma_beta ~ cauchy(0,5);
         sigma_gamma ~ cauchy(0,5);
         for (n in 1:N)
-            y[n] ~ bernoulli_logit( 
+            y[n] ~ bernoulli_logit(
                                 exp(log_gamma[kk[n]])
                                 * (alpha[jj[n],tt[n]] - beta[kk[n]] + delta) );
     }
@@ -156,7 +156,7 @@ frt_data <- list(
 
 ##### Run model ####
 fit_NonIndp <- stan(model_code = frt_code, data = frt_data,
-                    iter = 1000, chains = 4)
+                    iter = 100, chains = 4)
 
 # Examine results
 print(fit_NonIndp)
