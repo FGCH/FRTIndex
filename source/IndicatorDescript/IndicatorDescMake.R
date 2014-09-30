@@ -1,22 +1,38 @@
 #############
 # Create indicator description file from http://data.worldbank.org/data-catalog/global-financial-development
 # Christopher Gandrud
-# 19 February 2014
+# 30 September 2014
 ############
 
 setwd('/git_repositories/FRTIndex/source/IndicatorDescript/')
 
+library(DataCombine)
+library(xtable)
+
 Descript <- read.csv(file = 'GFDD_Series.csv', stringsAsFactors = FALSE)
 Descript <- Descript[, c('SeriesCode', 'Indicator.Name', 'Source', 'Periodicity')]
 
-# List of indicators included 
-Indicators <- c('GFDD.AM.03', 'GFDD.DI.01', 'GFDD.DI.02', 'GFDD.DI.03', 'GFDD.DI.04', 'GFDD.DI.05', 'GFDD.DI.06',
-                'GFDD.DI.07', 'GFDD.DI.08', 'GFDD.DI.11', 'GFDD.DI.12', 'GFDD.DI.13', 'GFDD.DI.14', 'GFDD.DM.03',
-                'GFDD.DM.04', 'GFDD.DM.05', 'GFDD.DM.06', 'GFDD.DM.07', 'GFDD.DM.08', 'GFDD.DM.09', 'GFDD.DM.10',
-                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.OI.07', 'GFDD.OI.08', 'GFDD.OI.09',
-                'GFDD.OI.10', 'GFDD.OI.11', 'GFDD.OI.12', 'GFDD.OI.13', 'GFDD.SI.02', 'GFDD.SI.03',
-                'GFDD.SI.04', 'GFDD.SI.05', 'GFDD.SI.07')
+# List of indicators included
+Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04',
+                'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07',
+                'GFDD.DI.08', 'GFDD.DI.11',
+                'GFDD.DI.14', 'GFDD.EI.02', 'GFDD.EI.08',
+                'GFDD.OI.02', 'GFDD.OI.07',
+                'GFDD.SI.04')
 
 Descript <- subset(Descript, SeriesCode %in% Indicators)
 
 write.csv(Descript, file = 'IndicatorDescription.csv', row.names = FALSE)
+
+## Create .tex version
+from = c('International Financial Statistics \\(IFS\\), International Monetary Fund \\(IMF\\)',
+         'World Bank - Non banking financial database',
+         'Nonbanking financial database, World Bank',
+         'World Development Indicators \\(WDI\\), World Bank')
+to = c('IFS', 'World Bank', 'World Bank', 'World Bank')
+replacements <- data.frame(from, to)
+
+Descript <- FindReplace(Descript, Var = 'Source', replaceData = replacements)
+
+print.xtable(xtable(Descript), file = 'IndicatorDescription.tex', 
+             floating = FALSE, type = 'latex')

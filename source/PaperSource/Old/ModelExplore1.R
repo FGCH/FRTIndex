@@ -25,7 +25,7 @@ M1 <- zelig(ZScore ~ FRT_Lag*Econ_Lag,
             data = Comb, model = 'ls', method = 'weave', cite = FALSE)
 
 
-scenarios <- expand.grid(FRT_Lag = seq(from = -1, to = 5, by = 0.1) ,
+scenarios <- expand.grid(FRT_Lag = seq(from = -2, to = 5, by = 0.1) ,
                          Econ_Lag = c(0.25, 0.9))
 
 # Sim1 <- simZelig(M1, scen = scenarios, secondVar = 'economic_abs')

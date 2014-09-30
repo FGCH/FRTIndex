@@ -73,13 +73,11 @@ Using these criteria our model has 60 countries, 14 items, and 22 years (1990-20
     \caption{Indicators included in the FRT Index from the World Bank's Global Financial Development Database}
     \label{IndTable}
     \vspace{0.3cm}
-    \scalebox{0.95}{
-        \input{tables/IndicatorDescript}
+    \scalebox{0.75}{
+        \input{tables/IndicatorDescription.tex}
     }
     {\scriptsize{SeriesCode is the GFDD variable identifier.\\
-    Sources Key:\\
-    IFS = International Financial Statistics\\
-    IMF = International Monetary Fund}}
+    IFS = International Financial Statistics, IMF}}
 \end{table}
 
 \subsection{The model}
@@ -117,7 +115,7 @@ Figures \ref{FRT_1998}, \ref{FRT_2007}, and \ref{FRT_2011} provide snapshots of 
 
 We should first notice that the index passes a face validity test. There is a noticeable cluster of countries with very low FRT scores. These countries include the Bermuda, Cayman Islands, the Isle of Man, and Monaco. All of these jurisdictions are known for their banking secrecy, often as explicit policy decisions to attract capital from those seeking to avoid paying taxes in their home jurisdictions. At the high end of the scale we also see countries that have been known for their transparency. \cite{Gandrud2014a} noted a high level of financial regulatory transparency in the United States' financial regulatory reporting practices relative to practices among many European Union countries. As we would expect from this work, the United States is regularly placed among the countries with the highest FRT scores.
 
-Changes in countries' FRT scores over time also reflect substantively meaningful policy changes. Hungary is a prime example. Figure~\ref{FRTHungary} shows Hungary's FRT Index across all of the years in the sample. In 1998 it is estimated to have one of the highest FRT scores, with a median well above 5. However, this declines over time with a clear break to very low transparency levels starting in 2009. The 2009 figures would have been reported to international institutions in 2010, the year that Viktor Orb\'{a}n's Christian Democratic People's Party entered government. This government introduced a number of major economic and financial policy changes that sometimes directly contradicted Hungary's international commitments, including reducing the independence of the central bank. \todo{Mark H. could you add some thoughts on this?}
+Changes in countries' FRT scores over time also reflect substantively meaningful policy changes. Hungary is a prime example. Figure~\ref{FRTHungary} shows Hungary's FRT Index across all of the years in the sample. In 1998 it is estimated to have one of the highest FRT scores, with a median well above 5. However, this declines over time with a clear break to very low transparency levels starting in 2009. The 2009 figures would have been reported to international institutions in 2010, the year that Viktor Orb\'{a}n's Christian Democratic People's Party entered government. This government introduced a number of major economic and financial policy changes that sometimes directly contradicted Hungary's international commitments, including reducing the independence of the central bank.
 
 \begin{figure}
     \caption{Financial Regulatory Transparency Index in 1998}
@@ -146,9 +144,9 @@ Changes in countries' FRT scores over time also reflect substantively meaningful
     {\scriptsize{Thin lines represent the 95\% highest posterior density interval. Thick lines represent the 90\%. Points represent the median.}}
 \end{figure}
 
-It's important to also note that the FRT Index provides distinct information from more general transparency indices, such as Hollyer et al.'s HRV Index and Freedom House. \todo{Complete}
+It's important to also note that the FRT Index provides distinct information from more general transparency indices, such as Hollyer et al.'s HRV Index and Freedom House.
 
-\todo{COMPARE COUNTRY PLACEMENT TO HRV INDEX, ESPECIALLY SWEDEN.}
+\todo[inline]{COMPARE COUNTRY PLACEMENT TO HRV INDEX AND LIEDORP\_ETAL, ESPECIALLY SWEDEN.}
 
 \begin{figure}
     \caption{Financial Regulatory Transparency Index for Hungary}
@@ -199,28 +197,30 @@ In addition to comparing the FRT Index to proportions of items reported, we can 
 \end{figure}
 
 
-\section{Preliminary Associations}
+\section{Preliminary Analysis}
 
 To demonstrate the potential usefulness of the FRT Index we examine a number of associations between the Index and the occurrence and potential occurrence of financial crisis.
 
-\todo[inline]{[ASSOCIATION WITH ECONOMIC BUREAUCRATIC CAPACITY]
-[Z-SCORE (PROB. OF BANK DEFAULT) AS DEPENDENT VARIABLE]}
-
 A standard measure of a banking system's health is the jurisdiction level `Z-Score'. This measure attempts to capture the probability of individual bank insolvency, but is sometimes aggregated to the jurisdiction level. The World Bank's GFDD includes a Z-score calculated by using Bankscope, Bureau van Dijk unconsolidated bank-level data. Aggregated to the jurisdiction level it compares commercial banks' buffers (capitalization and returns) to the volatility of those returns. A higher Z-score indicates that there is a higher probability of insolvency.
 
+In models by itself, the FRT Index is not significantly associated with the probability of a country's aggregated Z-Score. However, when we interact it with a measure of economic institutional quality, there is an interesting association. The indicator of economic institutional quality that we use is from \cite{kunvcivc2014}. This variable was created with a factor analysis of a number of economic institutional indicators including those from the Index of Economic Freedom, the World Bank’s Governance Indicators, and the Fraser Institutes’ EFW Index. The variable is available from 1990 through 2010.
+
+Figure \ref{basicAssoc} shows predicted Z-Scores from a simple linear regression model where the FRT Index and Economic Institutional Quality were lagged by one year. We can see that the positive effect of transparency on financial system stability is contingent on economic instituational quality. Countries with higher quality institutions are predicted to have more stability with higher transparency. However, the results are
+
 \begin{figure}
-    \caption{Initial Associations}
+    \caption{Predicted Z-Score for Various levels of FRT Transparency and Economic Capacity}
     \label{basicAssoc}
     \begin{center}
-        \includegraphics[scale=0.5]{figures/Associations1}
+        \includegraphics[scale=0.5]{figures/predictedZScore.pdf}
     \end{center}
+    {\scriptsize{From 1,000 simulations from the multivariate normal distribution with means and variances estimated using a normal linear regression. See \cite{King2000,simPH_JSS}}}
 \end{figure}
 
 \section*{Conclusion}
 
-In this paper we have introduced a new Financial Regulatory Transparency Index.
+In this paper we have introduced a new Financial Regulatory Transparency Index. This work builds directly on the approach pioneered by \cite{Hollyer2014} to measuring countries' attempts to release minimally credible information to international institutions and investors. In so doing we have not only applied the method to measuring financial supervisory transparency, but also made a number of important improvements to the fundamental model--primarily using the No-U-Turn Sampler, using half Cauchy rather than Gamma priors, and vectorising the model--that dramatically improve the accuracy and computational efficiency of the modelling process.
 
-\todo[inline]{Complete}
+We have also begun to explore how this type of transparency actually affects financial system stability. We will continue to develop this work and furthermore use it to help estabilish the causal process by examining how changes in international supervisory transparency levels affect capital inflows.
 
 \bibliographystyle{apsr}
 \bibliography{FRTIndex}
