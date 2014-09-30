@@ -2,7 +2,7 @@
 # FRT Index Stan Test (version 0.1): Adding time, don't treat years as indep.
 # Using only variables that are reported back to 1990
 # Christopher Gandrud
-# 29 September 2014
+# 30 September 2014
 # MIT License
 ################################################################################
 
@@ -131,10 +131,10 @@ frt_code <- "
             // alpha[t] ~ normal(0, sigma_alpha); // without smoothing
         beta ~ normal(0,sigma_beta);
         log_gamma ~ normal(0,sigma_gamma);
-        delta ~ cauchy(0,5);
-        sigma_alpha ~ cauchy(0,5);
-        sigma_beta ~ cauchy(0,5);
-        sigma_gamma ~ cauchy(0,5);
+        delta ~ cauchy(0,0.25);
+        sigma_alpha ~ cauchy(0,0.25);
+        sigma_beta ~ cauchy(0,0.25);
+        sigma_gamma ~ cauchy(0,0.25);
         for (n in 1:N)
             y[n] ~ bernoulli_logit(
                     exp(log_gamma[kk[n]])
@@ -156,7 +156,7 @@ frt_data <- list(
 
 ##### Run model ####
 fit_NonIndp <- stan(model_code = frt_code, data = frt_data,
-                    iter = 1000, chains = 4)
+                    iter = 150, chains = 4)
 
 # Examine results
 print(fit_NonIndp)
