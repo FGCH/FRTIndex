@@ -106,12 +106,15 @@ frt_code <- "
         matrix[J,T] alpha;             // transparency for j,t - mean
         vector[K] beta;                // difficulty of item k
         vector[K] log_gamma;           // discrimination of k
+
+        // all scale parameters have an implicit half Cauchy prior
         real<lower=0> sigma_alpha;     // scale of abilities
         real<lower=0> sigma_beta;      // scale of difficulties
         real<lower=0> sigma_gamma;     // scale of log discrimination
     }
 
-    transformed parameters {
+    transformed parameters {           
+        // recenters transparency for t = 1
         vector[J] recentered_alpha1;
         real mean_alpha1;
         real<lower=0> sd_alpha1;
@@ -123,16 +126,16 @@ frt_code <- "
     }
 
     model {
-        alpha1 ~ normal(0,100); // diffuse prior
-        for (j in 1:J)
-            alpha[j,1] ~ normal(recentered_alpha1[j], 0.001); // horrible hack
-        for (t in 2:T)
-            alpha[t] ~ normal(alpha[t-1], sigma_alpha); // with smoothing
-            // alpha[t] ~ normal(0, sigma_alpha); // without smoothing
+        alpha1 ~ normal(0,100);                                 // diffuse prior
+        for (j in 1:J) {
+            alpha[j,1] ~ normal(recentered_alpha1[j], 0.001);   // horrible hack
+            sigma_alpha ~ cauchy(0,0.25);                    
+            for (t in 2:T) 
+                alpha[j,t] ~ normal(alpha[j,t-1], sigma_alpha); 
+        }
         beta ~ normal(0,sigma_beta);
         log_gamma ~ normal(0,sigma_gamma);
         delta ~ cauchy(0,0.25);
-        sigma_alpha ~ cauchy(0,0.25);
         sigma_beta ~ cauchy(0,0.25);
         sigma_gamma ~ cauchy(0,0.25);
         for (n in 1:N)
@@ -156,7 +159,7 @@ frt_data <- list(
 
 ##### Run model ####
 fit_NonIndp <- stan(model_code = frt_code, data = frt_data,
-                    iter = 150, chains = 4)
+                    iter = 100, chains = 4)
 
 # Examine results
 print(fit_NonIndp)

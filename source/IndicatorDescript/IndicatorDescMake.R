@@ -35,4 +35,4 @@ replacements <- data.frame(from, to)
 Descript <- FindReplace(Descript, Var = 'Source', replaceData = replacements)
 
 print.xtable(xtable(Descript), file = 'IndicatorDescription.tex', 
-             floating = FALSE, type = 'latex')
+             floating = FALSE, type = 'latex', row.names = FALSE)
