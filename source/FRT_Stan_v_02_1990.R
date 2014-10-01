@@ -108,9 +108,9 @@ frt_code <- "
         vector[K] log_gamma;           // discrimination of k
 
         // all scale parameters have an implicit half Cauchy prior
-        real<lower=0> sigma_alpha;     // scale of abilities
-        real<lower=0> sigma_beta;      // scale of difficulties
-        real<lower=0> sigma_gamma;     // scale of log discrimination
+        real<lower=0> sigma_alpha[J];     // scale of abilities, per country
+        real<lower=0> sigma_beta;         // scale of difficulties
+        real<lower=0> sigma_gamma;        // scale of log discrimination
     }
 
     transformed parameters {           
@@ -129,15 +129,17 @@ frt_code <- "
         alpha1 ~ normal(0,100);                                 // diffuse prior
         for (j in 1:J) {
             alpha[j,1] ~ normal(recentered_alpha1[j], 0.001);   // horrible hack
-            sigma_alpha ~ cauchy(0,0.25);                    
             for (t in 2:T) 
-                alpha[j,t] ~ normal(alpha[j,t-1], sigma_alpha); 
+                alpha[j,t] ~ normal(alpha[j,t-1], sigma_alpha[j]); 
         }
         beta ~ normal(0,sigma_beta);
         log_gamma ~ normal(0,sigma_gamma);
         delta ~ cauchy(0,0.25);
+
+        sigma_alpha ~ cauchy(0,0.25);                    
         sigma_beta ~ cauchy(0,0.25);
         sigma_gamma ~ cauchy(0,0.25);
+
         for (n in 1:N)
             y[n] ~ bernoulli_logit(
                     exp(log_gamma[kk[n]])
@@ -159,7 +161,7 @@ frt_data <- list(
 
 ##### Run model ####
 fit_NonIndp <- stan(model_code = frt_code, data = frt_data,
-                    iter = 100, chains = 4)
+                    iter = 50, chains = 4)
 
 # Examine results
 print(fit_NonIndp)
