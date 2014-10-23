@@ -165,7 +165,7 @@ frt_data <- list(
 
 ##### Run model ####
 fit_NonIndp <- stan(model_code = frt_code, data = frt_data,
-                    iter = 1000, chains = 4, 
+                    iter = 2000, chains = 4, 
                     pars = c('delta', 'alpha', 'beta', 'log_gamma'))
 
 # Examine results
