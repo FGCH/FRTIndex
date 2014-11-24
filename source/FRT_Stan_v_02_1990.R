@@ -32,7 +32,7 @@ library(dplyr)
 library(rstan)
 
 ## Set out width
-options('width'=200)
+options('width' = 200)
 
 # ---------------------------------------------------------------------------- #
 #### Create Indicator Data Set ####
@@ -165,7 +165,7 @@ frt_data <- list(
 
 ##### Run model ####
 fit_NonIndp <- stan(model_code = frt_code, data = frt_data,
-                    iter = 2000, chains = 4, 
+                    iter = 2000, chains = 4,
                     pars = c('delta', 'alpha', 'beta', 'log_gamma'))
 
 # Examine results
