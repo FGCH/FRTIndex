@@ -2,7 +2,7 @@
 # FRT Index Stan Test (version 0.1): Adding time, don't treat years as indep.
 # Using only variables that are reported back to 1990
 # Christopher Gandrud
-# 17 October 2014
+# 26 November 2014
 # MIT License
 ################################################################################
 
@@ -33,6 +33,9 @@ library(rstan)
 
 ## Set out width
 options('width' = 200)
+
+# Set working directory for saving the simulation output. Change as needed.
+setwd('/git_repositories/FRTIndex/modelOut')
 
 # ---------------------------------------------------------------------------- #
 #### Create Indicator Data Set ####
@@ -167,6 +170,10 @@ frt_data <- list(
 fit_NonIndp <- stan(model_code = frt_code, data = frt_data,
                     iter = 2000, chains = 4,
                     pars = c('delta', 'alpha', 'beta', 'log_gamma'))
+
+# Save results as data.frame
+as.data.frame(fit_NonIndp) %>%
+    write.csv(file = paste0('frt_sims_', Sys.Date(), '.csv'), row.names = FALSE)
 
 # Examine results
 print(fit_NonIndp)

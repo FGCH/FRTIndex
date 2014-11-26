@@ -36,9 +36,7 @@
 *.fdb_latexmk
 paper/figures/*
 
-# R project files
-.Rproj.user
-FRTIndex.Rproj
+modelOut/sims*
 
 .DS_Store
 completer.hist
