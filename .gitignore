@@ -36,7 +36,7 @@
 *.fdb_latexmk
 paper/figures/*
 
-modelOut/sims*
+modelOut/frt_sims*
 
 .DS_Store
 completer.hist
