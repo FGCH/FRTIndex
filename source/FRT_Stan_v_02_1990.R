@@ -171,7 +171,7 @@ fit_NonIndp <- stan(model_code = frt_code, data = frt_data,
                     iter = 2000, chains = 4,
                     pars = c('delta', 'alpha', 'beta', 'log_gamma'),
                     diagnostic_file = paste0(
-                        'frt_sims_diagnostic', Sys.Date(), '.csv'))
+                        'frt_sims_diagnostic', Sys.Date()))
 
 # Save results as data.frame
 as.data.frame(fit_NonIndp) %>%

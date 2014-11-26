@@ -40,18 +40,18 @@ sc_country <- function(country) {
         ggtitle(paste0(country, '\n'))
 }
 
-sc_country('Canada')
-sc_country('United States')
-sc_country('Norway')
-sc_country('Korea')
-sc_country('Japan')
-sc_country('United Kingdom')
-
 p <- list()
 
 for (i in countries){
     message(i)
-    p[[i]] <- sc_country(i)
+    p[[i]] <- suppressMessages(sc_country(i))
 }
 
-do.call(grid.arrange, c(p))
+# First 30
+do.call(grid.arrange, c(p[1:30]))
+
+# Last 30
+do.call(grid.arrange, c(p[31:60]))
+
+## Late 90s weirdness
+sc_country('Austria')
