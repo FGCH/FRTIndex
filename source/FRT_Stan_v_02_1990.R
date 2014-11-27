@@ -35,7 +35,7 @@ library(rstan)
 options('width' = 200)
 
 # Set working directory for saving the simulation output. Change as needed.
-setwd('/git_repositories/FRTIndex/modelOut')
+setwd('/git_repositories/FRTIndex/')
 
 # ---------------------------------------------------------------------------- #
 #### Create Indicator Data Set ####
@@ -55,6 +55,7 @@ Droppers <- c("iso3c", "region",  "capital", "longitude", "latitude",
               "income", "lending")
 BaseSub <- BaseSub[, !(names(BaseSub) %in% Droppers)]
 
+# ---------------------------------------------------------------------------- #
 #### Create missingness indicators ####
 KeeperLength <- length(Indicators)
 IndSub <- Indicators[1:KeeperLength]
@@ -68,6 +69,15 @@ for (i in IndSub){
     VarVec <- append(VarVec, temp)
 }
 
+# ---------------------------------------------------------------------------- #
+#### Find the proportion of items reported ####
+source('source/miscFunctions/PropReported.R')
+PropRepor <- PropReported(BaseSub)
+PropRepor <- PropRepor[order(PropRepor$country, PropRepor$year), ]
+write.csv(PropRepor, file = paste0('IndexData/alternate/PropReported.csv'),
+          row.names = FALSE)
+
+# ---------------------------------------------------------------------------- #
 #### Data description ####
 # Create country/year numbers
 BaseSub$countrynum <- as.numeric(as.factor(BaseSub$iso2c))
@@ -171,7 +181,7 @@ fit_NonIndp <- stan(model_code = frt_code, data = frt_data,
                     iter = 2000, chains = 4,
                     pars = c('delta', 'alpha', 'beta', 'log_gamma'),
                     diagnostic_file = paste0(
-                        'frt_sims_diagnostic', Sys.Date()))
+                        'modelOut/frt_sims_diagnostic', Sys.Date()))
 
 # Save results as data.frame
 as.data.frame(fit_NonIndp) %>%

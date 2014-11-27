@@ -5,11 +5,15 @@
 # MIT License
 ####################################
 
+# Set working directory. Change as needed.
+setwd('/git_repositories/FRTIndex/')
+
 # Main figure output directory
-dir <- '/git_repositories/FRTIndex/paper/paper_plots/'
+dir <- 'paper/paper_plots/'
 
 # Load packages
 library(gridExtra)
+library(ggplot2)
 
 # Load stan_catterpillar function
 SourceURL <- 'https://gist.githubusercontent.com/christophergandrud/9b6caf8fa6ed0cbb33c4/raw/211f98590903e96e87686b02e4436a207f49f2ad/stan_caterpillar.R'
@@ -106,4 +110,23 @@ stan_catterpillar(fit_NonIndp, 'log_gamma\\[.*\\]',
 dev.off()
 
 # ---------------------------------------------------------------------------- #
-#### Compare FRT to Proportion Reported #### 
+#### Compare FRT to Proportion Reported method ####
+FRT <- read.csv('IndexData/FRTIndex_v0_2.csv', stringsAsFactors = FALSE)
+FRTProp <- read.csv('IndexData/alternate/PropReported.csv',
+                    stringsAsFactors = FALSE)
+
+FRTStand <- (FRT$median - mean(FRT$median))/sd(FRT$median)
+FRTPropStand <- (FRTProp$FRT_PropReport - 
+                     mean(FRTProp$FRT_PropReport))/sd(FRTProp$FRT_PropReport)
+
+Comb <- data.frame(FRT = FRTStand, FRTPropStand)
+
+pdf(file = paste0(dir, 'FRT_Prop_Compare.pdf'))
+    ggplot(Comb, aes(FRTStand, FRTPropStand)) + geom_point(alpha = 0.5) +
+        stat_smooth(method = 'loess', se = FALSE, size = 1) +
+        stat_smooth(method = 'lm', se = FALSE, linetype = 'dashed', 
+                    color = 'grey', size = 1) +
+        ylab('Proportion Reported (standardized)\n') +
+        xlab('\nMedian FRT Index (standardized)') +
+        theme_bw()
+dev.off()
