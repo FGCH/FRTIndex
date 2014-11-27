@@ -21,6 +21,7 @@ countries <- unique(BaseSub$country)
 # Load simulations
 load('~/Desktop/fit_2014-11-26.RData')
 
+# ---------------------------------------------------------------------------- #
 #### Plot by year ####
 sc_year <- function(year, yrange = 1990:2011) {
     ynumber <- grep(pattern = paste0('^', year, '$'), x = as.character(yrange))
@@ -40,6 +41,7 @@ pdf(file = paste0(dir, 'FRT_years.pdf'),
     grid.arrange(y1, y2, y3, ncol = 3, sub = 'FRT Index (HPD)')
 dev.off()
 
+# ---------------------------------------------------------------------------- #
 #### Plot individual countries ####
 sc_country <- function(country) {
     cnumber <- grep(pattern = country, x = countries)
@@ -83,6 +85,25 @@ pdf(file = paste0(dir, 'FRT_countries_3.pdf'),
 do.call(grid.arrange, c(pc[41:60]))
 dev.off()
 
+# ---------------------------------------------------------------------------- #
+#### Other Paremeters of Interest ####
+indicators_df <- read.csv('/git_repositories/FRTIndex/source/PaperSource/IndicatorDescript/IndicatorDescription.csv',
+                          stringsAsFactors = FALSE)
+indicator_labels <- indicators_df[, 2]
 
-## Late 90s weirdness
-sc_country('Austria')
+# Difficulty
+pdf(file = paste0(dir, 'difficultyPlot.pdf'), width = 10, height = 5.5)
+    stan_catterpillar(fit_NonIndp, 'beta\\[.*\\]',
+                    params_labels = indicator_labels) +
+        ylab('') + xlab('\nCoefficient')
+dev.off()
+
+# Discrimination
+pdf(file = paste0(dir, 'discriminationPlot.pdf'), width = 10, height = 5.5)
+stan_catterpillar(fit_NonIndp, 'log_gamma\\[.*\\]',
+                  params_labels = indicator_labels) +
+    ylab('') + xlab('\nCoefficient')
+dev.off()
+
+# ---------------------------------------------------------------------------- #
+#### Compare FRT to Proportion Reported #### 
