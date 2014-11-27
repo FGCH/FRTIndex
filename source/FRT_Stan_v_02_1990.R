@@ -2,7 +2,7 @@
 # FRT Index Stan Test (version 0.1): Adding time, don't treat years as indep.
 # Using only variables that are reported back to 1990
 # Christopher Gandrud
-# 26 November 2014
+# 27 November 2014
 # MIT License
 ################################################################################
 
@@ -42,10 +42,9 @@ setwd('/git_repositories/FRTIndex/modelOut')
 # Download GFDD data from the World Bank
 Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04',
                 'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07',
-                'GFDD.DI.08', 'GFDD.DI.11',
-                'GFDD.DI.14', 'GFDD.EI.02', 'GFDD.EI.08',
-                'GFDD.OI.02', 'GFDD.OI.07',
-                'GFDD.SI.04')
+                'GFDD.DI.08', 'GFDD.DI.11', 'GFDD.DI.14', 
+                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 
+                'GFDD.OI.07', 'GFDD.SI.04')
 
 # Download indicators
 Base <- WDI(indicator = Indicators, start = 1990, end = 2013, extra = TRUE)
@@ -132,7 +131,8 @@ frt_code <- "
     }
 
     model {
-        alpha1 ~ normal(0,1);   // informed constraints on the ability, numerical issues with larger sd
+        alpha1 ~ normal(0,1);   // informed constraints on the ability
+                                // numerical issues with larger sd
         for (j in 1:J) {
             alpha[j,1] ~ normal(recentered_alpha1[j], 0.001);   // horrible hack
             for (t in 2:T)
