@@ -8,6 +8,8 @@
 # Example code in package build process
 *-Ex.R
 
+*.nav
+*.snm
 *.aux
 *.glo
 *.idx
