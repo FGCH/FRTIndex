@@ -39,6 +39,7 @@
 paper/figures/*
 
 modelOut/frt_sims*
+frt_presentation/figures*
 
 .DS_Store
 completer.hist

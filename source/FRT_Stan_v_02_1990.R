@@ -42,8 +42,8 @@ setwd('/git_repositories/FRTIndex/')
 # Download GFDD data from the World Bank
 Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04',
                 'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07',
-                'GFDD.DI.08', 'GFDD.DI.11', 'GFDD.DI.14', 
-                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02', 
+                'GFDD.DI.08', 'GFDD.DI.11', 'GFDD.DI.14',
+                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02',
                 'GFDD.OI.07', 'GFDD.SI.04')
 
 # Download indicators
@@ -105,11 +105,11 @@ MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
 #### Specify Model ####
 frt_code <- "
     data {
-        int<lower=1> J;                // number of countries
+        int<lower=1> C;                // number of countries
         int<lower=1> T;                // number of years
         int<lower=1> K;                // number of items
         int<lower=1> N;                // number of observations
-        int<lower=1> jj[N];            // country for observation n
+        int<lower=1> cc[N];            // country for observation n
         int<lower=1> tt[N];            // time for observation n
         int<lower=1,upper=K> kk[N];    // item for observation n
         int<lower=0,upper=1> y[N];     // response for observation n
@@ -117,36 +117,36 @@ frt_code <- "
 
     parameters {
         real delta;                    // mean transparency
-        vector[J] alpha1;              // initial alpha for t = 1 before recentering
-        matrix[J,T] alpha;             // transparency for j,t - mean
+        vector[C] alpha1;              // initial alpha for t = 1 before recentering
+        matrix[C,T] alpha;             // transparency for c,t - mean
         vector[K] beta;                // difficulty of item k
         vector[K] log_gamma;           // discrimination of k
 
         // all scale parameters have an implicit half Cauchy prior
-        real<lower=0> sigma_alpha[J];     // scale of abilities, per country
+        real<lower=0> sigma_alpha[C];     // scale of abilities, per country
         real<lower=0> sigma_beta;         // scale of difficulties
         real<lower=0> sigma_gamma;        // scale of log discrimination
     }
 
     transformed parameters {
         // recenters transparency for t = 1
-        vector[J] recentered_alpha1;
+        vector[C] recentered_alpha1;
         real mean_alpha1;
         real<lower=0> sd_alpha1;
 
         mean_alpha1 <- mean(alpha1);
         sd_alpha1 <- sd(alpha1);
-        for (j in 1:J)
-            recentered_alpha1[j] <- ( alpha1[j] - mean_alpha1 ) / sd_alpha1;
+        for (c in 1:C)
+            recentered_alpha1[c] <- ( alpha1[c] - mean_alpha1 ) / sd_alpha1;
     }
 
     model {
         alpha1 ~ normal(0,1);   // informed constraints on the ability
                                 // numerical issues with larger sd
-        for (j in 1:J) {
-            alpha[j,1] ~ normal(recentered_alpha1[j], 0.001);   // horrible hack
+        for (c in 1:C) {
+            alpha[c,1] ~ normal(recentered_alpha1[c], 0.001);   // horrible hack
             for (t in 2:T)
-                alpha[j,t] ~ normal(alpha[j,t-1], sigma_alpha[j]);
+                alpha[c,t] ~ normal(alpha[c,t-1], sigma_alpha[c]);
         }
 
         beta ~ normal(0,sigma_beta);
@@ -160,17 +160,17 @@ frt_code <- "
         for (n in 1:N)
             y[n] ~ bernoulli_logit(
                     exp(log_gamma[kk[n]])
-                    * (alpha[jj[n],tt[n]] - beta[kk[n]] + delta) );
+                    * (alpha[cc[n],tt[n]] - beta[kk[n]] + delta) );
     }
 "
 
 #### Create data list for Stan ####
 frt_data <- list(
-    J = NCountry,
+    C = NCountry,
     T = NYear,
     K = NItems,
     N = nrow(MoltenReady),
-    jj = MoltenReady$countrynum,
+    cc = MoltenReady$countrynum,
     tt = MoltenReady$yearnum,
     kk = MoltenReady$variable,
     y = MoltenReady$value
@@ -178,7 +178,7 @@ frt_data <- list(
 
 ##### Run model ####
 fit_NonIndp <- stan(model_code = frt_code, data = frt_data,
-                    iter = 2000, chains = 4,
+                    iter = 50, chains = 4,
                     pars = c('delta', 'alpha', 'beta', 'log_gamma'),
                     diagnostic_file = paste0(
                         'modelOut/frt_sims_diagnostic', Sys.Date()))

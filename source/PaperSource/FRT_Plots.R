@@ -91,6 +91,22 @@ pdf(file = paste0(dir, 'FRT_countries_3.pdf'),
 do.call(grid.arrange, c(pc[41:60]))
 dev.off()
 
+#### Plot country comparison ###
+# Countries with stable scores
+stable_countries <- c("Saudi Arabia", "United Kingdom", "United States")
+do.call(grid.arrange, c(pc[stable_countries]))
+
+# Improvers
+improver_countries <- c("Brunei Darussalam", "Croatia", "Germany", "Greece", 
+                        "Iceland", "Korea, Rep.", "Oman", "Portugal", "Qatar", 
+                        "Slovenia", "Spain")
+do.call(grid.arrange, c(pc[improver_countries]))
+
+# Countries with declining scores
+declining_countries <- c("Canada", "Czech Republic", "Denmark", "Hungary",
+                         "Israel", "Japan", "Norway", "Poland")
+do.call(grid.arrange, c(pc[declining_countries]))
+
 # ---------------------------------------------------------------------------- #
 #### Other Paremeters of Interest ####
 indicators_df <- read.csv('/git_repositories/FRTIndex/source/PaperSource/IndicatorDescript/IndicatorDescription.csv',
