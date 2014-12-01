@@ -140,6 +140,37 @@ pdf(file = paste0(dir, 'FRT_Prop_Compare.pdf'))
 dev.off()
 
 # ---------------------------------------------------------------------------- #
+#### Raw proportion reported plots ####
+pprop <- list()
+for (u in unique(FRTProp$country)) {
+    message(u)
+    temp <- subset(FRTProp, country == u)
+    pprop[[u]] <- ggplot(temp, aes(year, FRT_PropReport)) +
+#        scale_x_continuous(breaks = c('1990', '1995', '2000', '2005', '2010')) +
+        scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1)) +
+        geom_line() + xlab('') + ylab('') +
+        ggtitle(u) + theme_bw()
+}
+
+# First 20
+pdf(file = paste0(dir, 'PropReported_countries_1.pdf'),
+    width = 15, height = 11)
+    do.call(grid.arrange, pprop[1:20])
+dev.off()
+
+# Second 20
+pdf(file = paste0(dir, 'PropReported_countries_2.pdf'),
+    width = 15, height = 11)
+    do.call(grid.arrange, pprop[21:40])
+dev.off()
+
+# Last 20
+pdf(file = paste0(dir, 'PropReported_countries_3.pdf'),
+    width = 15, height = 11)
+    do.call(grid.arrange, pprop[41:60])
+dev.off()
+
+# ---------------------------------------------------------------------------- #
 #### Compare FRT to Liedorp et al. 2013 ####
 # Load Liedorp et al. data (2013, 318)
 liedorp <- read.csv('misc/liedorp_et_al_2013_index.csv',
