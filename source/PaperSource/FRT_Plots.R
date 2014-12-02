@@ -99,7 +99,7 @@ do.call(grid.arrange, c(pc[stable_countries]))
 # Improvers
 improver_countries <- c("Brunei Darussalam", "Croatia", "Germany", "Greece", 
                         "Iceland", "Korea, Rep.", "Oman", "Portugal", "Qatar", 
-                        "Slovenia", "Spain")
+                        "Slovenia", "Spain", "United Arab Emirates")
 do.call(grid.arrange, c(pc[improver_countries]))
 
 # Countries with declining scores

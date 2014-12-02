@@ -38,7 +38,7 @@
 
     \frame{
         \frametitle{Promotion}
-            Supervisory transparency has been \textbf{promoted} by international/supra-national institutions including the IMF, Basel Committee, and the European Union.
+            Supervisory transparency has been \textbf{promoted} by international/supra-national institutions including the IMF, Basel Committee, and the European Union for these reasons.
     }
 
     \frame{
@@ -65,7 +65,7 @@
 
     \frame{
         \frametitle{Methodological Contribution}
-        We make (at least) two important methodological contributions:
+        Our indicator makes (at least) two important methodological contributions:
         \begin{itemize}
             \item Develop a Hierarchical Bayesian Item Response Theory-based \textbf{unique indicator} of countries' \textbf{willingness to credibly} reveal basic facts about their \textbf{financial systems to international actors}.
             \item Show that \textbf{missing financial system data} is \textbf{often endogenous} to financial system difficulties and policymaker's aspirations.
@@ -75,7 +75,7 @@
     \section{Creating the FRT Index}
     \frame{
         \frametitle{Predecessors}
-        Recent supervisory transparency indexes generally use \textbf{surveys} and \textbf{sum} dichotomous responses.
+        Recent supervisory transparency indexes generally use \textbf{surveys} and then \textbf{sum} dichotomous responses.
         \begin{itemize}
             \item<1-> Lierdorp et al. (2013)
             \item<1-> Arnone, Darbar, and Gambini (2007) (based on classified IMF data set, data is not publicly available)
@@ -91,6 +91,7 @@
             \item Survey methods are \textbf{laborious} to construct.
             \item Survey methods provide only brief windows, \textbf{not time series}.
             \item Summing dichotomous responses \textbf{assumes} that each item should be \textbf{weighted equally}.
+            \item Often \textbf{high non-response rate} (Liedorp et al. had a response rate of 57\%). This information is often \textbf{ignored}.
             \item \textbf{No estimation of uncertainty}.
         \end{itemize}
     }
@@ -141,7 +142,7 @@
         $$
 
         \begin{center}
-            then rescentered by $\frac{\alpha_{c,1990}-\bar{\alpha_{1990}}}{SD_{\alpha}_{1990}}$
+            then rescentered by $\frac{\alpha_{c,1990}-\bar{\alpha_{1990}}}{SD_{\alpha,1990}}$
         \end{center}
 
         Then random-walk priors
@@ -190,7 +191,7 @@
     }
 
     \frame{
-        \frametitle{FRT Index Overview}
+        \frametitle{FRT Index Overview (1990)}
 
         \begin{center}
             \includegraphics[scale=0.25]{figures/FRT_1990.pdf}
@@ -198,7 +199,7 @@
     }
 
     \frame{
-    \frametitle{FRT Index Overview}
+    \frametitle{FRT Index Overview (2011)}
 
     \begin{center}
         \includegraphics[scale=0.25]{figures/FRT_2011.pdf}
@@ -229,7 +230,7 @@
 \section{Comparison to other methods}
 
     \frame{
-        \frametitle{Comparision to frequency measure}
+        \frametitle{Comparison to frequency measure}
         \begin{center}
             \includegraphics[scale=0.4]{/git_repositories/FRTIndex/paper/paper_plots/FRT_Prop_Compare.pdf}
         \end{center}
@@ -252,7 +253,7 @@
     }
 
     \frame{
-        \frametitle{Comparision to survey/frequency measures}
+        \frametitle{Comparison to survey/frequency measures}
         Comparision to Liedorp et al. (2013)
         \begin{center}
             \includegraphics[scale=0.25]{/git_repositories/FRTIndex/paper/paper_plots/FRT_Liedorp.pdf}
@@ -264,11 +265,11 @@
     \frame{
         \frametitle{To-Do}
         \begin{itemize}
-            \item Understand why countries increase/decrease their reporting.
+            \item Understand \textbf{why} countries \textbf{increase/decrease} their reporting.
             \item Examine how reporting is associated with economic outcomes:
                 \begin{itemize}
-                    \item Investment flows
-                    \item Financial stability
+                    \item<1-> \textbf{Investment flows}
+                    \item<1-> \textbf{Financial stability}
                 \end{itemize}
         \end{itemize}
     }
