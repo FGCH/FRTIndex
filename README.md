@@ -63,7 +63,7 @@ frt_index <- repmis::source_data(URL,
 ```
 
 The sha1 hash identifies the current version of the Index. As it is under active
-development, this is likely to change. 
+development, this is likely to change.
 
 ## Estimation Model
 
@@ -82,6 +82,11 @@ Our estimation model is based on:
 > Hollyer, James R., B. Peter Rosendorff, and James Raymond Vreeland. 2014.
 "Replication data for: Measuring Transparency".
 [http://dx.doi.org/10.7910/DVN/24274](http://dx.doi.org/10.7910/DVN/24274)
+
+and
+
+> [Stan Modeling Language: User's Guide and Reference Manual for Stan Version](http://mc-stan.org/manual.html)
+2.5.0. p. 49-59.
 
 We have built on this model using the
 [No-U-Turn Sampler](http://arxiv.org/abs/1111.4246) implemented in
