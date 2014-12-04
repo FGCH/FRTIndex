@@ -130,7 +130,7 @@ dev.off()
 # ---------------------------------------------------------------------------- #
 #### Compare FRT to Proportion Reported method ####
 # Load data
-FRT <- read.csv('IndexData/FRTIndex_v0_2.csv', stringsAsFactors = FALSE)
+FRT <- read.csv('IndexData/FRTIndex.csv', stringsAsFactors = FALSE)
 FRTProp <- read.csv('IndexData/alternate/PropReported.csv',
                     stringsAsFactors = FALSE)
 
@@ -238,6 +238,6 @@ for (i in liedorp_vars){
     pfl[[i]] <- fl_plot(i) 
 }
 
-pdf(file = paste0(dir, 'FRT_Liedorp.pdf'), width = 8, height = 11.5)
-    do.call(grid.arrange, pfl[1:6])
+pdf(file = paste0(dir, 'FRT_Liedorp.pdf'), width = 11.5, height = 8)
+    do.call(grid.arrange, c(pfl[1:6], ncol = 3))
 dev.off()
