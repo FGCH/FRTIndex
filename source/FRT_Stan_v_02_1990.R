@@ -2,7 +2,7 @@
 # FRT Index Stan Test (version 0.1): Adding time, don't treat years as indep.
 # Using only variables that are reported back to 1990
 # Christopher Gandrud
-# 27 November 2014
+# 4 December 2014
 # MIT License
 ################################################################################
 
@@ -68,6 +68,14 @@ for (i in IndSub){
     temp <- paste0('Rep_', i)
     VarVec <- append(VarVec, temp)
 }
+
+# ---------------------------------------------------------------------------- #
+#### Manually correct World Bank missingness error for UK Bank Deposits/GDP ####
+# Data was reported from 1960 through 2009 and is available at: 
+# http://research.stlouisfed.org/fred2/series/DDOI02GBA156NWDB
+# Accessed December 2014
+BaseSub[, 'Rep_GFDD.OI.02'][BaseSub$country == 'United Kingdom' & 
+                                BaseSub$year <= 2009] <- 1
 
 # ---------------------------------------------------------------------------- #
 #### Find the proportion of items reported ####
