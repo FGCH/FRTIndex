@@ -90,7 +90,7 @@ for Stan Version 2.5.0. p. 49-59.
 
 We have built on this model using the
 [No-U-Turn Sampler](http://arxiv.org/abs/1111.4246) implemented in
-[Stan](http://mc-stan.org/). This provides computational efficiency improvements.
+[Stan](http://mc-stan.org/). 
 
 ---
 
