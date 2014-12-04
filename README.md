@@ -3,9 +3,11 @@ Financial Regulatory Transparency Index
 
 **Version:** 0.2
 
-**Maintainer:** [Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
+**Maintainer:**
+[Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
 
-Funding generously provided by the [Deutsche Forschungsgemeinschaft](http://www.dfg.de/en/).
+Funding generously provided by the
+[Deutsche Forschungsgemeinschaft](http://www.dfg.de/en/).
 
 **Work In Progress**
 
@@ -24,8 +26,8 @@ that they can be scrutinized by market participants and citizens.
 
 ## The FRT Index
 
-The current draft version of the Index is located in the *IndexData* directory.
-The current version is in a CSV formatted file called: [FRTIndex_v0_2.csv](https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex_v0_2.csv).
+The current draft version of the Index is located in the *IndexData* directory
+in a CSV formatted file called: [FRTIndex.csv](https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex.csv).
 
 It covers the **60 countries** classified by the World Bank as
 '**High Income**' for the years **1990 through 2011**.
@@ -54,7 +56,7 @@ To download the **working version** of the Index directly into
 [repmis](http://cran.r-project.org/web/packages/repmis/index.html) package:
 
 ```{S}
-URL <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex_v0_2.csv'
+URL <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex.csv'
 
 frt_index <- repmis::source_data(URL)
 ```
