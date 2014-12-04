@@ -34,7 +34,7 @@ It covers the **60 countries** classified by the World Bank as
 
 ![FRT_2011](FRT_2011.png)
 
-The file `FRTIndex_v0_2.csv` contains the following variables:
+The file `FRTIndex.csv` contains the following variables:
 
 | Variable Name | Short Description                              |
 | ------------- | ---------------------------------------------- |

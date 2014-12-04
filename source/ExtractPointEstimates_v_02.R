@@ -1,7 +1,7 @@
 ############################
-# Extract FRT Point Estimates and uncertainty 
+# Extract FRT Point Estimates and uncertainty
 # Christopher Gandrud
-# 27 November 2014
+# 4 December 2014
 # MIT License
 ############################
 
@@ -17,7 +17,7 @@ countries <- unique(BaseSub$country)
 # Load simulations
 load('~/Desktop/fit_2014-11-26.RData')
 
-# Years 
+# Years
 years <- 1990:2011
 
 # Convert simulations to data.frame
@@ -32,7 +32,7 @@ molten_fit <- melt(fit_df_sub)
 molten_fit <- group_by(molten_fit, variable)
 
 median <- summarize(molten_fit, median = round(median(value), digits = 3))
-lower_95 <- summarize(molten_fit, lower_95 = round(quantile(value, 
+lower_95 <- summarize(molten_fit, lower_95 = round(quantile(value,
                                                     probs = 0.025), digits = 3))
 lower_90 <- summarize(molten_fit, lower_90 = round(quantile(value, probs = 0.05),
                                                    digits = 3))
@@ -47,15 +47,15 @@ comb <- merge(comb, upper_90)
 comb <- merge(comb, upper_95)
 
 # Clean up identifiers
-fr_country <- data.frame(from = paste0('alpha\\[', 1:length(countries), ',.*'), 
+fr_country <- data.frame(from = paste0('alpha\\[', 1:length(countries), ',.*'),
                  to = countries)
-fr_year <- data.frame(from = paste0('alpha\\[.*,', 1:length(years), '\\]'), 
+fr_year <- data.frame(from = paste0('alpha\\[.*,', 1:length(years), '\\]'),
                       to = years)
 comb$country <- comb$variable
 
-comb <- FindReplace(comb, Var = 'country', replaceData = fr_country, 
+comb <- FindReplace(comb, Var = 'country', replaceData = fr_country,
                     exact = FALSE)
-comb <- FindReplace(comb, Var = 'variable', replaceData = fr_year, 
+comb <- FindReplace(comb, Var = 'variable', replaceData = fr_year,
                     exact = FALSE)
 comb <- rename(comb, year = variable)
 
@@ -69,6 +69,5 @@ comb <- MoveFront(comb, c('country', 'iso2c', 'year'))
 comb <- arrange(comb, country, year)
 
 # Write file
-write.csv(comb, 
-          '/git_repositories/FRTIndex/IndexData/FRTIndex_v0_2.csv', 
+write.csv(comb, '/git_repositories/FRTIndex/IndexData/FRTIndex.csv',
           row.names = FALSE)
