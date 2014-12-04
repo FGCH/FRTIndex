@@ -85,8 +85,8 @@ Our estimation model is based on:
 
 and
 
-> [Stan Modeling Language: User's Guide and Reference Manual for Stan Version](http://mc-stan.org/manual.html)
-2.5.0. p. 49-59.
+> [Stan Modeling Language: User's Guide and Reference Manual](http://mc-stan.org/manual.html)
+for Stan Version 2.5.0. p. 49-59.
 
 We have built on this model using the
 [No-U-Turn Sampler](http://arxiv.org/abs/1111.4246) implemented in
