@@ -58,8 +58,12 @@ To download the **working version** of the Index directly into
 ```{S}
 URL <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex.csv'
 
-frt_index <- repmis::source_data(URL)
+frt_index <- repmis::source_data(URL,
+    sha1 = 'f1f9820076de5c4888a13ef2ee5b92c0462cf4f5')
 ```
+
+The sha1 hash identifies the current version of the Index. As it is under active
+development, this is likely to change. 
 
 ## Estimation Model
 
