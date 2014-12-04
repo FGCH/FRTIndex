@@ -27,7 +27,7 @@
 \section{Motivation}
     \frame{
         \frametitle{Why financial supervisory transparency?}
-        Financial supervisory transparency has been \textbf{lauded} as promoting:
+        Financial supervisory transparency has been \textbf{lauded} as promoting:\\[0.5cm]
 
         \begin{itemize}
                 \item financial system stability,
@@ -38,7 +38,12 @@
 
     \frame{
         \frametitle{Promotion}
-            Supervisory transparency has been \textbf{promoted} by international/supra-national institutions including the IMF, Basel Committee, and the European Union.
+            Supervisory transparency has been \textbf{promoted} by international/supra-national institutions including:\\[0.5cm]
+            \begin{itemize}
+            	\item<1-> IMF, 
+		\item<1-> Basel Committee, 
+		\item<1-> European Union.
+	   \end{itemize}
     }
 
     \frame{
@@ -49,7 +54,7 @@
 
     \frame{
         \frametitle{Objective}
-        Our objectives are to:
+        Our objectives are to:\\[0.5cm]
         \begin{itemize}
             \item \textbf{Develop} a reliable and valid indicator of supervisory transparency across countries and time.
                 \begin{itemize}
@@ -65,7 +70,7 @@
 
     \frame{
         \frametitle{Methodological Contribution}
-        (At least) two important methodological contributions:
+        (At least) two important methodological contributions:\\[0.5cm]
         \begin{itemize}
             \item Develop a Hierarchical Bayesian Item Response Theory-based \textbf{unique indicator} of countries' \textbf{willingness to credibly} reveal basic facts about their \textbf{financial systems to international actors}.
             \item Show that \textbf{missing financial system data} is \textbf{often endogenous} to financial system difficulties and policymaker's aspirations.
@@ -75,7 +80,7 @@
     \section{Creating the FRT Index}
     \frame{
         \frametitle{Predecessors}
-        Previous supervisory transparency indices generally use \textbf{surveys} of supervisors and then \textbf{sum} responses.
+        Previous supervisory transparency indices generally use \textbf{surveys} of supervisors and then \textbf{sum} responses.\\[0.5cm]
         \begin{itemize}
             \item<1-> Lierdorp et al. (2013)
             \item<1-> Arnone, Darbar, and Gambini (2007)
@@ -86,7 +91,7 @@
 
     \frame{
         \frametitle{Issues with previous methods}
-        There are a number of issues with previous methods:
+        There are a number of issues with previous methods:\\[0.5cm]
         \begin{itemize}
         	   \item Ironically, many of the surveys are \textbf{not transparent}.
             \item Survey methods are \textbf{laborious}.
@@ -261,7 +266,7 @@ frt\_index <- repmis::source\_data(`http://bit.ly/1rZ49jB')
 
     \frame{
         \frametitle{Discrimination parameter}
-        How well reporting an item predicts reporting other items.
+        How well reporting an item \textbf{predicts} reporting other items.
         \begin{center}
             \includegraphics[scale=0.4]{/git_repositories/FRTIndex/paper/paper_plots/discriminationPlot.pdf}
         \end{center}
@@ -269,7 +274,7 @@ frt\_index <- repmis::source\_data(`http://bit.ly/1rZ49jB')
 
     \frame{
         \frametitle{Difficulty parameter}
-        On average how well reported is the item.
+        On average \textbf{how well reported} is the item.\\[0.5cm]
         
         \textbf{Higher} scores indicate \textbf{lower reporting}, i.e. more `difficult' to report.
         \begin{center}
@@ -286,12 +291,14 @@ frt\_index <- repmis::source\_data(`http://bit.ly/1rZ49jB')
     }
 
     \frame{
-    	\frametitle{One annoying issue\ldots}
-	There is a possibility that \textbf{missing-ness} is sometimes caused by World Bank \textbf{data handling errors} rather than countries' willingness to report. \\[0.5cm]
+    	\frametitle{Annoying issues\ldots}
+	1. There is a possibility that \textbf{missing-ness} is sometimes caused by World Bank \textbf{data handling errors} rather than countries' willingness to report. \\[0.5cm]
 
 	For example, Bank Deposits to GDP (\%) is not reported for the UK. However, a \textbf{mirror} of the GFDD (FRED)  \textbf{does have} the data.\\[0.5cm]
 
-	\url{http://research.stlouisfed.org/fred2/series/DDOI02GBA156NWDB}
+	\url{http://research.stlouisfed.org/fred2/series/DDOI02GBA156NWDB}\\[0.5cm]
+	
+	2. Missing data may be \textbf{entered by later governments/ supervisors}.
     }
 
 \section{Conclusion}
@@ -299,6 +306,7 @@ frt\_index <- repmis::source\_data(`http://bit.ly/1rZ49jB')
     \frame{
         \frametitle{To-Do}
         \begin{itemize}
+            \item Further \textbf{refine} the Index.
             \item Understand \textbf{why} countries \textbf{increase/decrease} their reporting.\\[0.5cm]
             \item Examine how reporting is associated with economic outcomes:
                 \begin{itemize}
