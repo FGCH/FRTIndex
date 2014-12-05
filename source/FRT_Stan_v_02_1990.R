@@ -27,65 +27,31 @@
 ## Requires: Stan http://mc-stan.org/
 
 # Load packages
-library(WDI)
 library(DataCombine)
 library(reshape2)
 library(dplyr)
 library(rstan)
 
+# Set working directory. Change as needed.
+setwd('/git_repositories/FRTIndex/')
+
 ## Set out width
 options('width' = 200)
 
-# Set working directory for saving the simulation output. Change as needed.
-setwd('/git_repositories/FRTIndex/')
+#### Gather data ####
+# Run if needed.
+# Note takes approximately 1 hour
+# Otherwise load saved data from CSV
 
-# ---------------------------------------------------------------------------- #
-#### Create Indicator Data Set ####
-# Download GFDD data from the World Bank
-Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04',
-                'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07',
-                'GFDD.DI.08', 'GFDD.DI.11', 'GFDD.DI.14',
-                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02',
-                'GFDD.OI.07', 'GFDD.SI.04')
+data_source <- 'csv' # switch to 'download' if you wish to download data from
+                     # World Bank/FRED
 
-# Download indicators
-Base <- WDI(indicator = Indicators, start = 1990, end = 2013, extra = TRUE)
+if (data_source == 'csv') BaseSub <- read.csv(
+                                        'source/RawData/wdi_fred_combined.csv',
+                                        stringsAsFactors = FALSE)
 
-# Keep countries with 'High income' (OECD and non-OECD classification)
-BaseSub <- grepl.sub(data = Base, Var = 'income', pattern = 'High income')
-Droppers <- c("iso3c", "region",  "capital", "longitude", "latitude",
-              "income", "lending")
-BaseSub <- BaseSub[, !(names(BaseSub) %in% Droppers)]
+if (data_source == 'download') source('source/RawDataGather.R')
 
-# ---------------------------------------------------------------------------- #
-#### Create missingness indicators ####
-KeeperLength <- length(Indicators)
-IndSub <- Indicators[1:KeeperLength]
-VarVec <- vector()
-
-for (i in IndSub){
-    BaseSub[, paste0('Rep_', i)] <- 1
-    BaseSub[, paste0('Rep_', i)][is.na(BaseSub[, i])] <- 0
-
-    temp <- paste0('Rep_', i)
-    VarVec <- append(VarVec, temp)
-}
-
-# ---------------------------------------------------------------------------- #
-#### Manually correct World Bank missingness error for UK Bank Deposits/GDP ####
-# Data was reported from 1960 through 2009 and is available at:
-# http://research.stlouisfed.org/fred2/series/DDOI02GBA156NWDB
-# Accessed December 2014
-BaseSub[, 'Rep_GFDD.OI.02'][BaseSub$country == 'United Kingdom' &
-                                BaseSub$year <= 2009] <- 1
-
-# ---------------------------------------------------------------------------- #
-#### Find the proportion of items reported ####
-source('source/miscFunctions/PropReported.R')
-PropRepor <- PropReported(BaseSub)
-PropRepor <- PropRepor[order(PropRepor$country, PropRepor$year), ]
-write.csv(PropRepor, file = paste0('IndexData/alternate/PropReported.csv'),
-          row.names = FALSE)
 
 # ---------------------------------------------------------------------------- #
 #### Data description ####
@@ -126,20 +92,20 @@ frt_code <- "
     }
 
     parameters {
-        real delta;                    // mean transparency
-        vector[C] alpha1;              // initial alpha for t = 1 before recentering
-        matrix[C,T] alpha;             // transparency for c,t - mean
-        vector[K] beta;                // difficulty of item k
-        vector[K] log_gamma;           // discrimination of k
+        real delta;                // mean transparency
+        vector[C] alpha1;          // initial alpha for t = 1 before recentering
+        matrix[C,T] alpha;         // transparency for c,t - mean
+        vector[K] beta;            // difficulty of item k
+        vector[K] log_gamma;       // discrimination of k
 
-        // all scale parameters have an implicit half Cauchy prior
+        //// all scale parameters have an implicit half Cauchy prior ////
         real<lower=0> sigma_alpha[C];     // scale of abilities, per country
         real<lower=0> sigma_beta;         // scale of difficulties
         real<lower=0> sigma_gamma;        // scale of log discrimination
     }
 
     transformed parameters {
-        // recenters transparency for t = 1
+        //// recenters transparency for t = 1 ////
         vector[C] recentered_alpha1;
         real mean_alpha1;
         real<lower=0> sd_alpha1;
