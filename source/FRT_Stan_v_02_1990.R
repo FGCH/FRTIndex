@@ -1,5 +1,5 @@
 ################################################################################
-# FRT Index Stan Test (version 0.1): Adding time, don't treat years as indep.
+# FRT Index (using Stan)
 # Using only variables that are reported back to 1990
 # Christopher Gandrud
 # 4 December 2014
@@ -9,7 +9,7 @@
 #### Credits ----------------------------------------------------------------- #
 # The Stan Multilevel 2PL Model is built from the following sources:
 # Stan Development Team. 2014. Stan Modeling Language Users Guide and Reference
-# Manual, Version 2.3. 32-35. http://mc-stan.org/.
+# Manual, Version 2.5. 49-50. http://mc-stan.org/.
 #
 # Bafumi, J., Gelman, A., Park, D. K., & Kaplan, N. (2005). Practical Issues in
 # Implementing and Understanding Bayesian Ideal Point Estimation. Political
@@ -23,6 +23,8 @@
 # - https://groups.google.com/forum/?hl=en#!topic/stan-users/j9Ire8EQObY
 # - https://groups.google.com/forum/#!topic/stan-users/oSGUrVFCIVw
 # ---------------------------------------------------------------------------- #
+
+## Requires: Stan http://mc-stan.org/
 
 # Load packages
 library(WDI)
@@ -71,10 +73,10 @@ for (i in IndSub){
 
 # ---------------------------------------------------------------------------- #
 #### Manually correct World Bank missingness error for UK Bank Deposits/GDP ####
-# Data was reported from 1960 through 2009 and is available at: 
+# Data was reported from 1960 through 2009 and is available at:
 # http://research.stlouisfed.org/fred2/series/DDOI02GBA156NWDB
 # Accessed December 2014
-BaseSub[, 'Rep_GFDD.OI.02'][BaseSub$country == 'United Kingdom' & 
+BaseSub[, 'Rep_GFDD.OI.02'][BaseSub$country == 'United Kingdom' &
                                 BaseSub$year <= 2009] <- 1
 
 # ---------------------------------------------------------------------------- #
