@@ -52,8 +52,18 @@ if (data_source == 'csv') BaseSub <- read.csv(
 
 if (data_source == 'download') source('source/RawDataGather.R')
 
-
 # ---------------------------------------------------------------------------- #
+#### Keep only countries that report at least 1 item for the entire period  ####
+binary_vars <- names(BaseSub)[grep('^Rep_', names(BaseSub))]
+BaseSub$sums <- rowSums(BaseSub[, binary_vars])
+report_zero <- group_by(BaseSub, country) %>%
+                        summarize(added = sum(sums)) %>%
+                        subset(., added == 0) %>%
+                        as.data.frame()
+
+# Subset 
+BaseSub <- subset(BaseSub, !(country %in% report_zero[, 1]))
+
 #### Data description ####
 # Create country/year numbers
 BaseSub$countrynum <- as.numeric(as.factor(BaseSub$iso2c))
@@ -61,7 +71,7 @@ BaseSub$yearnum <- as.numeric(as.factor(BaseSub$year))
 
 #### Clean up ####
 # Keep only complete variables
-BaseStanVars <- BaseSub[, c('countrynum', 'yearnum', VarVec)]
+BaseStanVars <- BaseSub[, c('countrynum', 'yearnum', binary_vars)]
 
 # Data descriptions
 NCountry <- max(BaseStanVars$countrynum)

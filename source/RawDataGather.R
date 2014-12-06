@@ -39,20 +39,6 @@ Droppers <- c("iso3c", "region",  "capital", "longitude", "latitude",
 BaseSub <- BaseSub[, !(names(BaseSub) %in% Droppers)]
 
 # ---------------------------------------------------------------------------- #
-#### Create missingness indicators ####
-KeeperLength <- length(Indicators)
-IndSub <- Indicators[1:KeeperLength]
-VarVec <- vector()
-
-for (i in IndSub){
-    BaseSub[, paste0('Rep_', i)] <- 1
-    BaseSub[, paste0('Rep_', i)][is.na(BaseSub[, i])] <- 0
-
-    temp <- paste0('Rep_', i)
-    VarVec <- append(VarVec, temp)
-}
-
-# ---------------------------------------------------------------------------- #
 # ---------------------------------------------------------------------------- #
 #### Download GFDD data from the World Bank ####
 #### Create indicator IDs ####
@@ -114,27 +100,39 @@ fred_combined <- subset(fred_combined, year >= 1990)
 fred_combined_cast <- dcast(fred_combined, iso2c + year ~ variable)
 
 #### Create missingness indicators ####
-IndSub <- names(fred_combined_cast)[3:length(names(fred_combined_cast))]
-VarVec <- vector()
-
-for (i in IndSub){
-    fred_combined_cast[, paste0('Rep_', i)] <- 1
-    fred_combined_cast[, paste0('Rep_', i)][is.na(fred_combined_cast[, i])] <- 0
-
-    temp <- paste0('Rep_', i)
-    VarVec <- append(VarVec, temp)
-}
+#IndSub <- names(fred_combined_cast)[3:length(names(fred_combined_cast))]
+#VarVec <- vector()
+#
+#for (i in IndSub){
+#    fred_combined_cast[, paste0('Rep_', i)] <- 1
+#    fred_combined_cast[, paste0('Rep_', i)][is.na(fred_combined_cast[, i])] <- 0
+#}
 
 
 # ---------------------------------------------------------------------------- #
 # ---------------------------------------------------------------------------- #
 #### Use FRED to Fill In Missing Values in World Bank version ####
 
+# Remove . from BaseSub
+names(BaseSub) <- gsub('\\.', '', names(BaseSub))
 
+# Names for variables to FillIn
+fred_names <- names(fred_combined_cast)[grep('^GFDD', names(fred_combined_cast))]
 
+for (i in fred_names){
+    message(i)
+    fred_sub <- fred_combined_cast[, c('iso2c', 'year', i)]
+    BaseSub <- FillIn(D1 = BaseSub, D2 = fred_sub, Var1 = i, Var2 = i)
+}
 
+# ---------------------------------------------------------------------------- #
+#### Create missingness indicators ####
+IndSub <- names(BaseSub)[grep('^GFDD', names(BaseSub))]
 
-
+for (i in IndSub){
+    BaseSub[, paste0('Rep_', i)] <- 1
+    BaseSub[, paste0('Rep_', i)][is.na(BaseSub[, i])] <- 0
+}
 
 
 # ---------------------------------------------------------------------------- #
@@ -144,3 +142,7 @@ PropRepor <- PropReported(BaseSub)
 PropRepor <- PropRepor[order(PropRepor$country, PropRepor$year), ]
 write.csv(PropRepor, file = paste0('IndexData/alternate/PropReported.csv'),
           row.names = FALSE)
+
+# ---------------------------------------------------------------------------- #
+#### Save data ####
+write.csv(BaseSub, 'source/RawData/wdi_fred_combined.csv', row.names = FALSE)
