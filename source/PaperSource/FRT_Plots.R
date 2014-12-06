@@ -33,7 +33,7 @@ sc_year <- function(year, yrange = 1990:2011) {
     ynumber <- grep(pattern = paste0('^', year, '$'), x = as.character(yrange))
     stan_catterpillar(fit_NonIndp, params = paste0('alpha\\[.*,', ynumber, '\\]'),
                       params_labels = countries) +
-        scale_x_continuous(breaks = c(-20, -10, -3, -1, 0, 1, 3, 5)) +
+        scale_x_continuous(breaks = c(-5, -3, -1, 0, 1, 3, 5)) +
         ylab('') + xlab('') + ggtitle(year)
 }
 
