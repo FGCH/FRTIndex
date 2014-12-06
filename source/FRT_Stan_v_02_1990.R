@@ -76,7 +76,7 @@ BaseStanVars <- BaseSub[, c('countrynum', 'yearnum', binary_vars)]
 # Data descriptions
 NCountry <- max(BaseStanVars$countrynum)
 NYear <- max(BaseStanVars$yearnum)
-NItems <- length(VarVec)
+NItems <- length(binary_vars)
 
 # Melt data so that it is easy to enter into Stan data list
 MoltenBase <- melt(BaseStanVars, id.vars = c('countrynum', 'yearnum'))
