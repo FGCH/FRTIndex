@@ -61,7 +61,7 @@ report_zero <- group_by(BaseSub, country) %>%
                         subset(., added == 0) %>%
                         as.data.frame()
 
-# Subset 
+# Subset
 BaseSub <- subset(BaseSub, !(country %in% report_zero[, 1]))
 
 #### Data description ####
@@ -171,7 +171,8 @@ fit_NonIndp <- stan(model_code = frt_code, data = frt_data,
 
 # Save results as data.frame
 as.data.frame(fit_NonIndp) %>%
-    write.csv(file = paste0('frt_sims_', Sys.Date(), '.csv'), row.names = FALSE)
+    write.csv(file = paste0('modelOut/frt_sims_', Sys.Date(), '.csv'),
+                row.names = FALSE)
 
 # Examine results
 print(fit_NonIndp)
