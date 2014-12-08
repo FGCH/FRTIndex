@@ -25,7 +25,7 @@ devtools::source_url(SourceURL)
 countries <- unique(BaseSub$country)
 
 # Load simulations
-load('~/Desktop/fit_2014-11-26.RData')
+load('~/Desktop/fit_2014-12-8.RData')
 
 # ---------------------------------------------------------------------------- #
 #### Plot by year ####
@@ -88,12 +88,12 @@ dev.off()
 # Third 20
 pdf(file = paste0(dir, 'FRT_countries_3.pdf'),
     width = 15, height = 11)
-do.call(grid.arrange, c(pc[41:60]))
+    do.call(grid.arrange, c(pc[41:50]))
 dev.off()
 
 #### Plot country comparison ###
 # Countries with stable scores
-stable_countries <- c("Saudi Arabia", "United Kingdom", "United States")
+stable_countries <- c("Saudi Arabia", "Sweden", "United States")
 do.call(grid.arrange, c(pc[stable_countries]))
 
 # Improvers
@@ -157,6 +157,7 @@ dev.off()
 
 # ---------------------------------------------------------------------------- #
 #### Raw proportion reported plots ####
+FRTProp <- subset(FRTProp, !(country %in% report_zero[, 1]))
 pprop <- list()
 for (u in unique(FRTProp$country)) {
     message(u)
@@ -183,7 +184,7 @@ dev.off()
 # Last 20
 pdf(file = paste0(dir, 'PropReported_countries_3.pdf'),
     width = 15, height = 11)
-    do.call(grid.arrange, pprop[41:60])
+    do.call(grid.arrange, pprop[41:50])
 dev.off()
 
 # ---------------------------------------------------------------------------- #
