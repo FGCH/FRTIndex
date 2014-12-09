@@ -145,3 +145,6 @@ sflist <-
 
 # Collect in to Stan fit object
 fit <- sflist2stanfit(sflist)
+
+# Save Stan fit object
+save(fit, file = paste0('fit_', Sys.Date(), '.RData'))

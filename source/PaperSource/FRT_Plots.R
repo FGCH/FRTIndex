@@ -43,13 +43,12 @@ y2 <- sc_year(2005)
 y3 <- sc_year(2011)
 
 # For github
-png(file = 'FRT_2011.png')
-    y3
+png(file = 'FRT_overview.png', width = 900)
+    grid.arrange(y1, y3, ncol = 2, sub = 'FRT Index (HPD)')
 dev.off()
 
 # For paper
-pdf(file = paste0(dir, 'FRT_years.pdf'),
-    width = 18)
+pdf(file = paste0(dir, 'FRT_years.pdf'), width = 18)
     grid.arrange(y1, y2, y3, ncol = 3, sub = 'FRT Index (HPD)')
 dev.off()
 
