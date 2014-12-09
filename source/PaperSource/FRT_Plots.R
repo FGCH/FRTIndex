@@ -44,7 +44,7 @@ y3 <- sc_year(2011)
 
 # For github
 png(file = 'FRT_2011.png')
-    print(y3)
+    y3
 dev.off()
 
 # For paper

@@ -17,6 +17,17 @@ BaseSub <-
     'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/RawData/wdi_fred_combined.csv' %>%
     source_data(stringsAsFactors = FALSE)
 
+#### Keep only countries that report at least 1 item for the entire period  ####
+binary_vars <- names(BaseSub)[grep('^Rep_', names(BaseSub))]
+BaseSub$sums <- rowSums(BaseSub[, binary_vars])
+report_zero <- group_by(BaseSub, country) %>%
+    summarize(added = sum(sums)) %>%
+    subset(., added == 0) %>%
+    as.data.frame()
+
+# Subset
+BaseSub <- subset(BaseSub, !(country %in% report_zero[, 1]))
+
 # Country list from FRT_Stan_v_02_1990.R
 countries <- unique(BaseSub$country)
 
