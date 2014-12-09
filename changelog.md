@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 0.2.1
+
+- Fill in data missing from the World Bank's version of the GFDD
+with data from FRED's version of the GFDD.
+
+- No longer include jurisdictions that never report items.
+So, now there are 50 countries in the sample.
+
 ## Version 0.2
 
 Updated beta model FRT Index using the No-U-Turn Sampler in Stan.

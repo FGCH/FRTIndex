@@ -6,16 +6,22 @@
 ############################
 
 # Load packages
+library(repmis)
 library(reshape2)
 library(dplyr)
 library(DataCombine)
 library(countrycode)
 
+# Load base data # Load data
+BaseSub <-
+    'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/RawData/wdi_fred_combined.csv' %>%
+    source_data(stringsAsFactors = FALSE)
+
 # Country list from FRT_Stan_v_02_1990.R
 countries <- unique(BaseSub$country)
 
 # Load simulations
-load('~/Desktop/fit_2014-11-26.RData')
+load('~/Desktop/fit_2014-12-9_a.RData')
 
 # Years
 years <- 1990:2011
@@ -24,7 +30,7 @@ years <- 1990:2011
 fit_df <- as.data.frame(fit_NonIndp)
 rm(fit_NonIndp)
 
-# Keep only FRT scores (alph)
+# Keep only FRT scores (alpha)
 fit_df_sub <- fit_df[, grep(pattern = 'alpha', x = names(fit_df))]
 
 # Melt into long format and group
@@ -41,10 +47,10 @@ upper_90 <- summarize(molten_fit, upper_90 = round(quantile(value, probs = 0.95)
 upper_95 <- summarize(molten_fit, upper_95 = round(quantile(value, probs = 0.975),
                                                    digits = 3))
 
-comb <- merge(lower_95, lower_90)
-comb <- merge(comb, median)
-comb <- merge(comb, upper_90)
-comb <- merge(comb, upper_95)
+comb <- merge(lower_95, lower_90) %>%
+            merge(., median) %>%
+            merge(., upper_90) %>%
+            merge(., upper_95)
 
 # Clean up identifiers
 fr_country <- data.frame(from = paste0('alpha\\[', 1:length(countries), ',.*'),

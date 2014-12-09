@@ -1,7 +1,7 @@
 Financial Regulatory Transparency Index
 ========
 
-**Version:** 0.2
+**Version:** 0.2.1
 
 **Maintainer:**
 [Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
@@ -90,7 +90,7 @@ for Stan Version 2.5.0. p. 49-59.
 
 We have built on this model using the
 [No-U-Turn Sampler](http://arxiv.org/abs/1111.4246) implemented in
-[Stan](http://mc-stan.org/). 
+[Stan](http://mc-stan.org/).
 
 ---
 

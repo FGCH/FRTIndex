@@ -1,7 +1,7 @@
 ####################################
 # Plot results from FRT_Stan
 # Christopher Gandrud
-# 28 November 2014
+# 9 December 2014
 # MIT License
 ####################################
 
@@ -25,7 +25,7 @@ devtools::source_url(SourceURL)
 countries <- unique(BaseSub$country)
 
 # Load simulations
-load('~/Desktop/fit_2014-12-8.RData')
+load('~/Desktop/fit_2014-12-9_a.RData')
 
 # ---------------------------------------------------------------------------- #
 #### Plot by year ####
@@ -42,6 +42,12 @@ y1 <- sc_year(1990)
 y2 <- sc_year(2005)
 y3 <- sc_year(2011)
 
+# For github
+png(file = 'FRT_2011.png')
+    print(y3)
+dev.off()
+
+# For paper
 pdf(file = paste0(dir, 'FRT_years.pdf'),
     width = 18)
     grid.arrange(y1, y2, y3, ncol = 3, sub = 'FRT Index (HPD)')
