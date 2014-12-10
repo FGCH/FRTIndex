@@ -91,6 +91,9 @@ MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
 #### Load Model ####
 frt_code <- 'source/FRT.stan'
 
+test = scan('source/FRT.stan', character(0), sep = "\n") %>% 
+        paste(collapse = '\n')
+
 #### Create data list for Stan ####
 frt_data <- list(
     C = NCountry,

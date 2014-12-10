@@ -1,7 +1,7 @@
 ###########################
 # Run model in parallel
 # Christopher Gandrud
-# 9 December 2014
+# 10 December 2014
 # MIT License
 ###########################
 
@@ -58,7 +58,8 @@ BaseSub <-
 
 # ---------------------------------------------------------------------------- #
 #### Specify Model ####
-frt_code <- 
+frt_code <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/usaPriors/source/FRT.stan' %>%
+            scan_https()  
 
 #### Create data list for Stan ####
 frt_data <- list(
