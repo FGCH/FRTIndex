@@ -44,9 +44,10 @@ transformed parameters {
 
 model {
     alpha1 ~ normal(0,1);   // informed constraints on the ability
-    // numerical issues with larger sd
+                            // there are numerical issues with larger sd
     for (c in 1:C) {
-        alpha[c,1] ~ normal(recentered_alpha1[c], 0.001);   // horrible hack
+        // horrible hack to address current Stan limitation
+        alpha[c,1] ~ normal(recentered_alpha1[c], 0.001);
         for (t in 2:T)
             alpha[c,t] ~ normal(alpha[c,t-1], sigma_alpha[c]);
     }
