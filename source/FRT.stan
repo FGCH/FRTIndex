@@ -39,28 +39,28 @@ transformed parameters {
     mean_alpha1 <- mean(alpha1);
     sd_alpha1 <- sd(alpha1);
     for (c in 1:C)
-    recentered_alpha1[c] <- ( alpha1[c] - mean_alpha1 ) / sd_alpha1;
+        recentered_alpha1[c] <- ( alpha1[c] - mean_alpha1 ) / sd_alpha1;
 }
 
 model {
     alpha1 ~ normal(0,1);   // informed constraints on the ability
     // numerical issues with larger sd
-    for (c in 1:C) {
+    for (c in 1:C-1) {
         alpha[c,1] ~ normal(recentered_alpha1[c], 0.001);   // horrible hack
         for (t in 2:T)
-        alpha[c,t] ~ normal(alpha[c,t-1], sigma_alpha[c]);
+            alpha[c,t] ~ normal(alpha[c,t-1], sigma_alpha[c]);
     }
 
     beta ~ normal(0,sigma_beta);
     log_gamma ~ normal(0,sigma_gamma);
-    delta ~ cauchy(0,0.25);
+    delta ~ cauchy(0,0.05);
 
-    sigma_alpha ~ cauchy(0,0.25);
-    sigma_beta ~ cauchy(0,0.25);
-    sigma_gamma ~ cauchy(0,0.25);
+    sigma_alpha ~ cauchy(0,0.05);
+    sigma_beta ~ cauchy(0,0.05);
+    sigma_gamma ~ cauchy(0,0.05);
 
     for (n in 1:N)
-    y[n] ~ bernoulli_logit(
+        y[n] ~ bernoulli_logit(
         exp(log_gamma[kk[n]])
         * (alpha[cc[n],tt[n]] - beta[kk[n]] + delta) );
 }

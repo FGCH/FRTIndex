@@ -91,9 +91,6 @@ MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
 #### Load Model ####
 frt_code <- 'source/FRT.stan'
 
-test = scan('source/FRT.stan', character(0), sep = "\n") %>%
-        paste(collapse = '\n')
-
 #### Create data list for Stan ####
 frt_data <- list(
     C = NCountry,
@@ -107,7 +104,7 @@ frt_data <- list(
 )
 
 ##### Run model ####
-fit_NonIndp <- stan(file = 'source/FRT.stan', data = frt_data,
+fit_NonIndp <- stan(file = frt_code, data = frt_data,
                     iter = 50, chains = 4,
                     pars = c('delta', 'alpha', 'beta', 'log_gamma'),
                     diagnostic_file = paste0(

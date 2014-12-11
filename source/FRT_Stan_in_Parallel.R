@@ -1,7 +1,7 @@
 ###########################
 # Run model in parallel
 # Christopher Gandrud
-# 10 December 2014
+# 11 December 2014
 # MIT License
 ###########################
 
@@ -19,46 +19,46 @@ options('width' = 200)
 # Load data
 BaseSub <-
     'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/RawData/wdi_fred_combined.csv' %>%
-    source_data()
+    source_data(stringsAsFactors = FALSE)
 
 # ---------------------------------------------------------------------------- #
 #### Keep only countries that report at least 1 item for the entire period  ####
-    binary_vars <- names(BaseSub)[grep('^Rep_', names(BaseSub))]
-    BaseSub$sums <- rowSums(BaseSub[, binary_vars])
-    report_zero <- group_by(BaseSub, country) %>%
-                            summarize(added = sum(sums)) %>%
-                            subset(., added == 0) %>%
-                            as.data.frame()
+binary_vars <- names(BaseSub)[grep('^Rep_', names(BaseSub))]
+BaseSub$sums <- rowSums(BaseSub[, binary_vars])
+report_zero <- group_by(BaseSub, country) %>%
+                        summarize(added = sum(sums)) %>%
+                        subset(., added == 0) %>%
+                        as.data.frame()
 
-    # Subset
-    BaseSub <- subset(BaseSub, !(country %in% report_zero[, 1]))
+# Subset
+BaseSub <- subset(BaseSub, !(country %in% report_zero[, 1]))
 
-    #### Data description ####
-    # Create country/year numbers
-    BaseSub$countrynum <- as.numeric(as.factor(BaseSub$iso2c))
-    BaseSub$yearnum <- as.numeric(as.factor(BaseSub$year))
+#### Data description ####
+# Create country/year numbers
+BaseSub$countrynum <- as.numeric(as.factor(BaseSub$iso2c))
+BaseSub$yearnum <- as.numeric(as.factor(BaseSub$year))
 
-    #### Clean up ####
-    # Keep only complete variables
-    BaseStanVars <- BaseSub[, c('countrynum', 'yearnum', binary_vars)]
+#### Clean up ####
+# Keep only complete variables
+BaseStanVars <- BaseSub[, c('countrynum', 'yearnum', binary_vars)]
 
-    # Data descriptions
-    NCountry <- max(BaseStanVars$countrynum)
-    NYear <- max(BaseStanVars$yearnum)
-    NItems <- length(binary_vars)
+# Data descriptions
+NCountry <- max(BaseStanVars$countrynum)
+NYear <- max(BaseStanVars$yearnum)
+NItems <- length(binary_vars)
 
-    # Melt data so that it is easy to enter into Stan data list
-    MoltenBase <- melt(BaseStanVars, id.vars = c('countrynum', 'yearnum'))
+# Melt data so that it is easy to enter into Stan data list
+MoltenBase <- melt(BaseStanVars, id.vars = c('countrynum', 'yearnum'))
 
-    # Convert item names to numeric
-    MoltenBase$variable <- as.factor(MoltenBase$variable) %>% as.numeric()
+# Convert item names to numeric
+MoltenBase$variable <- as.factor(MoltenBase$variable) %>% as.numeric()
 
-    # Order data
-    MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
+# Order data
+MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
 
 # ---------------------------------------------------------------------------- #
 #### Specify Model ####
-frt_code <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/usaPriors/source/FRT.stan' %>%
+frt_code <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/FRT.stan' %>%
             scan_https()
 
 #### Create data list for Stan ####
@@ -82,8 +82,8 @@ sflist <-
     mclapply(1:4, mc.cores = 4,
             function(i) stan(fit = empty_stan, data = frt_data,
                             seed = i, chains = 1,
-                            iter = 50,
-                            chain_id = i))
+                            iter = 50, chain_id = i,
+                            pars = c('delta', 'alpha', 'beta', 'log_gamma')))
 
 # Collect in to Stan fit object
 fit <- sflist2stanfit(sflist)
