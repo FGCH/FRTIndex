@@ -58,7 +58,7 @@ MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
 
 # ---------------------------------------------------------------------------- #
 #### Specify Model ####
-frt_code <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/FRT.stan' %>%
+frt_code <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/usaPriors/source/FRT.stan' %>%
             scan_https()
 
 #### Create data list for Stan ####
@@ -82,7 +82,7 @@ sflist <-
     mclapply(1:4, mc.cores = 4,
             function(i) stan(fit = empty_stan, data = frt_data,
                             seed = i, chains = 1,
-                            iter = 50, chain_id = i,
+                            iter = 500, chain_id = i,
                             pars = c('delta', 'alpha', 'beta', 'log_gamma')))
 
 # Collect in to Stan fit object
