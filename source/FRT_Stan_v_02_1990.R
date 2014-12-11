@@ -82,7 +82,7 @@ NItems <- length(binary_vars)
 MoltenBase <- melt(BaseStanVars, id.vars = c('countrynum', 'yearnum'))
 
 # Convert item names to numeric
-MoltenBase$variable <- as.numeric(as.factor(MoltenBase$variable))
+MoltenBase$variable <- as.factor(MoltenBase$variable) %>% as.numeric()
 
 # Order data
 MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
@@ -91,7 +91,7 @@ MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
 #### Load Model ####
 frt_code <- 'source/FRT.stan'
 
-test = scan('source/FRT.stan', character(0), sep = "\n") %>% 
+test = scan('source/FRT.stan', character(0), sep = "\n") %>%
         paste(collapse = '\n')
 
 #### Create data list for Stan ####

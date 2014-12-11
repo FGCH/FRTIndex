@@ -26,9 +26,9 @@ BaseSub <-
     binary_vars <- names(BaseSub)[grep('^Rep_', names(BaseSub))]
     BaseSub$sums <- rowSums(BaseSub[, binary_vars])
     report_zero <- group_by(BaseSub, country) %>%
-    summarize(added = sum(sums)) %>%
-    subset(., added == 0) %>%
-    as.data.frame()
+                            summarize(added = sum(sums)) %>%
+                            subset(., added == 0) %>%
+                            as.data.frame()
 
     # Subset
     BaseSub <- subset(BaseSub, !(country %in% report_zero[, 1]))
@@ -51,7 +51,7 @@ BaseSub <-
     MoltenBase <- melt(BaseStanVars, id.vars = c('countrynum', 'yearnum'))
 
     # Convert item names to numeric
-    MoltenBase$variable <- as.numeric(as.factor(MoltenBase$variable))
+    MoltenBase$variable <- as.factor(MoltenBase$variable) %>% as.numeric()
 
     # Order data
     MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
@@ -59,7 +59,7 @@ BaseSub <-
 # ---------------------------------------------------------------------------- #
 #### Specify Model ####
 frt_code <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/usaPriors/source/FRT.stan' %>%
-            scan_https()  
+            scan_https()
 
 #### Create data list for Stan ####
 frt_data <- list(
@@ -82,7 +82,7 @@ sflist <-
     mclapply(1:4, mc.cores = 4,
             function(i) stan(fit = empty_stan, data = frt_data,
                             seed = i, chains = 1,
-                            iter = 500,
+                            iter = 50,
                             chain_id = i))
 
 # Collect in to Stan fit object

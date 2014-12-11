@@ -31,7 +31,7 @@ parameters {
 }
 
 transformed parameters {
-    //// recenters transparency for t = 1 ////
+    //// re-centers transparency for t = 1 ////
     vector[C] recentered_alpha1;
     real mean_alpha1;
     real<lower=0> sd_alpha1;
