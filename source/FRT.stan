@@ -45,7 +45,7 @@ transformed parameters {
 model {
     alpha1 ~ normal(0,1);   // informed constraints on the ability
     // numerical issues with larger sd
-    for (c in 1:C-1) {
+    for (c in 1:C) {
         alpha[c,1] ~ normal(recentered_alpha1[c], 0.001);   // horrible hack
         for (t in 2:T)
             alpha[c,t] ~ normal(alpha[c,t-1], sigma_alpha[c]);
@@ -59,8 +59,8 @@ model {
     sigma_beta ~ cauchy(0,0.05);
     sigma_gamma ~ cauchy(0,0.05);
 
-    for (n in 1:N)
-        y[n] ~ bernoulli_logit(
-        exp(log_gamma[kk[n]])
-        * (alpha[cc[n],tt[n]] - beta[kk[n]] + delta) );
+        for (n in 1:N)
+            y[n] ~ bernoulli_logit(
+            exp(log_gamma[kk[n]])
+            * (alpha[cc[n],tt[n]] - beta[kk[n]] + delta) );
 }
