@@ -1,7 +1,7 @@
 ###########################
 # Run model in parallel
 # Christopher Gandrud
-# 11 December 2014
+# 12 December 2014
 # MIT License
 ###########################
 
@@ -76,8 +76,6 @@ frt_data <- list(
 
 # Create Empty Stan model (so it only needs to compile once)
 empty_stan <- stan(model_code = frt_code, data = frt_data, chains = 0)
-
-empty_stan <- stan(file = frt_code, data = frt_data, chains = 0)
 
 # Run on 4 cores
 sflist <-
