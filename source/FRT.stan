@@ -57,8 +57,8 @@ model {
     delta ~ cauchy(0,0.05);
 
     sigma_alpha ~ cauchy(0,0.05);
-    sigma_beta ~ cauchy(0,0.05);
-    sigma_gamma ~ cauchy(0,0.05);
+    sigma_beta ~ cauchy(0,0.25);
+    sigma_gamma ~ cauchy(0,0.25);
 
         for (n in 1:N)
             y[n] ~ bernoulli_logit(

@@ -77,12 +77,14 @@ frt_data <- list(
 # Create Empty Stan model (so it only needs to compile once)
 empty_stan <- stan(model_code = frt_code, data = frt_data, chains = 0)
 
-# Run on 2 cores
+empty_stan <- stan(file = frt_code, data = frt_data, chains = 0)
+
+# Run on 4 cores
 sflist <-
     mclapply(1:4, mc.cores = 4,
             function(i) stan(fit = empty_stan, data = frt_data,
                             seed = i, chains = 1,
-                            iter = 500, chain_id = i,
+                            iter = 3000, chain_id = i,
                             pars = c('delta', 'alpha', 'beta', 'log_gamma')))
 
 # Collect in to Stan fit object
