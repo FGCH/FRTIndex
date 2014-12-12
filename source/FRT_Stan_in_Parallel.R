@@ -82,10 +82,14 @@ empty_stan <- stan(file = frt_code, data = frt_data, chains = 0)
 # Run on 4 cores
 sflist <-
     mclapply(1:4, mc.cores = 4,
-            function(i) stan(fit = empty_stan, data = frt_data,
-                            seed = i, chains = 1,
-                            iter = 3000, chain_id = i,
-                            pars = c('delta', 'alpha', 'beta', 'log_gamma')))
+        function(i) stan(fit = empty_stan, data = frt_data,
+                        seed = i, chains = 1,
+                        iter = 3000, chain_id = i,
+                        pars = c('delta', 'alpha', 'beta', 'log_gamma'),
+                        diagnostic_file = paste0(
+                            'frt_sims_diagnostic', Sys.Date())
+        )
+    )
 
 # Collect in to Stan fit object
 fit <- sflist2stanfit(sflist)
