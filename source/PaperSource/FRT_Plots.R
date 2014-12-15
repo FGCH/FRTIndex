@@ -1,7 +1,7 @@
 ####################################
 # Plot results from FRT_Stan
 # Christopher Gandrud
-# 9 December 2014
+# 15 December 2014
 # MIT License
 ####################################
 
@@ -25,13 +25,13 @@ devtools::source_url(SourceURL)
 countries <- unique(BaseSub$country)
 
 # Load simulations
-load('~/Desktop/fit_2014-12-9_a.RData')
+load('~/Desktop/fit_2014-12-12.RData')
 
 # ---------------------------------------------------------------------------- #
 #### Plot by year ####
 sc_year <- function(year, yrange = 1990:2011) {
     ynumber <- grep(pattern = paste0('^', year, '$'), x = as.character(yrange))
-    stan_catterpillar(fit_NonIndp, params = paste0('alpha\\[.*,', ynumber, '\\]'),
+    stan_catterpillar(fit, params = paste0('alpha\\[.*,', ynumber, '\\]'),
                       params_labels = countries) +
         scale_x_continuous(breaks = c(-5, -3, -1, 0, 1, 3, 5)) +
         ylab('') + xlab('') + ggtitle(year)
@@ -57,7 +57,7 @@ dev.off()
 sc_country <- function(country) {
     cnumber <- grep(pattern = country, x = countries)
     param_temp <- paste0('alpha\\[', cnumber, ',.*\\]')
-    stan_catterpillar(fit_NonIndp, params = param_temp,
+    stan_catterpillar(fit, params = param_temp,
                       params_labels = 1990:2011, horizontal = FALSE,
                       order_medians = FALSE) +
         scale_y_discrete(breaks = c('1990', '1995', '2000', '2005', '2010')) +
@@ -120,14 +120,14 @@ indicator_labels <- indicators_df[, 2]
 
 # Difficulty
 pdf(file = paste0(dir, 'difficultyPlot.pdf'), width = 10, height = 5.5)
-    stan_catterpillar(fit_NonIndp, 'beta\\[.*\\]',
+    stan_catterpillar(fit, 'beta\\[.*\\]',
                     params_labels = indicator_labels) +
         ylab('') + xlab('\nCoefficient')
 dev.off()
 
 # Discrimination
 pdf(file = paste0(dir, 'discriminationPlot.pdf'), width = 10, height = 5.5)
-stan_catterpillar(fit_NonIndp, 'log_gamma\\[.*\\]',
+    stan_catterpillar(fit, 'log_gamma\\[.*\\]',
                   params_labels = indicator_labels) +
     ylab('') + xlab('\nCoefficient')
 dev.off()
