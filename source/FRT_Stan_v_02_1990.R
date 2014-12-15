@@ -2,7 +2,7 @@
 # FRT Index (using Stan)
 # Using only variables that are reported back to 1990
 # Christopher Gandrud
-# 10 December 2014
+# 15 December 2014
 # MIT License
 ################################################################################
 
@@ -104,16 +104,16 @@ frt_data <- list(
 )
 
 ##### Run model ####
-fit_NonIndp <- stan(file = frt_code, data = frt_data,
+fit <- stan(file = frt_code, data = frt_data,
                     iter = 50, chains = 4,
                     pars = c('delta', 'alpha', 'beta', 'log_gamma'),
                     diagnostic_file = paste0(
                         'modelOut/frt_sims_diagnostic', Sys.Date()))
 
 # Save results as data.frame
-as.data.frame(fit_NonIndp) %>%
+as.data.frame(fit) %>%
     write.csv(file = paste0('modelOut/frt_sims_', Sys.Date(), '.csv'),
                 row.names = FALSE)
 
 # Examine results
-print(fit_NonIndp)
+print(fit)

@@ -32,14 +32,14 @@ BaseSub <- subset(BaseSub, !(country %in% report_zero[, 1]))
 countries <- unique(BaseSub$country)
 
 # Load simulations
-load('~/Desktop/fit_2014-12-9_a.RData')
+load('~/Desktop/fit_2014-12-12.RData')
 
 # Years
 years <- 1990:2011
 
 # Convert simulations to data.frame
-fit_df <- as.data.frame(fit_NonIndp)
-rm(fit_NonIndp)
+fit_df <- as.data.frame(fit)
+rm(fit)
 
 # Keep only FRT scores (alpha)
 fit_df_sub <- fit_df[, grep(pattern = 'alpha', x = names(fit_df))]
