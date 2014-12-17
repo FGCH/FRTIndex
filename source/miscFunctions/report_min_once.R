@@ -7,11 +7,11 @@
 report_min_once <- function(data, drop_names = FALSE){
     library(dplyr)
     binary_vars <- names(data)[grep('^Rep_', names(data))]
-    data$sums <- rowSums(data[, binary_vars])
-                    report_zero <- group_by(data, country) %>%
-                    summarize(added = sum(sums)) %>%
+    data$sums <- rowSums(BaseSub[, binary_vars])
+    report_zero <- group_by(data, country) %>%
+                    dplyr::summarize(added = sum(sums)) %>%
                     subset(., added == 0) %>%
-                    as.data.frame()                    
+                    as.data.frame()
     
     if (!isTRUE(drop_names)){
         # Subset
