@@ -38,6 +38,10 @@ setwd('/git_repositories/FRTIndex/')
 ## Set out width
 options('width' = 200)
 
+# Load function to subset the data frame to countries that report 
+# at least 1 item.
+source('source/miscFunctions/report_min_once.R')
+
 #### Gather data ####
 # Run if needed.
 # Note takes approximately 1 hour
@@ -54,15 +58,7 @@ if (data_source == 'download') source('source/RawDataGather.R')
 
 # ---------------------------------------------------------------------------- #
 #### Keep only countries that report at least 1 item for the entire period  ####
-binary_vars <- names(BaseSub)[grep('^Rep_', names(BaseSub))]
-BaseSub$sums <- rowSums(BaseSub[, binary_vars])
-report_zero <- group_by(BaseSub, country) %>%
-                        summarize(added = sum(sums)) %>%
-                        subset(., added == 0) %>%
-                        as.data.frame()
-
-# Subset
-BaseSub <- subset(BaseSub, !(country %in% report_zero[, 1]))
+BaseSub <- report_min_once(BaseSub)
 
 #### Data description ####
 # Create country/year numbers

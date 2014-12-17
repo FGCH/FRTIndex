@@ -12,6 +12,7 @@ setwd('/git_repositories/FRTIndex/')
 dir <- 'paper/paper_plots/'
 
 # Load packages
+library(devtools)
 library(gridExtra)
 library(ggplot2)
 library(countrycode)
@@ -19,13 +20,26 @@ library(dplyr)
 
 # Load stan_catterpillar function
 SourceURL <- 'https://gist.githubusercontent.com/christophergandrud/9b6caf8fa6ed0cbb33c4/raw/211f98590903e96e87686b02e4436a207f49f2ad/stan_caterpillar.R'
-devtools::source_url(SourceURL)
+source_url(SourceURL)
+
+# Load function to subset the data frame to countries that report 
+# at least 1 item.
+source('source/miscFunctions/report_min_once.R')
+
+# Load base data 
+BaseSub <-
+    'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/RawData/wdi_fred_combined.csv' %>%
+    source_data(stringsAsFactors = FALSE)
+
+#### Keep only countries that report at least 1 item for the entire period  ####
+dropped <- report_min_once(BaseSub, drop_names = TRUE)
+BaseSub <- report_min_once(BaseSub)
 
 # Country list from FRT_Stan_v_02_1990.R
 countries <- unique(BaseSub$country)
 
 # Load simulations
-load('~/Desktop/fit_2014-12-12.RData')
+load('~/Desktop/fit_2014-12-17.RData')
 
 # ---------------------------------------------------------------------------- #
 #### Plot by year ####
@@ -114,7 +128,7 @@ do.call(grid.arrange, c(pc[declining_countries]))
 
 # ---------------------------------------------------------------------------- #
 #### Other Paremeters of Interest ####
-indicators_df <- read.csv('/git_repositories/FRTIndex/source/PaperSource/IndicatorDescript/IndicatorDescription.csv',
+indicators_df <- read.csv('source/PaperSource/IndicatorDescript/IndicatorDescription.csv',
                           stringsAsFactors = FALSE)
 indicator_labels <- indicators_df[, 2]
 
@@ -137,7 +151,8 @@ dev.off()
 # Load data
 FRT <- read.csv('IndexData/FRTIndex.csv', stringsAsFactors = FALSE)
 FRTProp <- read.csv('IndexData/alternate/PropReported.csv',
-                    stringsAsFactors = FALSE)
+                    stringsAsFactors = FALSE) %>%
+                subset(!(country %in% dropped))
 
 # Simple function to rescale the variables
 rescale <- function(variable){

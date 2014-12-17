@@ -1,7 +1,7 @@
 ############################
 # Extract FRT Point Estimates and uncertainty
 # Christopher Gandrud
-# 4 December 2014
+# 17 December 2014
 # MIT License
 ############################
 
@@ -12,27 +12,25 @@ library(dplyr)
 library(DataCombine)
 library(countrycode)
 
-# Load base data # Load data
+# Set working directory to save index data to. Change as needed
+setwd('/git_repositories/FRTIndex')
+
+# Load function to subset the data frame to countries that report 
+# at least 1 item.
+source('source/miscFunctions/report_min_once.R')
+
+# Load data
 BaseSub <-
     'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/RawData/wdi_fred_combined.csv' %>%
     source_data(stringsAsFactors = FALSE)
-
 #### Keep only countries that report at least 1 item for the entire period  ####
-binary_vars <- names(BaseSub)[grep('^Rep_', names(BaseSub))]
-BaseSub$sums <- rowSums(BaseSub[, binary_vars])
-report_zero <- group_by(BaseSub, country) %>%
-    summarize(added = sum(sums)) %>%
-    subset(., added == 0) %>%
-    as.data.frame()
-
-# Subset
-BaseSub <- subset(BaseSub, !(country %in% report_zero[, 1]))
+BaseSub <- report_min_once(BaseSub)
 
 # Country list from FRT_Stan_v_02_1990.R
 countries <- unique(BaseSub$country)
 
 # Load simulations
-load('~/Desktop/fit_2014-12-12.RData')
+load('~/Desktop/fit_2014-12-17.RData')
 
 # Years
 years <- 1990:2011
@@ -50,13 +48,13 @@ molten_fit <- group_by(molten_fit, variable)
 
 median <- summarize(molten_fit, median = round(median(value), digits = 3))
 lower_95 <- summarize(molten_fit, lower_95 = round(quantile(value,
-                                                    probs = 0.025), digits = 3))
+                                                probs = 0.025), digits = 3))
 lower_90 <- summarize(molten_fit, lower_90 = round(quantile(value, probs = 0.05),
-                                                   digits = 3))
+                                                digits = 3))
 upper_90 <- summarize(molten_fit, upper_90 = round(quantile(value, probs = 0.95),
-                                                   digits = 3))
+                                                digits = 3))
 upper_95 <- summarize(molten_fit, upper_95 = round(quantile(value, probs = 0.975),
-                                                   digits = 3))
+                                                digits = 3))
 
 comb <- merge(lower_95, lower_90) %>%
             merge(., median) %>%
@@ -86,5 +84,5 @@ comb <- MoveFront(comb, c('country', 'iso2c', 'year'))
 comb <- arrange(comb, country, year)
 
 # Write file
-write.csv(comb, '/git_repositories/FRTIndex/IndexData/FRTIndex.csv',
+write.csv(comb, 'IndexData/FRTIndex.csv',
           row.names = FALSE)
