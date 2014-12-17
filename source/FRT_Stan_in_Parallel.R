@@ -37,6 +37,7 @@ BaseSub$yearnum <- as.numeric(as.factor(BaseSub$year))
 
 #### Clean up ####
 # Keep only complete variables
+binary_vars <- names(BaseSub)[grep('^Rep_', names(BaseSub))]
 BaseStanVars <- BaseSub[, c('countrynum', 'yearnum', binary_vars)]
 
 # Data descriptions
@@ -69,7 +70,6 @@ frt_data <- list(
     kk = MoltenReady$variable,
     y = MoltenReady$value
 )
-
 
 # Create Empty Stan model (so it only needs to compile once)
 empty_stan <- stan(model_code = frt_code, data = frt_data, chains = 0)

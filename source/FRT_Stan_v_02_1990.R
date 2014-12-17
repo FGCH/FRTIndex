@@ -67,6 +67,7 @@ BaseSub$yearnum <- as.numeric(as.factor(BaseSub$year))
 
 #### Clean up ####
 # Keep only complete variables
+binary_vars <- names(BaseSub)[grep('^Rep_', names(BaseSub))]
 BaseStanVars <- BaseSub[, c('countrynum', 'yearnum', binary_vars)]
 
 # Data descriptions
