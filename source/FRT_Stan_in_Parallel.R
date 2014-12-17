@@ -1,7 +1,7 @@
 ###########################
 # Run model in parallel
 # Christopher Gandrud
-# 12 December 2014
+# 15 December 2014
 # MIT License
 ###########################
 
@@ -58,7 +58,7 @@ MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
 
 # ---------------------------------------------------------------------------- #
 #### Specify Model ####
-frt_code <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/usaPriors/source/FRT.stan' %>%
+frt_code <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/FRT.stan' %>%
             scan_https()
 
 #### Create data list for Stan ####
