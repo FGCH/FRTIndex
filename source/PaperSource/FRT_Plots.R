@@ -1,7 +1,7 @@
 ####################################
 # Plot results from FRT_Stan
 # Christopher Gandrud
-# 15 December 2014
+# 17 December 2014
 # MIT License
 ####################################
 
@@ -12,6 +12,7 @@ setwd('/git_repositories/FRTIndex/')
 dir <- 'paper/paper_plots/'
 
 # Load packages
+library(repmis)
 library(devtools)
 library(gridExtra)
 library(ggplot2)
@@ -156,7 +157,7 @@ FRTProp <- read.csv('IndexData/alternate/PropReported.csv',
 
 # Simple function to rescale the variables
 rescale <- function(variable){
-    rescaled <- (variable - mean(variable)) / sd(variable)
+    rescaled <- (variable - median(variable)) / sd(variable)
     return(rescaled)
 }
 
