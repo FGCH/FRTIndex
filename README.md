@@ -1,7 +1,7 @@
 Financial Regulatory Transparency Index
 ========
 
-**Version:** 0.2.2
+**Version:** 0.2.3
 
 **Maintainer:**
 [Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
@@ -32,7 +32,7 @@ in a CSV formatted file called: [FRTIndex.csv](https://raw.githubusercontent.com
 It covers the **50 countries** classified by the World Bank as
 '**High Income**' for the years **1990 through 2011**.
 
-#### FRT Index Scores for 2011
+#### FRT Index Scores for selected years
 
 ![FRT Overview](FRT_overview.png)
 
