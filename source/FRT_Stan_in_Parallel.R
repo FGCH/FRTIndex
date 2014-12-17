@@ -1,7 +1,7 @@
 ###########################
 # Run model in parallel
 # Christopher Gandrud
-# 15 December 2014
+# 17 December 2014
 # MIT License
 ###########################
 
@@ -10,11 +10,16 @@ library(repmis)
 library(DataCombine)
 library(reshape2)
 library(dplyr)
+library(devtools)
 library(rstan)
 library(parallel)
 
 ## Set out width
 options('width' = 200)
+
+# Load function to subset the data frame to countries that report 
+# at least 1 item.
+source_url('https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/miscFunctions/report_min_once.R')
 
 # Load data
 BaseSub <-
@@ -23,15 +28,7 @@ BaseSub <-
 
 # ---------------------------------------------------------------------------- #
 #### Keep only countries that report at least 1 item for the entire period  ####
-binary_vars <- names(BaseSub)[grep('^Rep_', names(BaseSub))]
-BaseSub$sums <- rowSums(BaseSub[, binary_vars])
-report_zero <- group_by(BaseSub, country) %>%
-                        summarize(added = sum(sums)) %>%
-                        subset(., added == 0) %>%
-                        as.data.frame()
-
-# Subset
-BaseSub <- subset(BaseSub, !(country %in% report_zero[, 1]))
+BaseSub <- report_min_once(BaseSub)
 
 #### Data description ####
 # Create country/year numbers

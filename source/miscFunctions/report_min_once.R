@@ -17,7 +17,7 @@ report_min_once <- function(data, drop_names = FALSE){
         # Subset
         data <- subset(data, !(country %in% report_zero[, 1]))
         message('None reported for:\n')
-        message(paste(report_zero[, 1], sep = ' \n'))
+        message(paste(report_zero[, 1], '\n'))
         return(data)
     }
     else if (isTRUE(drop_names)){
