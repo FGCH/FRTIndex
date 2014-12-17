@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.2.3
+
+- Run with 6,000 iterations.
+
 ## Version 0.2.2
 
 - Use cauchy(0,0.05) priors for transparency scale parameter and mean transparency.
