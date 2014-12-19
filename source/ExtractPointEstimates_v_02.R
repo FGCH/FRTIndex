@@ -1,7 +1,7 @@
 ############################
 # Extract FRT Point Estimates and uncertainty
 # Christopher Gandrud
-# 17 December 2014
+# 19 December 2014
 # MIT License
 ############################
 
@@ -30,7 +30,7 @@ BaseSub <- report_min_once(BaseSub)
 countries <- unique(BaseSub$country)
 
 # Load simulations
-load('~/Desktop/fit_2014-12-17.RData')
+load('~/Desktop/fit_2014-12-18.RData')
 
 # Years
 years <- 1990:2011

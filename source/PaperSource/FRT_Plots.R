@@ -21,7 +21,7 @@ library(dplyr)
 
 # Load stan_catterpillar function
 SourceURL <- 'https://gist.githubusercontent.com/christophergandrud/9b6caf8fa6ed0cbb33c4/raw/211f98590903e96e87686b02e4436a207f49f2ad/stan_caterpillar.R'
-source_url(SourceURL)
+                source_url(SourceURL)
 
 # Load function to subset the data frame to countries that report 
 # at least 1 item.
@@ -40,7 +40,7 @@ BaseSub <- report_min_once(BaseSub)
 countries <- unique(BaseSub$country)
 
 # Load simulations
-load('~/Desktop/fit_2014-12-17.RData')
+load('~/Desktop/fit_2014-12-18.RData')
 
 # ---------------------------------------------------------------------------- #
 #### Plot by year ####
@@ -148,9 +148,26 @@ pdf(file = paste0(dir, 'discriminationPlot.pdf'), width = 10, height = 5.5)
 dev.off()
 
 # ---------------------------------------------------------------------------- #
-#### Compare FRT to Proportion Reported method ####
+#### Median trend overview ####
 # Load data
 FRT <- read.csv('IndexData/FRTIndex.csv', stringsAsFactors = FALSE)
+FRT_minus_ca <- subset(FRT, country != 'Canada')
+
+all1 <- ggplot(FRT, aes(year, median, group = iso2c)) +
+        geom_line(alpha = 0.3) +
+        ylab('Median FRT Index\n') + xlab('') + ggtitle('With Canada\n') +
+        theme_bw()
+
+no_canada <- ggplot(FRT_minus_ca, aes(year, median, group = iso2c)) +
+                geom_line(alpha = 0.3) +
+                ylab('Median FRT Index\n') + xlab('') + ggtitle('Without Canada\n') +
+                theme_bw()
+
+grid.arrange(all1, no_canada, ncol = 2)
+
+# ---------------------------------------------------------------------------- #
+#### Compare FRT to Proportion Reported method ####
+# Load data
 FRTProp <- read.csv('IndexData/alternate/PropReported.csv',
                     stringsAsFactors = FALSE) %>%
                 subset(!(country %in% dropped))

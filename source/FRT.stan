@@ -1,6 +1,6 @@
 ////////////////////////////////
 // FRT Stan Model
-// Version 0.2.2
+// Version 0.2--
 // Christopher Gandrud
 // 10 December 2014
 // MIT License

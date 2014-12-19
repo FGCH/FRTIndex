@@ -1,14 +1,18 @@
 # Changelog
 
+## Version 0.2.4
+
+- Run with 10,000 iterations
+
 ## Version 0.2.3
 
 - Run with 6,000 iterations.
 
 ## Version 0.2.2
 
-- Use cauchy(0,0.05) priors for transparency scale parameter and mean transparency.
-A smaller scale parameter (previously it was 0.25) is  a more informative prior
-used to limit the range of the transparency parameter.
+- Use cauchy(0,0.05) priors for transparency scale parameter and mean
+transparency. A smaller scale parameter (previously it was 0.25) is  a more
+informative prior used to limit the range of the transparency parameter.
 
 - Run with 3,000 iterations.
 
