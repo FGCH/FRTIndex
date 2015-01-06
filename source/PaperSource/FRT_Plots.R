@@ -199,7 +199,7 @@ dev.off()
 
 # ---------------------------------------------------------------------------- #
 #### Raw proportion reported plots ####
-FRTProp <- subset(FRTProp, !(country %in% report_zero[, 1]))
+FRTProp <- subset(FRTProp, !(country %in% dropped))
 pprop <- list()
 for (u in unique(FRTProp$country)) {
     message(u)
