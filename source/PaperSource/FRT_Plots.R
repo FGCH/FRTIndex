@@ -1,7 +1,7 @@
 ####################################
 # Plot results from FRT_Stan
 # Christopher Gandrud
-# 17 December 2014
+# 2 January 2015
 # MIT License
 ####################################
 
@@ -40,7 +40,8 @@ BaseSub <- report_min_once(BaseSub)
 countries <- unique(BaseSub$country)
 
 # Load simulations
-load('~/Desktop/fit_2014-12-18.RData')
+# Change location as needed
+load('/Volumes/GANDRUD32/FRT/fit_2014-12-18.RData')
 
 # ---------------------------------------------------------------------------- #
 #### Plot by year ####
@@ -54,17 +55,16 @@ sc_year <- function(year, yrange = 1990:2011) {
 
 # 1990, 2005, 2011
 y1 <- sc_year(1990)
-y2 <- sc_year(2005)
-y3 <- sc_year(2011)
+y2 <- sc_year(2011)
 
 # For github
 png(file = 'FRT_overview.png', width = 900)
-    grid.arrange(y1, y3, ncol = 2, sub = 'FRT Index (HPD)')
+    grid.arrange(y1, y2, ncol = 2, sub = 'FRT Index (HPD)')
 dev.off()
 
 # For paper
 pdf(file = paste0(dir, 'FRT_years.pdf'), width = 18)
-    grid.arrange(y1, y2, y3, ncol = 3, sub = 'FRT Index (HPD)')
+    grid.arrange(y1, y2, ncol = 2, sub = 'FRT Index (HPD)')
 dev.off()
 
 # ---------------------------------------------------------------------------- #
@@ -172,14 +172,18 @@ FRTProp <- read.csv('IndexData/alternate/PropReported.csv',
                     stringsAsFactors = FALSE) %>%
                 subset(!(country %in% dropped))
 
+######## No Canada ############
+FRTProp_noCanada <- subset(FRTProp, country != "Canada")
+
 # Simple function to rescale the variables
 rescale <- function(variable){
     rescaled <- (variable - median(variable)) / sd(variable)
     return(rescaled)
 }
 
-FRTStand <- rescale(FRT$median)
-FRTPropStand <- rescale(FRTProp$FRT_PropReport)
+FRTStand <- rescale(FRT_minus_ca$median)
+FRTPropStand <- rescale(FRTProp_noCanada$FRT_PropReport)
+
 Comb <- data.frame(FRT = FRTStand, FRTPropStand)
 
 # Plot

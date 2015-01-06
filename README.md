@@ -19,15 +19,17 @@ Why do countries release data on their financial systems to international
 organizations, such as the IMF and World Bank? What are the consequences of
 releasing this data for the stability of their financial systems?
 
-We are developing a **Financial Regulatory Transparency Index**. The new
-Index we make it possible to compare the willingness of governments to credibly
-reveal the structure of their financial systems and their regulatory quality, so
-that they can be scrutinized by market participants and citizens.
+To address these questions we are developing a **Financial Regulatory
+Transparency Index**. The new Index we make it possible to compare the
+willingness of governments to credibly reveal the structure of their financial
+systems through international institutions, allowing them to be scrutinized by
+market participants and citizens.
 
 ## The FRT Index
 
 The current draft version of the Index is located in the *IndexData* directory
-in a CSV formatted file called: [FRTIndex.csv](https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex.csv).
+in a CSV formatted file called:
+[FRTIndex.csv](https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex.csv).
 
 It covers the **50 countries** classified by the World Bank as
 '**High Income**' for the years **1990 through 2011**.
