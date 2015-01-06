@@ -4,7 +4,7 @@
 # - FRED: http://research.stlouisfed.org/fred2/
 # Also generates simple graphs/statistics comparing the data sources.
 # Christopher Gandrud
-# 5 December 2014
+# 6 January 2015
 # MIT License
 ################################################################################
 
@@ -24,10 +24,10 @@ library(ggplot2)
 # ---------------------------------------------------------------------------- #
 #### Download GFDD data from the World Bank ####
 Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04',
-                'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07',
-                'GFDD.DI.08', 'GFDD.DI.11', 'GFDD.DI.14',
-                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02',
-                'GFDD.OI.07', 'GFDD.SI.04')
+                'GFDD.DI.06', 'GFDD.DI.07', 'GFDD.DI.08',
+                'GFDD.DI.11', 'GFDD.DI.14', 'GFDD.EI.02',
+                'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.OI.07',
+                'GFDD.SI.04')
 
 # Download indicators
 Base <- WDI(indicator = Indicators, start = 1990, end = 2013, extra = TRUE)
@@ -100,7 +100,7 @@ fred_combined <- subset(fred_combined, year >= 1990)
 fred_combined_cast <- dcast(fred_combined, iso2c + year ~ variable)
 
 # ---------------------------------------------------------------------------- #
-#### Create comparative missingness plots for the two versions #### 
+#### Create comparative missingness plots for the two versions ####
 #### Create missingness indicators ####
 #IndSub <- names(fred_combined_cast)[3:length(names(fred_combined_cast))]
 #
@@ -130,18 +130,18 @@ fred_combined_cast <- dcast(fred_combined, iso2c + year ~ variable)
 #### Merge both data sets ####
 #prop_combined <- merge(PropRepor, fredProp, by = c('iso2c', 'year'))
 
-#prop_combined$diff <- prop_combined$fred_PropReport - 
+#prop_combined$diff <- prop_combined$fred_PropReport -
 #                        prop_combined$FRT_PropReport
 
 # Only plot those country-years where there is a difference
-#prop_comb_sub <- subset(prop_combined, diff != 0) 
+#prop_comb_sub <- subset(prop_combined, diff != 0)
 #
 #pdf(file = 'paper/paper_plots/FRED_vs_WorldBank.pdf')
 #    ggplot(prop_comb_sub, aes(FRT_PropReport, fred_PropReport, label = iso2c)) +
 #        geom_text(position = position_jitter(w = 0.05), alpha = 0.5) +
 #        scale_y_continuous(limits = c(0, 1)) +
 #        geom_abline(yintercept = 0, slope = 1, linetype = 'dashed') +
-#        ylab('Proportion Reported in FRED\n') + 
+#        ylab('Proportion Reported in FRED\n') +
 #        xlab('\nProportion Reported in World Bank') +
 #        theme_bw()
 #dev.off()

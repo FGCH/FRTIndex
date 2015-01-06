@@ -1,8 +1,13 @@
 # Changelog
 
+## Version 0.2.5 (To-do)
+
+- Dropped Liquid liabilities to GDP (%) (GFDD.DI.05) as it is very similar to
+Liquid liabilities in millions USD (2000 constant).
+
 ## Version 0.2.4
 
-- Run with 10,000 iterations
+- Run with 10,000 iterations.
 
 ## Version 0.2.3
 
@@ -32,7 +37,8 @@ Updated beta model FRT Index using the No-U-Turn Sampler in Stan.
 
 - 1990-2011.
 
-- Model run with 4 chains with 2,000 iterations each (1000 or which are burn-in).
+- Model run with 4 chains with 2,000 iterations each (1000 or which are
+burn-in).
 
 ## Version 0.1
 
