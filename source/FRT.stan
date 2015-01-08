@@ -2,7 +2,7 @@
 // FRT Stan Model
 // Version 0.2--
 // Christopher Gandrud
-// 10 December 2014
+// 8 January 2015
 // MIT License
 ////////////////////////////////
 
@@ -46,8 +46,8 @@ model {
     alpha1 ~ normal(0,1);   // informed constraints on the ability
                             // numerical issues with larger sd
     for (c in 1:C) {
-        // horrible hack to address current Stan limitation
         alpha[c,1] ~ normal(recentered_alpha1[c],0.001);
+            // addresses current Stan limitation
         for (t in 2:T)
             alpha[c,t] ~ normal(alpha[c,t-1], sigma_alpha[c]);
     }
