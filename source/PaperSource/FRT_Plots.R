@@ -1,7 +1,7 @@
 ####################################
 # Plot results from FRT_Stan
 # Christopher Gandrud
-# 2 January 2015
+# 9 January 2015
 # MIT License
 ####################################
 
@@ -47,13 +47,13 @@ load('/Volumes/GANDRUD32/FRT/fit_2014-12-18.RData')
 #### Plot by year ####
 sc_year <- function(year, yrange = 1990:2011) {
     ynumber <- grep(pattern = paste0('^', year, '$'), x = as.character(yrange))
-    stan_catterpillar(fit, params = paste0('alpha\\[.*,', ynumber, '\\]'),
-                      params_labels = countries) +
+    stan_catterpillar(fit, pars = paste0('alpha\\[.*,', ynumber, '\\]'),
+                      pars_labels = countries, hpd = TRUE) +
         scale_x_continuous(breaks = c(-5, -3, -1, 0, 1, 3, 5)) +
         ylab('') + xlab('') + ggtitle(year)
 }
 
-# 1990, 2005, 2011
+# 1990, 2011
 y1 <- sc_year(1990)
 y2 <- sc_year(2011)
 
@@ -72,9 +72,9 @@ dev.off()
 sc_country <- function(country) {
     cnumber <- grep(pattern = country, x = countries)
     param_temp <- paste0('alpha\\[', cnumber, ',.*\\]')
-    stan_catterpillar(fit, params = param_temp,
-                      params_labels = 1990:2011, horizontal = FALSE,
-                      order_medians = FALSE) +
+    stan_catterpillar(fit, pars = param_temp,
+                      pars_labels = 1990:2011, horizontal = FALSE,
+                      order_medians = FALSE, hpd = TRUE) +
         scale_y_discrete(breaks = c('1990', '1995', '2000', '2005', '2010')) +
         ggtitle(paste0(country, '\n'))
 }
