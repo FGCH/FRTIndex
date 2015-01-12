@@ -6,8 +6,10 @@
 ############################
 
 # Load packages
+if (!('StanCat' %in% installed.packages()[, 1])) devtools::install_github('christophergandrud/StanCat')
+library(StanCat)
 library(repmis)
-library(reshape2)
+library(tidyr)
 library(dplyr)
 library(DataCombine)
 library(countrycode)
@@ -15,7 +17,7 @@ library(countrycode)
 # Set working directory to save index data to. Change as needed
 setwd('/git_repositories/FRTIndex')
 
-# Load function to subset the data frame to countries that report 
+# Load function to subset the data frame to countries that report
 # at least 1 item.
 source('source/miscFunctions/report_min_once.R')
 
@@ -30,7 +32,7 @@ BaseSub <- report_min_once(BaseSub)
 countries <- unique(BaseSub$country)
 
 # Load simulations
-load('~/Desktop/fit_2014-12-18.RData')
+load('/Volumes/GANDRUD32/FRT/fit_2014-12-18.RData')
 
 # Years
 years <- 1990:2011
@@ -43,23 +45,25 @@ rm(fit)
 fit_df_sub <- fit_df[, grep(pattern = 'alpha', x = names(fit_df))]
 
 # Melt into long format and group
-molten_fit <- melt(fit_df_sub)
-molten_fit <- group_by(molten_fit, variable)
+gathered <- gather(fit_df_sub, variable, value)
+gathered <- group_by(gathered, variable)
 
-median <- summarize(molten_fit, median = round(median(value), digits = 3))
-lower_95 <- summarize(molten_fit, lower_95 = round(quantile(value,
-                                                probs = 0.025), digits = 3))
-lower_90 <- summarize(molten_fit, lower_90 = round(quantile(value, probs = 0.05),
-                                                digits = 3))
-upper_90 <- summarize(molten_fit, upper_90 = round(quantile(value, probs = 0.95),
-                                                digits = 3))
-upper_95 <- summarize(molten_fit, upper_95 = round(quantile(value, probs = 0.975),
-                                                digits = 3))
+median <- summarize(gathered, median = median(value))
+lower_95 <- summarize(gathered, lower_95 = StanCat:::HPD(value, prob = 0.95,
+                                                        side = 'lower'))
+lower_90 <- summarize(gathered, lower_90 = StanCat:::HPD(value, prob = 0.9,
+                                                        side = 'lower'))
+upper_90 <- summarize(gathered, upper_90 = StanCat:::HPD(value, prob = 0.9,
+                                                        side = 'upper'))
+upper_95 <- summarize(gathered, upper_95 = StanCat:::HPD(value, prob = 0.95,
+                                                        side = 'upper'))
 
 comb <- merge(lower_95, lower_90) %>%
             merge(., median) %>%
             merge(., upper_90) %>%
             merge(., upper_95)
+
+for (i in 2:ncol(comb)) comb[, i] <- round(comb[, i], digits = 3)
 
 # Clean up identifiers
 fr_country <- data.frame(from = paste0('alpha\\[', 1:length(countries), ',.*'),
