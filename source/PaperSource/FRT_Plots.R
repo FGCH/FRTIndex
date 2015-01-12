@@ -1,7 +1,7 @@
 ####################################
 # Plot results from FRT_Stan
 # Christopher Gandrud
-# 9 January 2015
+# 12 January 2015
 # MIT License
 ####################################
 
@@ -12,6 +12,8 @@ setwd('/git_repositories/FRTIndex/')
 dir <- 'paper/paper_plots/'
 
 # Load packages
+if (!('StanCat' %in% installed.packages()[, 1])) devtools::install_github('christophergandrud/StanCat')
+library(StanCat)
 library(repmis)
 library(devtools)
 library(gridExtra)
@@ -19,15 +21,11 @@ library(ggplot2)
 library(countrycode)
 library(dplyr)
 
-# Load stan_catterpillar function
-SourceURL <- 'https://gist.githubusercontent.com/christophergandrud/9b6caf8fa6ed0cbb33c4/raw/211f98590903e96e87686b02e4436a207f49f2ad/stan_caterpillar.R'
-                source_url(SourceURL)
-
-# Load function to subset the data frame to countries that report 
+# Load function to subset the data frame to countries that report
 # at least 1 item.
 source('source/miscFunctions/report_min_once.R')
 
-# Load base data 
+# Load base data
 BaseSub <-
     'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/RawData/wdi_fred_combined.csv' %>%
     source_data(stringsAsFactors = FALSE)
@@ -47,7 +45,7 @@ load('/Volumes/GANDRUD32/FRT/fit_2014-12-18.RData')
 #### Plot by year ####
 sc_year <- function(year, yrange = 1990:2011) {
     ynumber <- grep(pattern = paste0('^', year, '$'), x = as.character(yrange))
-    stan_catterpillar(fit, pars = paste0('alpha\\[.*,', ynumber, '\\]'),
+    stan_caterpillar(fit, pars = paste0('alpha\\[.*,', ynumber, '\\]'),
                       pars_labels = countries, hpd = TRUE) +
         scale_x_continuous(breaks = c(-5, -3, -1, 0, 1, 3, 5)) +
         ylab('') + xlab('') + ggtitle(year)
@@ -72,7 +70,7 @@ dev.off()
 sc_country <- function(country) {
     cnumber <- grep(pattern = country, x = countries)
     param_temp <- paste0('alpha\\[', cnumber, ',.*\\]')
-    stan_catterpillar(fit, pars = param_temp,
+    stan_caterpillar(fit, pars = param_temp,
                       pars_labels = 1990:2011, horizontal = FALSE,
                       order_medians = FALSE, hpd = TRUE) +
         scale_y_discrete(breaks = c('1990', '1995', '2000', '2005', '2010')) +
@@ -117,8 +115,8 @@ stable_countries <- c("Saudi Arabia", "Sweden", "United States")
 do.call(grid.arrange, c(pc[stable_countries]))
 
 # Improvers
-improver_countries <- c("Brunei Darussalam", "Croatia", "Germany", "Greece", 
-                        "Iceland", "Korea, Rep.", "Oman", "Portugal", "Qatar", 
+improver_countries <- c("Brunei Darussalam", "Croatia", "Germany", "Greece",
+                        "Iceland", "Korea, Rep.", "Oman", "Portugal", "Qatar",
                         "Slovenia", "Spain", "United Arab Emirates")
 do.call(grid.arrange, c(pc[improver_countries]))
 
@@ -135,14 +133,14 @@ indicator_labels <- indicators_df[, 2]
 
 # Difficulty
 pdf(file = paste0(dir, 'difficultyPlot.pdf'), width = 10, height = 5.5)
-    stan_catterpillar(fit, 'beta\\[.*\\]',
+    stan_caterpillar(fit, 'beta\\[.*\\]',
                     params_labels = indicator_labels) +
         ylab('') + xlab('\nCoefficient')
 dev.off()
 
 # Discrimination
 pdf(file = paste0(dir, 'discriminationPlot.pdf'), width = 10, height = 5.5)
-    stan_catterpillar(fit, 'log_gamma\\[.*\\]',
+    stan_caterpillar(fit, 'log_gamma\\[.*\\]',
                   params_labels = indicator_labels) +
     ylab('') + xlab('\nCoefficient')
 dev.off()
@@ -278,7 +276,7 @@ liedorp_vars <- names(liedorp)[1:max(liedorp_vars)]
 
 pfl <- list()
 for (i in liedorp_vars){
-    pfl[[i]] <- fl_plot(i) 
+    pfl[[i]] <- fl_plot(i)
 }
 
 pdf(file = paste0(dir, 'FRT_Liedorp.pdf'), width = 11.5, height = 8)

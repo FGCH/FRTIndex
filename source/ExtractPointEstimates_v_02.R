@@ -1,7 +1,7 @@
 ############################
 # Extract FRT Point Estimates and uncertainty
 # Christopher Gandrud
-# 19 December 2014
+# 12 January 2015
 # MIT License
 ############################
 
