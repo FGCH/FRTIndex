@@ -134,14 +134,14 @@ indicator_labels <- indicators_df[, 2]
 # Difficulty
 pdf(file = paste0(dir, 'difficultyPlot.pdf'), width = 10, height = 5.5)
     stan_caterpillar(fit, 'beta\\[.*\\]',
-                    params_labels = indicator_labels) +
+                    pars_labels = indicator_labels) +
         ylab('') + xlab('\nCoefficient')
 dev.off()
 
 # Discrimination
 pdf(file = paste0(dir, 'discriminationPlot.pdf'), width = 10, height = 5.5)
     stan_caterpillar(fit, 'log_gamma\\[.*\\]',
-                  params_labels = indicator_labels) +
+                  pars_labels = indicator_labels) +
     ylab('') + xlab('\nCoefficient')
 dev.off()
 
