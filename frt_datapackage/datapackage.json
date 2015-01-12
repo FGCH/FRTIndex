@@ -1,0 +1,67 @@
+[
+    {
+        "name": [
+            "frt_datapackage"
+        ],
+        "title": [
+            "The Financial Regulatory Transparency Index"
+        ],
+        "version": [
+            "0.2.4.1"
+        ],
+        "maintainer": [
+            "Christopher Gandrurd"
+        ],
+        "license": [
+            "PDDL-1.0"
+        ],
+        "last_updated": [
+            "2015-01-12"
+        ],
+        "homepage": [
+            "https://github.com/FGCH/FRTIndex"
+        ]
+    },
+    {
+        "resources": [
+            {
+                "path": "data/frt_datapackage_data.csv"
+            }
+        ],
+        "schema": [
+            {
+                "name": "country",
+                "type": "character"
+            },
+            {
+                "name": "iso2c",
+                "type": "character"
+            },
+            {
+                "name": "year",
+                "type": "character"
+            },
+            {
+                "name": "lower_95",
+                "type": "number"
+            },
+            {
+                "name": "lower_90",
+                "type": "number"
+            },
+            {
+                "name": "median",
+                "type": "number"
+            },
+            {
+                "name": "upper_90",
+                "type": "number"
+            },
+            {
+                "name": "upper_95",
+                "type": "number"
+            }
+        ]
+    }
+]
+

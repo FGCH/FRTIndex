@@ -8,6 +8,8 @@
 # Load packages
 if (!('StanCat' %in% installed.packages()[, 1])) devtools::install_github('christophergandrud/StanCat')
 library(StanCat)
+if (!('dpmr' %in% installed.packages()[, 1])) devtools::install_github('christophergandrud/dpmr')
+library(dpmr)
 library(repmis)
 library(tidyr)
 library(dplyr)
@@ -90,3 +92,18 @@ comb <- arrange(comb, country, year)
 # Write file
 write.csv(comb, 'IndexData/FRTIndex.csv',
           row.names = FALSE)
+
+# Create data package version
+meta_list <- list(name = 'frt_datapackage', 
+                  title = 'The Financial Regulatory Transparency Index',
+                  version = '0.2.4.1',
+                  maintainer = 'Christopher Gandrurd',
+                  license = 'PDDL-1.0',
+                  last_updated = Sys.Date(),
+                  homepage = 'https://github.com/FGCH/FRTIndex')
+
+datapackage_init(comb, meta = meta_list, 
+                 source_cleaner = c('source/FRT_Stan_in_Parallel.R', 
+                                    'source/FRT.stan'), 
+                 source_cleaner_rename = T)
+
