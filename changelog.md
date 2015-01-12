@@ -5,6 +5,11 @@
 - Dropped Liquid liabilities to GDP (%) (GFDD.DI.05) as it is very similar to
 Liquid liabilities in millions USD (2000 constant).
 
+## Version 0.2.4.1
+
+Same as v0.2.4, but highest probability density intervals reported rather than
+central intervals.
+
 ## Version 0.2.4
 
 - Run with 10,000 iterations.

@@ -1,7 +1,7 @@
 Financial Regulatory Transparency Index
 ========
 
-**Version:** 0.2.4
+**Version:** 0.2.4.1
 
 **Maintainer:**
 [Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
@@ -40,16 +40,16 @@ It covers the **50 countries** classified by the World Bank as
 
 The file `FRTIndex.csv` contains the following variables:
 
-| Variable Name | Short Description                              |
-| ------------- | ---------------------------------------------- |
-| country       | country name                                   |
+| Variable Name | Short Description                                          |
+| ------------- | ---------------------------------------------------------- |
+| country       | country name                                               |
 | iso2c         | [ISO 2 letter country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) |
-| year          | year of the FRT score                          |
-| lower_95      | lower bound of the 95% credibility interval    |
-| lower_90      | lower bound of the 90% credibility interval    |
-| median        | median of the FRT index posterior distribution |
-| upper_90      | upper bound of the 90% credibility interval    |
-| upper_95      | upper bound of the 95% credibility interval    |
+| year          | year of the FRT score                                      |
+| lower_95      | lower bound of the 95% highest probability density interval|
+| lower_90      | lower bound of the 90% highest probability density interval|
+| median        | median of the FRT index posterior distribution             |
+| upper_90      | upper bound of the 90% highest probability density interval|
+| upper_95      | upper bound of the 95% highest probability density interval|
 
 ## Download into R
 
