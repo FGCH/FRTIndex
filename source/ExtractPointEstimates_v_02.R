@@ -103,7 +103,8 @@ meta_list <- list(name = 'frt_datapackage',
                   homepage = 'https://github.com/FGCH/FRTIndex')
 
 datapackage_init(comb, meta = meta_list, 
-                 source_cleaner = c('source/FRT_Stan_in_Parallel.R', 
+                 source_cleaner = c('source/RawDataGather.R',
+                                    'source/FRT_Stan_in_Parallel.R', 
                                     'source/FRT.stan'), 
-                 source_cleaner_rename = T)
+                 source_cleaner_rename = F)
 
