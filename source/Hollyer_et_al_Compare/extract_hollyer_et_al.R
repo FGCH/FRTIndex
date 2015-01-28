@@ -12,10 +12,12 @@ library(tidyr)
 library(countrycode)
 library(DataCombine)
 library(foreign)
-library(ggplot2)
 
 # Set working directory. Change as needed.
 setwd('~/Desktop/')
+
+# Saving directory. Change as needed/
+sd <- '/git_repositories/FRTIndex/source/Hollyer_et_al_Compare/'
 
 # Load jags result
 ### Data not stored in git repository due to large file size ####
@@ -45,6 +47,10 @@ gathered <- PercChange(gathered, Var = 'hrv_mean', GroupVar = 'iso2c',
                        NewVar = 'dhrv_mean', type = 'proportion',
                        TimeVar = 'year')
 
+# Save basic Hollyer et al. medians
+simple <- gathered %>% select(iso2c, year, hrv_mean)
+write.csv(simple, file = paste0(sd, 'hrv_means.csv'), row.names = F)
+
 #### Merge with bond spread data set ####
 frt <- read.csv('frt_bondspread_28Jan.csv', stringsAsFactors = F)
 frt$iso2c <- countrycode(frt$wbcode, origin = 'wb',
@@ -60,15 +66,5 @@ comb <- MoveFront(comb, c('iso2c', 'ccode1', 'country', 'year', 'frt', 'dfrt',
             select(-X_merge, -sname, -wbcode)
 
 # Save
-# Saving directory. Change as needed/
-sd <- '/git_repositories/FRTIndex/source/Hollyer_et_al_Compare/'
 write.dta(comb, file = paste0(sd, 'frt_hrv_bond.dta'))
-
-#### Plot comparison to FRT ####
-comb_noca <- comb %>% filter(country != 'Canada')
-
-ggplot(comb, aes(log(frt), mean_hrv)) +
-    geom_point() +
-    stat_smooth() +
-    theme_bw()
 

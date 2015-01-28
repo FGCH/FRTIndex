@@ -1,7 +1,7 @@
 ####################################
 # Plot results from FRT_Stan
 # Christopher Gandrud
-# 12 January 2015
+# 28 January 2015
 # MIT License
 ####################################
 
@@ -127,8 +127,8 @@ do.call(grid.arrange, c(pc[declining_countries]))
 
 # ---------------------------------------------------------------------------- #
 #### Other Paremeters of Interest ####
-indicators_df <- read.csv('source/PaperSource/IndicatorDescript/IndicatorDescription.csv',
-                          stringsAsFactors = FALSE)
+indicators_df <- 'source/PaperSource/IndicatorDescript/IndicatorDescription.csv' %>%
+                    read.csv(stringsAsFactors = FALSE)
 indicator_labels <- indicators_df[, 2]
 
 # Difficulty
@@ -281,4 +281,33 @@ for (i in liedorp_vars){
 
 pdf(file = paste0(dir, 'FRT_Liedorp.pdf'), width = 11.5, height = 8)
     do.call(grid.arrange, c(pfl[1:6], ncol = 3))
+dev.off()
+
+# ---------------------------------------------------------------------------- #
+#### Compare FRT to Hollyer et al. 2014 ####
+# Load HRV means
+hrv <- 'source/Hollyer_et_al_Compare/hrv_means.csv' %>%
+        read.csv(stringsAsFactors = F)
+
+# Standardise & merge
+hrv$hrv_median_rescale <- rescale(hrv$hrv_mean)
+hrv_rescale <- select(hrv, iso2c, year, hrv_median_rescale)
+
+FRT_HRV <- merge(FRT_rescale, hrv_rescale, all.x = T)
+
+cor.test(FRT_HRV$median_rescale, FRT_HRV$hrv_median_rescale)
+
+# Drop Canada
+frt_hrv_noCA <- FRT_HRV %>% filter(iso2c != 'CA')
+
+# Plot 
+pdf(file = paste0(dir, 'FRT_HRV_Compare.pdf'))
+ggplot(frt_hrv_noCA, aes(median_rescale, hrv_median_rescale)) + 
+    geom_point(alpha = 0.5) +
+    stat_smooth(method = 'loess', se = FALSE, size = 1) +
+    stat_smooth(method = 'lm', se = FALSE, linetype = 'dashed',
+                color = 'grey', size = 1) +
+    ylab('Mean HRV (standardized)\n') +
+    xlab('\nMedian FRT Index (standardized)') +
+    theme_bw()
 dev.off()
