@@ -11,12 +11,14 @@ library(rjags)
 library(tidyr)
 library(countrycode)
 library(DataCombine)
+library(foreign)
 library(ggplot2)
 
 # Set working directory. Change as needed.
 setwd('~/Desktop/')
 
 # Load jags result
+### Data not stored in git repository due to large file size ####
 load('TransparencyIndex2013.RData')
 
 # Extract mean transparency
@@ -58,7 +60,9 @@ comb <- MoveFront(comb, c('iso2c', 'ccode1', 'country', 'year', 'frt', 'dfrt',
             select(-X_merge, -sname, -wbcode)
 
 # Save
-write.dta(comb, file = 'frt_hrv_bond.dta')
+# Saving directory. Change as needed/
+sd <- '/git_repositories/FRTIndex/source/Hollyer_et_al_Compare/'
+write.dta(comb, file = paste0(sd, 'frt_hrv_bond.dta'))
 
 #### Plot comparison to FRT ####
 comb_noca <- comb %>% filter(country != 'Canada')
