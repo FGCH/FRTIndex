@@ -82,13 +82,22 @@ xtreg dratecov lltratecov lfrt_log dfrt_log lstrucbalgdp dstrucbalgdp lpubdebtgd
 	regsave using "tables/log_FRT1.dta", detail(all) replace ///
         table(Volatility_log, order(regvars r2) format(%5.2f) ///
         paren(stderr) asterisk())
+        
+// with no Canada
+xtreg dratecov lltratecov lfrt_log dfrt_log lstrucbalgdp dstrucbalgdp lpubdebtgdp ///
+    dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
+    dvix if country != "Canada", ///
+    cluster(ccode1) i(ccode1) fe vsquish noomit
+    regsave using "tables/log_FRT2.dta", detail(all) replace ///
+        table(Volatility_log_no_ca, order(regvars r2) format(%5.2f) ///
+        paren(stderr) asterisk())
     
 // with domestic growth and eurozone
 xtreg dratecov lltratecov lfrt_log dfrt_log lstrucbalgdp dstrucbalgdp lpubdebtgdp ///
     dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
     dvix lcountry_growth dcountry_growth eurozone, cluster(ccode1) i(ccode1) ///
     fe vsquish noomit
-    regsave using "tables/log_FRT2.dta", detail(all) replace ///
+    regsave using "tables/log_FRT3.dta", detail(all) replace ///
         table(Volatility_log_morevars, order(regvars r2) format(%5.2f) ///
         paren(stderr) asterisk())
 

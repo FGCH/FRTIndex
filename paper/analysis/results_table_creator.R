@@ -106,22 +106,24 @@ outputFRT_log <- FindReplace(outputFRT_log, Var = 'var', replaceData = CleanUp,
 outputFRT_log <- outputFRT_log[c(1:30, 75:80, 31:32, 38, 34, 42), ]
 
 # Insert blank row for formatting
-blank <- c('', '', '')
+blank <- c('', '', '', '')
 outputFRT_log <- InsertRow(outputFRT_log, New = blank, RowNum = 39)
 outputFRT_log <- InsertRow(outputFRT_log, New = blank, RowNum = 39)
 
 # Highlight key finding
 outputFRT_log[3, 2] <- paste0('\\textbf{', outputFRT_log[3, 2], '}')
 outputFRT_log[3, 3] <- paste0('\\textbf{', outputFRT_log[3, 3], '}')
+outputFRT_log[3, 4] <- paste0('\\textbf{', outputFRT_log[3, 4], '}')
 
 names(outputFRT_log) <- c('',
                       '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data)',
+                      '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data), \\textbf{Excluding Canada}',
                       '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data)'
 )
 
 # Output
 tableFRTlog <- xtable(outputFRT_log, dcolumn = TRUE, booktabs = TRUE)
-align(tableFRTlog) <- 'llp{2cm}p{2cm}'
+align(tableFRTlog) <- 'llp{2cm}p{2cm}p{2cm}'
 print(tableFRTlog, include.rownames = FALSE, floating = FALSE, size = 'tiny',
       file = 'tables/frt_log_bond_results.tex')
 
