@@ -43,3 +43,5 @@ frt_presentation/figures*
 
 .DS_Store
 completer.hist
+
+paper/tables/*dta
