@@ -1,7 +1,7 @@
 ################################################################################
 # Create LaTeX tables from Stata output
 # Christopher Gandrud
-# 29 May 2015
+# 30 May 2015
 # MIT License
 ################################################################################
 
@@ -24,6 +24,7 @@ setwd('/git_repositories/FRTIndex/paper/')
 AllFiles <- list.files('tables/')
 
 filesFRT <- AllFiles[grep('^FRT', AllFiles)]
+filesLogFRT <- AllFiles[grep('^log_FRT', AllFiles)]
 filesHRV <- AllFiles[grep('^HRV', AllFiles)]
 
 # Combine into data frames
@@ -39,7 +40,8 @@ CombineFiles <- function(file_list, start){
 CleanUp <- data.frame(
     from = c('^.*?_stderr', '_coef', '_cons', 'N_clust', 'N$', 'r2_a',
              '^lltrate$', '^lltspreadus$', '^lltratecov$',
-             '^lfrt', '^dfrt',
+             '^lfrt$', '^dfrt$',
+             '^lfrt_log$', '^dfrt_log$',
              'lhrv_mean', 'dhrv_mean',
              'lstrucbalgdp', 'dstrucbalgdp',
              'lpubdebtgdp', 'dpubdebtgdp',
@@ -54,6 +56,7 @@ CleanUp <- data.frame(
            'Adjusted R-squared',
            'LT rate$_{t-1}$', 'LT rate spread$_{t-1}$', 'LT rate COV$_{t-1}$',
            'FRT$_{t-1}$', '$\\\\Delta$ FRT',
+           'FRT (log)$_{t-1}$', '$\\\\Delta$ FRT (log)',
            'HRV$_{t-1}$', '$\\\\Delta$ HRV',
            'Structural budget balance/GDP (\\\\%)$_{t-1}$', '$\\\\Delta$ Structural budget balance/GDP',
            'Public debt/GDP (\\\\%)$_{t-1}$', '$\\\\Delta$ Public debt/GDP',
@@ -66,10 +69,12 @@ CleanUp <- data.frame(
            )
 )
 
-#### FRT
+#### FRT ####
 outputFRT <- CombineFiles(filesFRT, start = 'FRT1.dta')
-outputFRT <- FindReplace(outputFRT, Var = 'var', replaceData = CleanUp, exact = F)
-outputFRT <- outputFRT[c(77, 78, 75, 76, 73, 74, 1:28, 79:84, 29:30, 36, 32, 40), ]
+outputFRT <- FindReplace(outputFRT, Var = 'var', replaceData = CleanUp, 
+                         exact = F)
+outputFRT <- outputFRT[c(77, 78, 75, 76, 73, 74, 1:28, 79:84, 29:30, 36, 32, 
+                         40), ]
 
 # Insert blank row for formatting
 blank <- c('', '', '', '', '')
@@ -94,9 +99,37 @@ align(tableFRT) <- 'llp{2cm}p{2cm}p{2cm}p{2cm}'
 print(tableFRT, include.rownames = FALSE, floating = FALSE, size = 'tiny',
       file = 'tables/frt_bond_results.tex')
 
-#### HRV
+## Logged FRT ####
+outputFRT_log <- CombineFiles(filesLogFRT, start = 'log_FRT1.dta')
+outputFRT_log <- FindReplace(outputFRT_log, Var = 'var', replaceData = CleanUp, 
+                             exact = F)
+outputFRT_log <- outputFRT_log[c(1:30, 75:80, 31:32, 38, 34, 42), ]
+
+# Insert blank row for formatting
+blank <- c('', '', '')
+outputFRT_log <- InsertRow(outputFRT_log, New = blank, RowNum = 39)
+outputFRT_log <- InsertRow(outputFRT_log, New = blank, RowNum = 39)
+
+# Highlight key finding
+outputFRT_log[3, 2] <- paste0('\\textbf{', outputFRT_log[3, 2], '}')
+outputFRT_log[3, 3] <- paste0('\\textbf{', outputFRT_log[3, 3], '}')
+
+names(outputFRT_log) <- c('',
+                      '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data)',
+                      '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data)'
+)
+
+# Output
+tableFRTlog <- xtable(outputFRT_log, dcolumn = TRUE, booktabs = TRUE)
+align(tableFRTlog) <- 'llp{2cm}p{2cm}'
+print(tableFRTlog, include.rownames = FALSE, floating = FALSE, size = 'tiny',
+      file = 'tables/frt_log_bond_results.tex')
+
+
+#### HRV ####
 outputHRV <- CombineFiles(filesHRV, start = 'HRV1.dta')
-outputHRV <- FindReplace(outputHRV, Var = 'var', replaceData = CleanUp, exact = F)
+outputHRV <- FindReplace(outputHRV, Var = 'var', replaceData = CleanUp, 
+                         exact = F)
 outputHRV <- outputHRV[c(76, 73, 74, 75, 77, 78, 1:30, 36, 32, 40), ]
 
 # Insert blank row for formatting
