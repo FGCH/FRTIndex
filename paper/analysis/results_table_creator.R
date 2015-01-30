@@ -1,7 +1,7 @@
 ################################################################################
 # Create LaTeX tables from Stata output
 # Christopher Gandrud
-# 30 May 2015
+# 30 January 2015
 # MIT License
 ################################################################################
 
@@ -73,29 +73,30 @@ CleanUp <- data.frame(
 outputFRT <- CombineFiles(filesFRT, start = 'FRT1.dta')
 outputFRT <- FindReplace(outputFRT, Var = 'var', replaceData = CleanUp, 
                          exact = F)
-outputFRT <- outputFRT[c(77, 78, 75, 76, 73, 74, 1:28, 79:84, 29:30, 36, 32, 
-                         40), ]
+outputFRT <- outputFRT[c(78, 75, 76, 77, 69, 70, 1:24, 81:82, 79:80, 83:84, 
+                         25:26, 32, 28, 36), ]
 
 # Insert blank row for formatting
-blank <- c('', '', '', '', '')
-outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 43)
-outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 43)
+blank <- c('', '', '', '', '', '')
+outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 39)
+outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 39)
 
 # Highlight key finding
 outputFRT[7:8, 4] <- paste0('\\textbf{', outputFRT[7:8, 4], '}')
 outputFRT[7:8, 5] <- paste0('\\textbf{', outputFRT[7:8, 5], '}')
-
+outputFRT[7:8, 6] <- paste0('\\textbf{', outputFRT[7:8, 6], '}')
 
 names(outputFRT) <- c('',
                       '$\\Delta$ Long-term (10-year) interest rate (\\%)',
                       '$\\Delta$ LT rate spread (US 10-year bond)',
                       '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data)',
+                      '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data), \\textbf{Excluding Canada}',
                       '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data)'
                       )
 
 # Output
 tableFRT <- xtable(outputFRT, dcolumn = TRUE, booktabs = TRUE)
-align(tableFRT) <- 'llp{2cm}p{2cm}p{2cm}p{2cm}'
+align(tableFRT) <- 'llp{2cm}p{2cm}p{2cm}p{2cm}p{2cm}'
 print(tableFRT, include.rownames = FALSE, floating = FALSE, size = 'tiny',
       file = 'tables/frt_bond_results.tex')
 
@@ -103,27 +104,25 @@ print(tableFRT, include.rownames = FALSE, floating = FALSE, size = 'tiny',
 outputFRT_log <- CombineFiles(filesLogFRT, start = 'log_FRT1.dta')
 outputFRT_log <- FindReplace(outputFRT_log, Var = 'var', replaceData = CleanUp, 
                              exact = F)
-outputFRT_log <- outputFRT_log[c(1:30, 75:80, 31:32, 38, 34, 42), ]
+outputFRT_log <- outputFRT_log[c(1:28, 34, 30, 38), ]
 
 # Insert blank row for formatting
-blank <- c('', '', '', '')
-outputFRT_log <- InsertRow(outputFRT_log, New = blank, RowNum = 39)
-outputFRT_log <- InsertRow(outputFRT_log, New = blank, RowNum = 39)
+blank <- c('', '', '')
+outputFRT_log <- InsertRow(outputFRT_log, New = blank, RowNum = 29)
+outputFRT_log <- InsertRow(outputFRT_log, New = blank, RowNum = 29)
 
 # Highlight key finding
-outputFRT_log[3, 2] <- paste0('\\textbf{', outputFRT_log[3, 2], '}')
-outputFRT_log[3, 3] <- paste0('\\textbf{', outputFRT_log[3, 3], '}')
-outputFRT_log[3, 4] <- paste0('\\textbf{', outputFRT_log[3, 4], '}')
+outputFRT_log[3:4, 2] <- paste0('\\textbf{', outputFRT_log[3:4, 2], '}')
+outputFRT_log[3:4, 3] <- paste0('\\textbf{', outputFRT_log[3:4, 3], '}')
 
 names(outputFRT_log) <- c('',
                       '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data)',
-                      '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data), \\textbf{Excluding Canada}',
-                      '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data)'
-)
+                      '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data), \\textbf{Excluding Canada}'
+                        )
 
 # Output
 tableFRTlog <- xtable(outputFRT_log, dcolumn = TRUE, booktabs = TRUE)
-align(tableFRTlog) <- 'llp{2cm}p{2cm}p{2cm}'
+align(tableFRTlog) <- 'llp{2cm}p{2cm}'
 print(tableFRTlog, include.rownames = FALSE, floating = FALSE, size = 'tiny',
       file = 'tables/frt_log_bond_results.tex')
 
@@ -142,8 +141,8 @@ outputHRV <- InsertRow(outputHRV, New = blank, RowNum = 37)
 names(outputHRV) <- c('',
                     '$\\Delta$ Long-term (10-year) interest rate (\\%)',
                     '$\\Delta$ LT rate spread (US 10-year bond)',
-                    '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data)')
-
+                    '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data)'
+                    )
 # Output
 tableHRV <- xtable(outputHRV, dcolumn = TRUE, booktabs = TRUE)
 align(tableHRV) <- 'llp{2cm}p{2cm}p{2cm}'
