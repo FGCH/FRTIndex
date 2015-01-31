@@ -1,7 +1,7 @@
 ################################################################################
 # Create LaTeX tables from Stata output
 # Christopher Gandrud
-# 30 January 2015
+# 31 January 2015
 # MIT License
 ################################################################################
 
@@ -73,11 +73,12 @@ CleanUp <- data.frame(
 outputFRT <- CombineFiles(filesFRT, start = 'FRT1.dta')
 outputFRT <- FindReplace(outputFRT, Var = 'var', replaceData = CleanUp, 
                          exact = F)
-outputFRT <- outputFRT[c(78, 75, 76, 77, 73:74, 1:28, 81:82, 79:80, 83:84, 
-                         29:30, 36, 32, 40), ]
+outputFRT <- outputFRT[c(74, 71, 72:73, 69:70, 1:24, 75:84, 25:26, 32, 28, 
+                         36), ]
 
 # Insert blank row for formatting
 blank <- c('', '', '', '', '', '')
+row.names(outputFRT) <- 1:nrow(outputFRT)
 outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 43)
 outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 43)
 
@@ -104,12 +105,13 @@ print(tableFRT, include.rownames = FALSE, floating = FALSE, size = 'tiny',
 outputFRT_log <- CombineFiles(filesLogFRT, start = 'log_FRT1.dta')
 outputFRT_log <- FindReplace(outputFRT_log, Var = 'var', replaceData = CleanUp, 
                              exact = F)
-outputFRT_log <- outputFRT_log[c(1:32, 38, 34, 42), ]
+outputFRT_log <- outputFRT_log[c(1:28, 34, 30, 38), ]
 
 # Insert blank row for formatting
 blank <- c('', '', '')
-outputFRT_log <- InsertRow(outputFRT_log, New = blank, RowNum = 33)
-outputFRT_log <- InsertRow(outputFRT_log, New = blank, RowNum = 33)
+row.names(outputFRT_log) <- 1:nrow(outputFRT_log)
+outputFRT_log <- InsertRow(outputFRT_log, New = blank, RowNum = 29)
+outputFRT_log <- InsertRow(outputFRT_log, New = blank, RowNum = 29)
 
 # Highlight key finding
 outputFRT_log[3:4, 2] <- paste0('\\textbf{', outputFRT_log[3:4, 2], '}')
@@ -131,12 +133,12 @@ print(tableFRTlog, include.rownames = FALSE, floating = FALSE, size = 'tiny',
 outputHRV <- CombineFiles(filesHRV, start = 'HRV1.dta')
 outputHRV <- FindReplace(outputHRV, Var = 'var', replaceData = CleanUp, 
                          exact = F)
-outputHRV <- outputHRV[c(76, 73, 74:75, 77:78, 1:28, 79:82, 29:30, 36, 32, 
-                         40), ]
+outputHRV <- outputHRV[c(72, 69, 70:71, 73:74, 1:26, 32, 28, 36), ]
 # Insert blank row for formatting
 blank <- c('', '', '', '')
-outputHRV <- InsertRow(outputHRV, New = blank, RowNum = 41)
-outputHRV <- InsertRow(outputHRV, New = blank, RowNum = 41)
+row.names(outputHRV) <- 1:nrow(outputHRV)
+outputHRV <- InsertRow(outputHRV, New = blank, RowNum = 33)
+outputHRV <- InsertRow(outputHRV, New = blank, RowNum = 33)
 
 names(outputHRV) <- c('',
                     '$\\Delta$ Long-term (10-year) interest rate (\\%)',

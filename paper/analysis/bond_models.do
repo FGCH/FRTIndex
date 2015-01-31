@@ -18,8 +18,7 @@ gen dfrt_log = log(dfrt + 2.5)
 // FRT
 xtreg dltrate lltrate lfrt dfrt lpubdebtgdp ///
     dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
-    dvix lcountry_growth dcountry_growth, ///
-    cluster(ccode1) i(ccode1) fe vsquish noomit
+    dvix, cluster(ccode1) i(ccode1) fe vsquish noomit
     
     regsave using "tables/FRT1.dta", detail(all) replace table(LongRunRate, ///
         order(regvars r2) format(%5.2f) paren(stderr) asterisk())
@@ -27,8 +26,7 @@ xtreg dltrate lltrate lfrt dfrt lpubdebtgdp ///
 // HRV
 xtreg dltrate lltrate lhrv_mean dhrv_mean ///
     lpubdebtgdp dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth ///
-    doecdgrowth lvix dvix lcountry_growth dcountry_growth, ///
-    cluster(ccode1) i(ccode1) fe vsquish noomit
+    doecdgrowth lvix dvix, cluster(ccode1) i(ccode1) fe vsquish noomit
     
     regsave using "tables/HRV1.dta", detail(all) replace table(LongRunRate, ///
         order(regvars r2) format(%5.2f) paren(stderr) asterisk())
@@ -42,8 +40,7 @@ xtreg dltrate lltrate lobi_filled dobi_filled ///
 //FRT
 xtreg dltspreadus lltspreadus lfrt dfrt lpubdebtgdp ///
     dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
-    dvix lcountry_growth dcountry_growth, ///
-    cluster(ccode1) i(ccode1) fe vsquish noomit
+    dvix, cluster(ccode1) i(ccode1) fe vsquish noomit
     
     regsave using "tables/FRT2.dta", detail(all) replace ///
         table(ChangeLongRunRate, order(regvars r2) format(%5.2f) ///
@@ -52,8 +49,7 @@ xtreg dltspreadus lltspreadus lfrt dfrt lpubdebtgdp ///
 // HRV
 xtreg dltspreadus lltspreadus lhrv_mean dhrv_mean ///
     lpubdebtgdp dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth ///
-    doecdgrowth lvix dvix lcountry_growth dcountry_growth, ///
-    cluster(ccode1) i(ccode1) fe vsquish noomit
+    doecdgrowth lvix dvix, cluster(ccode1) i(ccode1) fe vsquish noomit
     
     regsave using "tables/HRV2.dta", detail(all) replace ///
         table(ChangeLongRunRate, order(regvars r2) format(%5.2f) ///
@@ -69,8 +65,7 @@ xtreg dltspreadus lltspreadus lobi_filled dobi_filled  ///
 // FRT --- Basic
 xtreg dratecov lltratecov lfrt dfrt lpubdebtgdp ///
     dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
-    dvix lcountry_growth dcountry_growth, cluster(ccode1) i(ccode1) ///
-    fe vsquish noomit
+    dvix, cluster(ccode1) i(ccode1) fe vsquish noomit
     
     regsave using "tables/FRT3.dta", detail(all) replace table(Volatility_basic, ///
         order(regvars r2) format(%5.2f) paren(stderr) asterisk())
@@ -78,17 +73,16 @@ xtreg dratecov lltratecov lfrt dfrt lpubdebtgdp ///
 // FRT --- no Canada
 xtreg dratecov lltratecov lfrt dfrt lpubdebtgdp ///
     dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
-    dvix lcountry_growth dcountry_growth if country != "Canada", ///
-    cluster(ccode1) i(ccode1) fe vsquish noomit
+    dvix if country != "Canada", cluster(ccode1) i(ccode1) fe vsquish noomit
     
     regsave using "tables/FRT4.dta", detail(all) replace table(Volatility_noca, ///
         order(regvars r2) format(%5.2f) paren(stderr) asterisk())
 
-// FRT with country growth and Eurozone
-xtreg dratecov lltratecov lfrt dfrt lstrucbalgdp dstrucbalgdp lpubdebtgdp ///
+// FRT with structural budget balance, country growth, and Eurozone
+xtreg dratecov lltratecov lfrt dfrt lpubdebtgdp ///
     dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
-    dvix lcountry_growth dcountry_growth eurozone, cluster(ccode1) i(ccode1) ///
-    fe vsquish noomit
+    dvix lstrucbalgdp dstrucbalgdp lcountry_growth dcountry_growth eurozone, ///
+    cluster(ccode1) i(ccode1) fe vsquish noomit
     
     regsave using "tables/FRT5.dta", detail(all) replace ///
         table(Volatility_morevars, order(regvars r2) format(%5.2f) ///
@@ -98,8 +92,7 @@ xtreg dratecov lltratecov lfrt dfrt lstrucbalgdp dstrucbalgdp lpubdebtgdp ///
 /// without domestic growth and eurozone
 xtreg dratecov lltratecov lfrt_log dfrt_log lpubdebtgdp ///
 	dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
-	dvix lcountry_growth dcountry_growth, ///
-	cluster(ccode1) i(ccode1) fe vsquish noomit
+	dvix, cluster(ccode1) i(ccode1) fe vsquish noomit
 	
 	regsave using "tables/log_FRT1.dta", detail(all) replace ///
         table(Volatility_log, order(regvars r2) format(%5.2f) ///
@@ -108,8 +101,7 @@ xtreg dratecov lltratecov lfrt_log dfrt_log lpubdebtgdp ///
 // with no Canada
 xtreg dratecov lltratecov lfrt_log dfrt_log lpubdebtgdp ///
     dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
-    dvix lcountry_growth dcountry_growth if country != "Canada", ///
-    cluster(ccode1) i(ccode1) fe vsquish noomit
+    dvix if country != "Canada", cluster(ccode1) i(ccode1) fe vsquish noomit
     
     regsave using "tables/log_FRT2.dta", detail(all) replace ///
         table(Volatility_log_no_ca, order(regvars r2) format(%5.2f) ///
@@ -117,9 +109,9 @@ xtreg dratecov lltratecov lfrt_log dfrt_log lpubdebtgdp ///
 
 
 // HRV
-xtreg dratecov lltratecov lhrv_mean dhrv_mean lstrucbalgdp dstrucbalgdp ///
+xtreg dratecov lltratecov lhrv_mean dhrv_mean ///
     lpubdebtgdp dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth ///
-    doecdgrowth lvix dvix lcountry_growth dcountry_growth, ///
+    doecdgrowth lvix dvix, ///
     cluster(ccode1) i(ccode1) fe vsquish noomit
     
     regsave using "tables/HRV3.dta", detail(all) replace table(Volatility, ///
