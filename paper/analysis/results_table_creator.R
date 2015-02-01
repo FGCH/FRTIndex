@@ -1,7 +1,7 @@
 ################################################################################
 # Create LaTeX tables from Stata output
 # Christopher Gandrud
-# 31 January 2015
+# 1 February 2015
 # MIT License
 ################################################################################
 
@@ -73,8 +73,8 @@ CleanUp <- data.frame(
 outputFRT <- CombineFiles(filesFRT, start = 'FRT1.dta')
 outputFRT <- FindReplace(outputFRT, Var = 'var', replaceData = CleanUp, 
                          exact = F)
-outputFRT <- outputFRT[c(74, 71, 72:73, 69:70, 1:24, 75:84, 25:26, 32, 28, 
-                         36), ]
+outputFRT <- outputFRT[c(78, 75, 76:77, 69:70, 1:24, 73:74, 72:71, 79:84,
+                         25:26, 32, 28, 36), ]
 
 # Insert blank row for formatting
 blank <- c('', '', '', '', '', '')
@@ -133,12 +133,14 @@ print(tableFRTlog, include.rownames = FALSE, floating = FALSE, size = 'tiny',
 outputHRV <- CombineFiles(filesHRV, start = 'HRV1.dta')
 outputHRV <- FindReplace(outputHRV, Var = 'var', replaceData = CleanUp, 
                          exact = F)
-outputHRV <- outputHRV[c(72, 69, 70:71, 73:74, 1:26, 32, 28, 36), ]
+outputHRV <- outputHRV[c(72:73, 74, 71, 77:78, 1:24, 75:76, 69:70, 25:26, 32, 
+                         28, 36), ]
+
 # Insert blank row for formatting
 blank <- c('', '', '', '')
 row.names(outputHRV) <- 1:nrow(outputHRV)
-outputHRV <- InsertRow(outputHRV, New = blank, RowNum = 33)
-outputHRV <- InsertRow(outputHRV, New = blank, RowNum = 33)
+outputHRV <- InsertRow(outputHRV, New = blank, RowNum = 37)
+outputHRV <- InsertRow(outputHRV, New = blank, RowNum = 37)
 
 names(outputHRV) <- c('',
                     '$\\Delta$ Long-term (10-year) interest rate (\\%)',
