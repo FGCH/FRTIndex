@@ -1,7 +1,7 @@
 ################################################################################
 # Create LaTeX tables from Stata output
 # Christopher Gandrud
-# 1 February 2015
+# 2 February 2015
 # MIT License
 ################################################################################
 
@@ -11,7 +11,7 @@ library(foreign)
 library(DataCombine)
 library(xtable)
 
-# Raw tables created with bond_models_frt_vs_hrv.do in Stata 12.1
+# Raw tables created with bond_models.do in Stata 12.1
 
 # Don't clean LaTeX syntax
 options(xtable.sanitize.text.function = identity)
@@ -89,7 +89,7 @@ outputFRT[7:8, 6] <- paste0('\\textbf{', outputFRT[7:8, 6], '}')
 
 names(outputFRT) <- c('',
                       '$\\Delta$ Long-term (10-year) interest rate (\\%)',
-                      '$\\Delta$ LT rate spread (US 10-year bond)',
+                      '$\\Delta$ LT rate spread (US 10-year bond, \\%)',
                       '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data)',
                       '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data), \\textbf{Excluding Canada}',
                       '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data)'
@@ -144,7 +144,7 @@ outputHRV <- InsertRow(outputHRV, New = blank, RowNum = 37)
 
 names(outputHRV) <- c('',
                     '$\\Delta$ Long-term (10-year) interest rate (\\%)',
-                    '$\\Delta$ LT rate spread (US 10-year bond)',
+                    '$\\Delta$ LT rate spread (US 10-year bond,  \\%)',
                     '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data)'
                     )
 # Output
