@@ -20,7 +20,7 @@ xtreg dltrate lltrate lfrt dfrt lpubdebtgdp ///
     dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
     dvix lcountry_growth dcountry_growth, ///
     cluster(ccode1) i(ccode1) fe vsquish noomit
-    
+
     regsave using "tables/FRT1.dta", detail(all) replace table(LongRunRate, ///
         order(regvars r2) format(%5.2f) paren(stderr) asterisk())
 
@@ -29,7 +29,7 @@ xtreg dltrate lltrate lhrv_mean dhrv_mean ///
     lpubdebtgdp dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth ///
     doecdgrowth lvix dvix lcountry_growth dcountry_growth, ///
     cluster(ccode1) i(ccode1) fe vsquish noomit
-    
+
     regsave using "tables/HRV1.dta", detail(all) replace table(LongRunRate, ///
         order(regvars r2) format(%5.2f) paren(stderr) asterisk())
 
@@ -44,7 +44,7 @@ xtreg dltspreadus lltspreadus lfrt dfrt lpubdebtgdp ///
     dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
     dvix lcountry_growth dcountry_growth ///
     if country != "United States", cluster(ccode1) i(ccode1) fe vsquish noomit
-    
+
     regsave using "tables/FRT2.dta", detail(all) replace ///
         table(ChangeLongRunRate, order(regvars r2) format(%5.2f) ///
         paren(stderr) asterisk())
@@ -54,7 +54,7 @@ xtreg dltspreadus lltspreadus lhrv_mean dhrv_mean ///
     lpubdebtgdp dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth ///
     doecdgrowth lvix dvix lcountry_growth dcountry_growth ///
     if country != "United States", cluster(ccode1) i(ccode1) fe vsquish noomit
-    
+
     regsave using "tables/HRV2.dta", detail(all) replace ///
         table(ChangeLongRunRate, order(regvars r2) format(%5.2f) ///
         paren(stderr) asterisk())
@@ -70,15 +70,15 @@ xtreg dltspreadus lltspreadus lobi_filled dobi_filled  ///
 xtreg dratecov lltratecov lfrt dfrt lpubdebtgdp ///
     dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
     dvix, cluster(ccode1) i(ccode1) fe vsquish noomit
-    
+
     regsave using "tables/FRT3.dta", detail(all) replace table(Volatility_basic, ///
         order(regvars r2) format(%5.2f) paren(stderr) asterisk())
-        
+
 // FRT --- no Canada
 xtreg dratecov lltratecov lfrt dfrt lpubdebtgdp ///
     dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
     dvix if country != "Canada", cluster(ccode1) i(ccode1) fe vsquish noomit
-    
+
     regsave using "tables/FRT4.dta", detail(all) replace table(Volatility_noca, ///
         order(regvars r2) format(%5.2f) paren(stderr) asterisk())
 
@@ -87,7 +87,7 @@ xtreg dratecov lltratecov lfrt dfrt lpubdebtgdp ///
     dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
     dvix lstrucbalgdp dstrucbalgdp lcountry_growth dcountry_growth eurozone, ///
     cluster(ccode1) i(ccode1) fe vsquish noomit
-    
+
     regsave using "tables/FRT5.dta", detail(all) replace ///
         table(Volatility_morevars, order(regvars r2) format(%5.2f) ///
         paren(stderr) asterisk())
@@ -95,18 +95,18 @@ xtreg dratecov lltratecov lfrt dfrt lpubdebtgdp ///
 // FRT on a log scale
 /// without domestic growth and eurozone
 xtreg dratecov lltratecov lfrt_log dfrt_log lpubdebtgdp ///
-	dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
-	dvix, cluster(ccode1) i(ccode1) fe vsquish noomit
-	
-	regsave using "tables/log_FRT1.dta", detail(all) replace ///
+    dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
+    dvix, cluster(ccode1) i(ccode1) fe vsquish noomit
+
+    regsave using "tables/log_FRT1.dta", detail(all) replace ///
         table(Volatility_log, order(regvars r2) format(%5.2f) ///
         paren(stderr) asterisk())
-        
+
 // with no Canada
 xtreg dratecov lltratecov lfrt_log dfrt_log lpubdebtgdp ///
     dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth doecdgrowth lvix ///
     dvix if country != "Canada", cluster(ccode1) i(ccode1) fe vsquish noomit
-    
+
     regsave using "tables/log_FRT2.dta", detail(all) replace ///
         table(Volatility_log_no_ca, order(regvars r2) format(%5.2f) ///
         paren(stderr) asterisk())
@@ -116,7 +116,7 @@ xtreg dratecov lltratecov lhrv_mean dhrv_mean ///
     lpubdebtgdp dpubdebtgdp linfl dinfl lus3mrate dus3mrate loecdgrowth ///
     doecdgrowth lvix dvix, ///
     cluster(ccode1) i(ccode1) fe vsquish noomit
-    
+
     regsave using "tables/HRV3.dta", detail(all) replace table(Volatility, ///
         order(regvars r2) format(%5.2f) paren(stderr) asterisk())
 

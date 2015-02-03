@@ -1,7 +1,7 @@
 ################################################################################
 # Add in OBI fiscal transparency indicators
 # Christopher Gandrud
-# 30 January 2015
+# 3 February 2015
 # MIT License
 ################################################################################
 
@@ -12,6 +12,7 @@ library(foreign)
 library(DataCombine)
 library(repmis)
 library(WDI)
+library(MASS)
 
 # Set working directory. Change as needed
 setwd('/git_repositories/FRTIndex/')
@@ -89,3 +90,13 @@ write.dta(comb, file = 'paper/analysis/frt_hrv_obi_bond.dta')
 cor.test(comb$frt, comb$obi_filled)
 
 cor.test(comb$hrv, comb$obi_filled)
+
+#### Create parellel coordinates plots to highlight differences ####
+# Used in presentation
+
+sub_2010 <- comb %>% filter(year == 2010) %>% 
+                select(frt, hrv_mean, obi_filled)
+
+names(sub_2010) <- c('FRT', 'HRV', 'OBI')
+
+parcoord(sub_2010, var.label = T)
