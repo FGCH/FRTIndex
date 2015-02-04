@@ -1,7 +1,7 @@
 ################################################################################
 # Add in OBI fiscal transparency indicators
 # Christopher Gandrud
-# 3 February 2015
+# 4 February 2015
 # MIT License
 ################################################################################
 
@@ -33,12 +33,12 @@ fiscal <- PercChange(fiscal, Var = 'obi3', TimeVar = 'year', GroupVar = 'iso2c',
                      NewVar = 'dobi3', type = 'proportion')
 
 # Raw OBI index
-obi <- read.csv('source/FiscalTranparency/ibp_data_summary.csv', 
+obi <- read.csv('source/FiscalTranparency/ibp_data_summary.csv',
                 stringsAsFactors = F) %>%
                 select(-RANK)
 names(obi) <- c('iso2c', 'year', 'obi_raw')
 obi <- TimeExpand(obi, GroupVar = 'iso2c', TimeVar = 'year')
-obi <- obi %>% group_by(iso2c) %>% 
+obi <- obi %>% group_by(iso2c) %>%
             mutate(obi_filled = FillDown(Var = obi_raw)) %>%
             select (-obi_raw)
 obi <- subset(obi, !is.na(iso2c))
@@ -69,10 +69,10 @@ comb <- merge(main, fiscal, all.x = T)
 comb <- merge(comb, obi, all.x = T)
 comb <- merge(comb, growth, all.x = T)
 
-comb <- comb %>% MoveFront(c("iso2c", "year",  "ccode1", "country", "frt",
-                             "dfrt", "lfrt", "hrv_mean", "dhrv_mean", 
-                             "lhrv_mean", "obi3", "lobi3", "dobi3", 
-                             "obi_filled", 'lobi_filled', 'dobi_filled'))
+comb <- comb %>% MoveFront(c('iso2c', 'year',  'ccode1', 'country', 'frt',
+                             'dfrt', 'lfrt', 'hrv_mean', 'dhrv_mean',
+                             'lhrv_mean', 'obi3', 'lobi3', 'dobi3',
+                             'obi_filled', 'lobi_filled', 'dobi_filled'))
 
 #### Add Euro membership
 euro <- 'http://bit.ly/1yRvycq' %>%
@@ -94,7 +94,7 @@ cor.test(comb$hrv, comb$obi_filled)
 #### Create parellel coordinates plots to highlight differences ####
 # Used in presentation
 
-sub_2010 <- comb %>% filter(year == 2010) %>% 
+sub_2010 <- comb %>% filter(year == 2010) %>%
                 select(frt, hrv_mean, obi_filled)
 
 names(sub_2010) <- c('FRT', 'HRV', 'OBI')
