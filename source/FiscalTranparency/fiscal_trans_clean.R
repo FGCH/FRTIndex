@@ -23,8 +23,7 @@ fiscal <- 'source/FiscalTranparency/Alt_et_al_aggregated_fiscal_transparency.csv
 
 fiscal$iso2c <- countrycode(fiscal$worldbank_code, origin = 'wb',
                             destination = 'iso2c')
-
-fiscal <- fiscal %>% select(iso2c, year, obi3)
+fiscal <- fiscal %>% dplyr::select(iso2c, year obi3)
 
 # Create lags/percent change
 fiscal <- slide(fiscal, Var = 'obi3', TimeVar = 'year', GroupVar = 'iso2c',
@@ -35,12 +34,12 @@ fiscal <- PercChange(fiscal, Var = 'obi3', TimeVar = 'year', GroupVar = 'iso2c',
 # Raw OBI index
 obi <- read.csv('source/FiscalTranparency/ibp_data_summary.csv',
                 stringsAsFactors = F) %>%
-                select(-RANK)
+                dplyr::select(-RANK)
 names(obi) <- c('iso2c', 'year', 'obi_raw')
 obi <- TimeExpand(obi, GroupVar = 'iso2c', TimeVar = 'year')
 obi <- obi %>% group_by(iso2c) %>%
             mutate(obi_filled = FillDown(Var = obi_raw)) %>%
-            select (-obi_raw)
+            dplyr::select (-obi_raw)
 obi <- subset(obi, !is.na(iso2c))
 class(obi) <- 'data.frame'
 
@@ -53,7 +52,7 @@ obi <- PercChange(obi, Var = 'obi_filled', TimeVar = 'year', GroupVar = 'iso2c',
 #### GDP Growth Data
 growth <- WDI(indicator = 'NY.GDP.MKTP.KD.ZG', start = 1985, end = 2012) %>%
             rename(country_growth = NY.GDP.MKTP.KD.ZG) %>%
-            select(-country)
+            dplyr::select(-country)
 
 # Create lags/percent change
 growth <- slide(growth, Var = 'country_growth', TimeVar = 'year', GroupVar = 'iso2c',
@@ -95,8 +94,9 @@ cor.test(comb$hrv, comb$obi_filled)
 # Used in presentation
 
 sub_2010 <- comb %>% filter(year == 2010) %>%
-                select(frt, hrv_mean, obi_filled)
+                dplyr::select(frt, hrv_mean, obi_filled)
 
-names(sub_2010) <- c('FRT', 'HRV', 'OBI')
+names(sub_2010) <- c('Financial (FRT)', 
+                     'General (HRV)', 'Fiscal (OBI)')
 
 parcoord(sub_2010, var.label = T)
