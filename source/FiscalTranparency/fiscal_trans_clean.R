@@ -23,7 +23,7 @@ fiscal <- 'source/FiscalTranparency/Alt_et_al_aggregated_fiscal_transparency.csv
 
 fiscal$iso2c <- countrycode(fiscal$worldbank_code, origin = 'wb',
                             destination = 'iso2c')
-fiscal <- fiscal %>% dplyr::select(iso2c, year obi3)
+fiscal <- fiscal %>% dplyr::select(iso2c, year, obi3)
 
 # Create lags/percent change
 fiscal <- slide(fiscal, Var = 'obi3', TimeVar = 'year', GroupVar = 'iso2c',

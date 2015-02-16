@@ -1,8 +1,9 @@
 ////////////////////////////////
 // FRT Stan Model
-// Version 0.2--
+// FRT Model Version 0.2--
+// Stan Version 0.2.6
 // Christopher Gandrud
-// 8 January 2015
+// 16 February 2015
 // MIT License
 ////////////////////////////////
 
@@ -18,11 +19,11 @@ data {
 }
 
 parameters {
-    real delta;                // mean transparency
-    vector[C] alpha1;          // initial alpha for t = 1 before recentering
-    matrix[C,T] alpha;         // transparency for c,t - mean
-    vector[K] beta;            // difficulty of item k
-    vector[K] log_gamma;       // discrimination of k
+    real delta;                         // mean transparency
+    vector[C] alpha1;                   // initial alpha for t = 1 before recentering
+    matrix[C,T] alpha;                  // transparency for c,t - mean
+    vector[K] beta;                     // difficulty of item k
+    vector<lower=0>[K] log_gamma;       // discrimination of k
 
     //// all scale parameters have an implicit half Cauchy prior ////
     real<lower=0> sigma_alpha[C];     // scale of abilities, per country
@@ -53,7 +54,7 @@ model {
     }
 
     beta ~ normal(0,sigma_beta);
-    log_gamma ~ normal(0,sigma_gamma);
+    log_gamma ~ lognormal(0,sigma_gamma);
     delta ~ cauchy(0,0.05);
 
     sigma_alpha ~ cauchy(0,0.05);
@@ -62,6 +63,6 @@ model {
 
         for (n in 1:N)
             y[n] ~ bernoulli_logit(
-            exp(log_gamma[kk[n]])
+            log_gamma[kk[n]]
             * (alpha[cc[n],tt[n]] - beta[kk[n]] + delta) );
 }
