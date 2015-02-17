@@ -5,6 +5,10 @@
 - Dropped Liquid liabilities to GDP (%) (GFDD.DI.05) as it is very similar to
 Liquid liabilities in millions USD (2000 constant).
 
+- Modified Stan code so that gamma is drawn from a Log-Normal distribution,
+rather than exponentiating gamma in the logistic model. Gamma is also explicitly
+constrained to be lower bounded by 0.
+
 ## Version 0.2.4.1
 
 Same as v0.2.4, but highest probability density intervals reported rather than
