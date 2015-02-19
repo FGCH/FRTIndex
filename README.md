@@ -25,6 +25,11 @@ willingness of governments to credibly reveal the structure of their financial
 systems through international institutions, allowing them to be scrutinized by
 market participants and citizens.
 
+We presented an early draft of a research using the FRT at the 2015 Political 
+Economy of International Organizations conference. The working paper can be
+found 
+[here](http://wp.peio.me/wp-content/uploads/PEIO8/Copelovitch,%20Gandrud,%20Hallerberg%2001.10.2014.pdf).
+
 ## The FRT Index
 
 The current draft version of the Index is located in the *IndexData* directory
