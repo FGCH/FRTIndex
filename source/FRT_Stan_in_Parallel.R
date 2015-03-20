@@ -56,8 +56,10 @@ MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
 
 # ---------------------------------------------------------------------------- #
 #### Specify Model ####
-frt_code <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/FRT.stan' %>%
-            scan_https()
+#frt_code <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/FRT.stan' %>%
+#            scan_https()
+
+frt_code <- '/git_repositories/FRTIndex/source/FRT.stan'
 
 #### Create data list for Stan ####
 frt_data <- list(
@@ -72,14 +74,14 @@ frt_data <- list(
 )
 
 # Create Empty Stan model (so it only needs to compile once)
-empty_stan <- stan(model_code = frt_code, data = frt_data, chains = 0)
+empty_stan <- stan(file = frt_code, data = frt_data, chains = 0)
 
 # Run on 4 cores
 sflist <-
     mclapply(1:4, mc.cores = 4,
         function(i) stan(fit = empty_stan, data = frt_data,
                         seed = i, chains = 1,
-                        iter = 10000, chain_id = i,
+                        iter = 50, chain_id = i,
                         pars = c('delta', 'alpha', 'beta', 'log_gamma'),
                         diagnostic_file = paste0(
                             'frt_sims_diagnostic', Sys.Date())
