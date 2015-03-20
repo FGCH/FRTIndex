@@ -1,7 +1,7 @@
 ###########################
 # Run model in parallel
 # Christopher Gandrud
-# 17 December 2014
+# 16 February 2014
 # MIT License
 ###########################
 

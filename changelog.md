@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 0.2.5 (To-do)
+## Version 0.2.5
 
 - Dropped Liquid liabilities to GDP (%) (GFDD.DI.05) as it is very similar to
 Liquid liabilities in millions USD (2000 constant).

@@ -39,7 +39,7 @@ countries <- unique(BaseSub$country)
 
 # Load simulations
 # Change location as needed
-load('/Volumes/GANDRUD32/FRT/fit_2014-12-18.RData')
+load('/Volumes/Gandrud1TB/frt/2015-03-18/fit_2015-03-18.RData')
 
 # ---------------------------------------------------------------------------- #
 #### Plot by year ####

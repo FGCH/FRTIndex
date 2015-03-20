@@ -24,9 +24,9 @@ library(ggplot2)
 # ---------------------------------------------------------------------------- #
 #### Download GFDD data from the World Bank ####
 Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04',
-                'GFDD.DI.06', 'GFDD.DI.07', 'GFDD.DI.08',
-                'GFDD.DI.11', 'GFDD.DI.14', 'GFDD.EI.02',
-                'GFDD.EI.08', 'GFDD.OI.02', 'GFDD.OI.07',
+                'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07',
+                'GFDD.DI.08', 'GFDD.DI.11', 'GFDD.DI.14',
+                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02',
                 'GFDD.SI.04')
 
 # Download indicators
