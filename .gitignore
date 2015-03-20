@@ -47,3 +47,7 @@ completer.hist
 paper/tables/*dta
 
 misc/*
+
+nohup.out
+.nohup.out.swp
+frt_sims_diagnostic*
