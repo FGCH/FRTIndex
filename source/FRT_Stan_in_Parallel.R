@@ -1,7 +1,7 @@
 ###########################
 # Run model in parallel
 # Christopher Gandrud
-# 16 February 2014
+# 20 March 2015
 # MIT License
 ###########################
 
@@ -59,7 +59,7 @@ MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
 #frt_code <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/FRT.stan' %>%
 #            scan_https()
 
-frt_code <- '/git_repositories/FRTIndex/source/FRT.stan'
+frt_code <- '~/git_repositories/FRTIndex/source/FRT.stan'
 
 #### Create data list for Stan ####
 frt_data <- list(
@@ -81,7 +81,7 @@ sflist <-
     mclapply(1:4, mc.cores = 4,
         function(i) stan(fit = empty_stan, data = frt_data,
                         seed = i, chains = 1,
-                        iter = 1000, chain_id = i,
+                        iter = 10000, chain_id = i,
                         pars = c('delta', 'alpha', 'beta', 'log_gamma'),
                         diagnostic_file = paste0(
                             'frt_sims_diagnostic', Sys.Date())
