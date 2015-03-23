@@ -3,7 +3,7 @@
 // FRT Model Version 0.3--
 // Stan Version 0.2.6
 // Christopher Gandrud
-// 20 March 2015
+// 23 March 2015
 // MIT License
 ////////////////////////////////
 
@@ -19,9 +19,9 @@ data {
 }
 
 parameters {
-    real<lower=-100,upper=100> delta;        // mean transparency
-    vector<lower=-100,upper=100>[C] alpha1;  // initial alpha for t = 1 before recentering
-    matrix<lower=-100,upper=100>[C,T] alpha; // transparency for c,t - mean
+    real delta;        // mean transparency
+    vector[C] alpha1;  // initial alpha for t = 1 before recentering
+    matrix[C,T] alpha; // transparency for c,t - mean
     vector[K] beta;                        // difficulty of item k
     vector<lower=0>[K] log_gamma;          // discrimination of k
 
@@ -33,7 +33,7 @@ parameters {
 
 transformed parameters {
     //// re-centers transparency for t = 1 ////
-    vector[C] recentered_alpha1;
+    vector<lower=-10,upper=10>[C] recentered_alpha1;
     real mean_alpha1;
     real<lower=0> sd_alpha1;
 
