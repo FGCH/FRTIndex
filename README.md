@@ -1,7 +1,7 @@
 Financial Regulatory Transparency Index
 ========
 
-**Version:** 0.2.5
+**Version:** 0.3
 
 **Maintainer:**
 [Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
@@ -25,9 +25,9 @@ willingness of governments to credibly reveal the structure of their financial
 systems through international institutions, allowing them to be scrutinized by
 market participants and citizens.
 
-We presented an early draft of a research using the FRT at the 2015 Political 
+We presented an early draft of a research using the FRT at the 2015 Political
 Economy of International Organizations conference. The working paper can be
-found 
+found
 [here](http://wp.peio.me/wp-content/uploads/PEIO8/Copelovitch,%20Gandrud,%20Hallerberg%203.2.2015.pdf).
 
 ## The FRT Index

@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.3
+
+Include EMBI countries + China.
+
 ## Version 0.2.5
 
 - Dropped Liquid liabilities to GDP (%) (GFDD.DI.05) as it is very similar to
