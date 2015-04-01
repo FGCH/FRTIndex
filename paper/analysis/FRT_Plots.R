@@ -211,10 +211,16 @@ pdf(file = paste0(dir, 'PropReported_countries_2.pdf'),
     do.call(grid.arrange, pprop[21:40])
 dev.off()
 
-# Last 20
+# Third 20
 pdf(file = paste0(dir, 'PropReported_countries_3.pdf'),
     width = 15, height = 11)
-    do.call(grid.arrange, pprop[41:50])
+    do.call(grid.arrange, pprop[41:60])
+dev.off()
+
+# Final 8
+pdf(file = paste0(dir, 'PropReported_countries_3.pdf'),
+    width = 15, height = 11)
+    do.call(grid.arrange, pprop[61:68])
 dev.off()
 
 # ---------------------------------------------------------------------------- #

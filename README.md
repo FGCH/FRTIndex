@@ -36,8 +36,9 @@ The current draft version of the Index is located in the *IndexData* directory
 in a CSV formatted file called:
 [FRTIndex.csv](https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex.csv).
 
-It covers the **50 countries** classified by the World Bank as
-'**High Income**' for the years **1990 through 2011**.
+It covers the **68 countries** classified by the World Bank as
+'**High Income**', [EMBI](http://en.wikipedia.org/wiki/JPMorgan_EMBI) countries,
+and China for the years **1990 through 2011**.
 
 #### FRT Index Scores for selected years
 
