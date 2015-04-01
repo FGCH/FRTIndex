@@ -7,7 +7,7 @@
             "The Financial Regulatory Transparency Index"
         ],
         "version": [
-            "0.2.5"
+            "0.3"
         ],
         "maintainer": [
             "Christopher Gandrurd"
@@ -16,7 +16,7 @@
             "PDDL-1.0"
         ],
         "last_updated": [
-            "2015-03-20"
+            "2015-04-01"
         ],
         "homepage": [
             "https://github.com/FGCH/FRTIndex"

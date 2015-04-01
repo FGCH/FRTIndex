@@ -1,7 +1,7 @@
 Financial Regulatory Transparency Index
 ========
 
-**Version:** 0.2.4.1
+**Version:** 0.3
 
 **Maintainer:**
 [Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
@@ -25,9 +25,9 @@ willingness of governments to credibly reveal the structure of their financial
 systems through international institutions, allowing them to be scrutinized by
 market participants and citizens.
 
-We presented an early draft of a research using the FRT at the 2015 Political 
+We presented an early draft of a research using the FRT at the 2015 Political
 Economy of International Organizations conference. The working paper can be
-found 
+found
 [here](http://wp.peio.me/wp-content/uploads/PEIO8/Copelovitch,%20Gandrud,%20Hallerberg%203.2.2015.pdf).
 
 ## The FRT Index
@@ -36,8 +36,9 @@ The current draft version of the Index is located in the *IndexData* directory
 in a CSV formatted file called:
 [FRTIndex.csv](https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex.csv).
 
-It covers the **50 countries** classified by the World Bank as
-'**High Income**' for the years **1990 through 2011**.
+It covers the **68 countries** classified by the World Bank as
+'**High Income**', [EMBI](http://en.wikipedia.org/wiki/JPMorgan_EMBI) countries,
+and China for the years **1990 through 2011**.
 
 #### FRT Index Scores for selected years
 

@@ -1,7 +1,7 @@
 ###########################
 # Run model in parallel
 # Christopher Gandrud
-# 26 March 2015 
+# 27 March 2015
 # MIT License
 ###########################
 
@@ -80,9 +80,7 @@ sflist <-
         function(i) stan(fit = empty_stan, data = frt_data,
                         seed = i, chains = 1,
                         iter = 20000, chain_id = i,
-                        pars = c('delta', 'alpha', 'beta', 'log_gamma'),
-                        diagnostic_file = paste0(
-                            'frt_sims_diagnostic', Sys.Date())
+                        pars = c('delta', 'alpha', 'beta', 'log_gamma')
         )
     )
 

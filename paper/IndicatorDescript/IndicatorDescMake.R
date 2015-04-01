@@ -4,7 +4,7 @@
 # 30 September 2014
 ############
 
-setwd('/git_repositories/FRTIndex/source/IndicatorDescript/')
+setwd('/git_repositories/FRTIndex/paper/IndicatorDescript/')
 
 library(DataCombine)
 library(xtable)
@@ -15,9 +15,8 @@ Descript <- Descript[, c('SeriesCode', 'Indicator.Name', 'Source', 'Periodicity'
 # List of indicators included
 Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04',
                 'GFDD.DI.05', 'GFDD.DI.06', 'GFDD.DI.07',
-                'GFDD.DI.08', 'GFDD.DI.11',
-                'GFDD.DI.14', 'GFDD.EI.02', 'GFDD.EI.08',
-                'GFDD.OI.02', 'GFDD.OI.07',
+                'GFDD.DI.08', 'GFDD.DI.11', 'GFDD.DI.14',
+                'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02',
                 'GFDD.SI.04')
 
 Descript <- subset(Descript, SeriesCode %in% Indicators)
