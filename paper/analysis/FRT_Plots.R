@@ -1,7 +1,7 @@
 ####################################
 # Plot results from FRT_Stan
 # Christopher Gandrud
-# 28 January 2015
+# 1 April 2015
 # MIT License
 ####################################
 
@@ -39,7 +39,7 @@ countries <- unique(BaseSub$country)
 
 # Load simulations
 # Change location as needed
-load('/Volumes/Gandrud1TB/frt/2015-03-18/fit_2015-03-18.RData')
+load('/Volumes/Gandrud1TB/frt/fit_2015-03-30.RData')
 
 # ---------------------------------------------------------------------------- #
 #### Plot by year ####
@@ -106,28 +106,18 @@ dev.off()
 # Third 20
 pdf(file = paste0(dir, 'FRT_countries_3.pdf'),
     width = 15, height = 11)
-    do.call(grid.arrange, c(pc[41:50]))
+    do.call(grid.arrange, c(pc[41:60]))
 dev.off()
 
-#### Plot country comparison ###
-# Countries with stable scores
-stable_countries <- c("Saudi Arabia", "Sweden", "United States")
-do.call(grid.arrange, c(pc[stable_countries]))
-
-# Improvers
-improver_countries <- c("Brunei Darussalam", "Croatia", "Germany", "Greece",
-                        "Iceland", "Korea, Rep.", "Oman", "Portugal", "Qatar",
-                        "Slovenia", "Spain", "United Arab Emirates")
-do.call(grid.arrange, c(pc[improver_countries]))
-
-# Countries with declining scores
-declining_countries <- c("Canada", "Czech Republic", "Denmark", "Hungary",
-                         "Israel", "Japan", "Norway", "Poland")
-do.call(grid.arrange, c(pc[declining_countries]))
+# Final 8
+pdf(file = paste0(dir, 'FRT_countries_4.pdf'),
+    width = 15, height = 11)
+    do.call(grid.arrange, c(pc[61:68]))
+dev.off()
 
 # ---------------------------------------------------------------------------- #
 #### Other Paremeters of Interest ####
-indicators_df <- 'source/PaperSource/IndicatorDescript/IndicatorDescription.csv' %>%
+indicators_df <- 'paper/IndicatorDescript/IndicatorDescription.csv' %>%
                     read.csv(stringsAsFactors = FALSE)
 indicator_labels <- indicators_df[, 2]
 

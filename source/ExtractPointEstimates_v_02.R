@@ -1,7 +1,7 @@
 ############################
 # Extract FRT Point Estimates and uncertainty
 # Christopher Gandrud
-# 20 March 2015
+# 1 April 2015
 # MIT License
 ############################
 
@@ -34,7 +34,7 @@ BaseSub <- report_min_once(BaseSub)
 countries <- unique(BaseSub$country)
 
 # Load simulations
-load('/Volumes/Gandrud1TB/frt/2015-03-18/fit_2015-03-18.RData')
+load('/Volumes/Gandrud1TB/frt/fit_2015-03-30.RData')
 
 # Years
 years <- 1990:2011
@@ -94,17 +94,16 @@ write.csv(comb, 'IndexData/FRTIndex.csv',
           row.names = FALSE)
 
 # Create data package version
-meta_list <- list(name = 'frt_datapackage', 
+meta_list <- list(name = 'frt_datapackage',
                   title = 'The Financial Regulatory Transparency Index',
-                  version = '0.2.5',
+                  version = '0.3',
                   maintainer = 'Christopher Gandrurd',
                   license = 'PDDL-1.0',
                   last_updated = Sys.Date(),
                   homepage = 'https://github.com/FGCH/FRTIndex')
 
-datapackage_init(comb, meta = meta_list, 
+datapackage_init(comb, meta = meta_list,
                  source_cleaner = c('source/RawDataGather.R',
-                                    'source/FRT_Stan_in_Parallel.R', 
-                                    'source/FRT.stan'), 
+                                    'source/FRT_Stan_in_Parallel.R',
+                                    'source/FRT.stan'),
                  source_cleaner_rename = F)
-

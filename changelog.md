@@ -2,7 +2,7 @@
 
 ## Version 0.3
 
-Includes EMBI countries + China. [TO-DO]
+- Includes EMBI countries + China.
 
 - Run with 20,000 iterations.
 

@@ -4,7 +4,7 @@
 # - FRED: http://research.stlouisfed.org/fred2/
 # Also generates simple graphs/statistics comparing the data sources.
 # Christopher Gandrud
-# 6 January 2015
+# 26 March 2015
 # MIT License
 ################################################################################
 
@@ -19,6 +19,7 @@ library(reshape2)
 library(WDI)
 library(DataCombine)
 library(ggplot2)
+library(countrycode)
 
 # ---------------------------------------------------------------------------- #
 # ---------------------------------------------------------------------------- #
@@ -29,28 +30,61 @@ Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04',
                 'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02',
                 'GFDD.SI.04')
 
+## EMBI+ + China country list
+EMBI <- c(
+    'Argentina',
+    'Brazil',
+    'Bulgaria',
+    'China',
+    'Colombia',
+    'Ecuador',
+    'Egypt',
+    'Mexico',
+    'Morocco',
+    'Nigeria',
+    'Panama',
+    'Peru',
+    'Philippines',
+    'Poland',
+    'Russian Federation',
+    'South Africa',
+    'Turkey',
+    'Ukraine',
+    'Venezuela'
+)
+
 # Download indicators
 Base <- WDI(indicator = Indicators, start = 1990, end = 2013, extra = TRUE)
 
 # Keep countries with 'High income' (OECD and non-OECD classification)
 BaseSub <- grepl.sub(data = Base, Var = 'income', pattern = 'High income')
+
+# Subset for EMBI+, + China
+embi_iso <- countrycode(EMBI, origin = 'country.name', destination = 'iso2c')
+financial_embi <- grepl.sub(data = Base, Var = 'iso2c', pattern = embi_iso)
+
+# Combine
+BaseSub <- rbind(BaseSub, financial_embi)
+BaseSub <- BaseSub[!duplicated(BaseSub[, c('country', 'year')]), ]
+
 Droppers <- c("iso3c", "region",  "capital", "longitude", "latitude",
-            "income", "lending")
+              "income", "lending")
 BaseSub <- BaseSub[, !(names(BaseSub) %in% Droppers)]
+
+BaseSub <- BaseSub %>% arrange(country, year)
 
 # ---------------------------------------------------------------------------- #
 # ---------------------------------------------------------------------------- #
 #### Download GFDD data from the World Bank ####
 #### Create indicator IDs ####
 # Load included indicators from the GFDD
-prefix <- read.csv('source/PaperSource/IndicatorDescript/IndicatorDescription.csv',
+prefix <- read.csv('paper/IndicatorDescript/IndicatorDescription.csv',
                     stringsAsFactors = FALSE)[, 'SeriesCode'] %>%
                 gsub(pattern = 'GF', replacement = '', .) %>%
                 gsub(pattern = '\\.', replacement = '', .)
 
 # Load country codes included in the data
-URL <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex.csv'
-countries <- source_data(URL, stringsAsFactors = FALSE)[, 'iso2c'] %>% unique()
+countries <- BaseSub[, 'iso2c'] %>% unique()
 
 # Add FRED suffix
 countries <- paste0(countries, 'A156NWDB')
@@ -102,49 +136,49 @@ fred_combined_cast <- dcast(fred_combined, iso2c + year ~ variable)
 # ---------------------------------------------------------------------------- #
 #### Create comparative missingness plots for the two versions ####
 #### Create missingness indicators ####
-#IndSub <- names(fred_combined_cast)[3:length(names(fred_combined_cast))]
+IndSub <- names(fred_combined_cast)[3:length(names(fred_combined_cast))]
 #
-#for (i in IndSub){
-#    fred_combined_cast[, paste0('Rep_', i)] <- 1
-#    fred_combined_cast[, paste0('Rep_', i)][is.na(fred_combined_cast[, i])] <- 0
-#}
-#
+for (i in IndSub){
+    fred_combined_cast[, paste0('Rep_', i)] <- 1
+    fred_combined_cast[, paste0('Rep_', i)][is.na(fred_combined_cast[, i])] <- 0
+}
+
 #### Find the proportion of items reported ####
-#source('source/miscFunctions/PropReported.R')
-#fredProp <- PropReported(fred_combined_cast)
-#fredProp <- fredProp[order(fredProp$iso2c, fredProp$year), ]
-#fredProp <- rename(fredProp, fred_PropReport = FRT_PropReport)
+source('source/miscFunctions/PropReported.R')
+fredProp <- PropReported(fred_combined_cast)
+fredProp <- fredProp[order(fredProp$iso2c, fredProp$year), ]
+fredProp <- rename(fredProp, fred_PropReport = FRT_PropReport)
 
 #### Create missingness indicators for World Bank version ####
-#names(BaseSub) <- gsub('\\.', '', names(BaseSub))
-#WBProp <- BaseSub[, c('iso2c', 'country', 'year', IndSub)]
-#KeeperLength <- length(IndSub)
-#
-#for (i in IndSub){
-#    WBProp[, paste0('Rep_', i)] <- 1
-#    WBProp[, paste0('Rep_', i)][is.na(WBProp[, i])] <- 0
-#}
-#
-#PropRepor <- PropReported(WBProp)
+names(BaseSub) <- gsub('\\.', '', names(BaseSub))
+WBProp <- BaseSub[, c('iso2c', 'country', 'year', IndSub)]
+KeeperLength <- length(IndSub)
+
+for (i in IndSub){
+    WBProp[, paste0('Rep_', i)] <- 1
+    WBProp[, paste0('Rep_', i)][is.na(WBProp[, i])] <- 0
+}
+
+PropRepor <- PropReported(WBProp)
 
 #### Merge both data sets ####
-#prop_combined <- merge(PropRepor, fredProp, by = c('iso2c', 'year'))
+prop_combined <- merge(PropRepor, fredProp, by = c('iso2c', 'year'))
 
-#prop_combined$diff <- prop_combined$fred_PropReport -
-#                        prop_combined$FRT_PropReport
+prop_combined$diff <- prop_combined$fred_PropReport -
+                        prop_combined$FRT_PropReport
 
 # Only plot those country-years where there is a difference
-#prop_comb_sub <- subset(prop_combined, diff != 0)
-#
-#pdf(file = 'paper/paper_plots/FRED_vs_WorldBank.pdf')
-#    ggplot(prop_comb_sub, aes(FRT_PropReport, fred_PropReport, label = iso2c)) +
-#        geom_text(position = position_jitter(w = 0.05), alpha = 0.5) +
-#        scale_y_continuous(limits = c(0, 1)) +
-#        geom_abline(yintercept = 0, slope = 1, linetype = 'dashed') +
-#        ylab('Proportion Reported in FRED\n') +
-#        xlab('\nProportion Reported in World Bank') +
-#        theme_bw()
-#dev.off()
+prop_comb_sub <- subset(prop_combined, diff != 0)
+
+pdf(file = 'paper/paper_plots/FRED_vs_WorldBank.pdf')
+    ggplot(prop_comb_sub, aes(FRT_PropReport, fred_PropReport, label = iso2c)) +
+        geom_text(position = position_jitter(w = 0.05), alpha = 0.5) +
+        scale_y_continuous(limits = c(0, 1)) +
+        geom_abline(yintercept = 0, slope = 1, linetype = 'dashed') +
+        ylab('Proportion Reported in FRED\n') +
+        xlab('\nProportion Reported in World Bank') +
+        theme_bw()
+dev.off()
 
 # ---------------------------------------------------------------------------- #
 # ---------------------------------------------------------------------------- #
