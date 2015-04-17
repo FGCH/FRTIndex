@@ -1,7 +1,7 @@
 ####################################
 # Plot results from FRT_Stan
 # Christopher Gandrud
-# 1 April 2015
+# 15 April 2015
 # MIT License
 ####################################
 
@@ -39,7 +39,7 @@ countries <- unique(BaseSub$country)
 
 # Load simulations
 # Change location as needed
-load('/Volumes/Gandrud1TB/frt/fit_2015-03-30.RData')
+load('/Volumes/Gandrud1TB/frt/fit_2015-04-16.RData')
 
 # ---------------------------------------------------------------------------- #
 #### Plot by year ####
@@ -84,7 +84,7 @@ dev.off()
 
 # Create plots for all countries
 pc <- list()
-for (i in countries){
+for (i in countries) {
     message(i)
     pc[[i]] <- suppressMessages(sc_country(i))
 }
@@ -130,7 +130,7 @@ dev.off()
 
 # Discrimination
 pdf(file = paste0(dir, 'discriminationPlot.pdf'), width = 10, height = 5.5)
-    stan_caterpillar(fit, 'log_gamma\\[.*\\]',
+    stan_caterpillar(fit, 'gamma\\[.*\\]',
                   pars_labels = indicator_labels) +
     ylab('') + xlab('\nCoefficient')
 dev.off()
@@ -139,19 +139,11 @@ dev.off()
 #### Median trend overview ####
 # Load data
 FRT <- read.csv('IndexData/FRTIndex.csv', stringsAsFactors = FALSE)
-FRT_minus_ca <- subset(FRT, country != 'Canada')
 
-all1 <- ggplot(FRT, aes(year, median, group = iso2c)) +
+all_plot <- ggplot(FRT, aes(year, median, group = iso2c)) +
         geom_line(alpha = 0.3) +
-        ylab('Median FRT Index\n') + xlab('') + ggtitle('With Canada\n') +
+        ylab('Median FRT Index\n') + xlab('') +
         theme_bw()
-
-no_canada <- ggplot(FRT_minus_ca, aes(year, median, group = iso2c)) +
-                geom_line(alpha = 0.3) +
-                ylab('Median FRT Index\n') + xlab('') + ggtitle('Without Canada\n') +
-                theme_bw()
-
-grid.arrange(all1, no_canada, ncol = 2)
 
 # ---------------------------------------------------------------------------- #
 #### Compare FRT to Proportion Reported method ####
@@ -160,17 +152,14 @@ FRTProp <- read.csv('IndexData/alternate/PropReported.csv',
                     stringsAsFactors = FALSE) %>%
                 subset(!(country %in% dropped))
 
-######## No Canada ############
-FRTProp_noCanada <- subset(FRTProp, country != "Canada")
-
 # Simple function to rescale the variables
 rescale <- function(variable){
     rescaled <- (variable - median(variable)) / sd(variable)
     return(rescaled)
 }
 
-FRTStand <- rescale(FRT_minus_ca$median)
-FRTPropStand <- rescale(FRTProp_noCanada$FRT_PropReport)
+FRTStand <- rescale(FRT$median)
+FRTPropStand <- rescale(FRTProp$FRT_PropReport)
 
 Comb <- data.frame(FRT = FRTStand, FRTPropStand)
 
