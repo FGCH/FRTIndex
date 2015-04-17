@@ -1,67 +1,52 @@
 [
-    {
-        "name": [
-            "frt_datapackage"
-        ],
-        "title": [
-            "The Financial Regulatory Transparency Index"
-        ],
-        "version": [
-            "0.3"
-        ],
-        "maintainer": [
-            "Christopher Gandrurd"
-        ],
-        "license": [
-            "PDDL-1.0"
-        ],
-        "last_updated": [
-            "2015-04-01"
-        ],
-        "homepage": [
-            "https://github.com/FGCH/FRTIndex"
-        ]
-    },
-    {
-        "resources": [
-            {
-                "path": "data/frt_datapackage_data.csv"
-            }
-        ],
-        "schema": [
-            {
-                "name": "country",
-                "type": "character"
-            },
-            {
-                "name": "iso2c",
-                "type": "character"
-            },
-            {
-                "name": "year",
-                "type": "character"
-            },
-            {
-                "name": "lower_95",
-                "type": "number"
-            },
-            {
-                "name": "lower_90",
-                "type": "number"
-            },
-            {
-                "name": "median",
-                "type": "number"
-            },
-            {
-                "name": "upper_90",
-                "type": "number"
-            },
-            {
-                "name": "upper_95",
-                "type": "number"
-            }
-        ]
-    }
+  {
+    "name": ["frt_datapackage"],
+    "title": ["The Financial Regulatory Transparency Index"],
+    "version": ["0.3.1"],
+    "maintainer": ["Christopher Gandrurd"],
+    "license": ["PDDL-1.0"],
+    "last_updated": ["2015-04-17"],
+    "homepage": ["https://github.com/FGCH/FRTIndex"]
+  },
+  {
+    "resources": [
+      {
+        "path": "data/frt_datapackage_data.csv"
+      }
+    ],
+    "schema": [
+      {
+        "name": "country",
+        "type": "character"
+      },
+      {
+        "name": "iso2c",
+        "type": "character"
+      },
+      {
+        "name": "year",
+        "type": "character"
+      },
+      {
+        "name": "lower_95",
+        "type": "number"
+      },
+      {
+        "name": "lower_90",
+        "type": "number"
+      },
+      {
+        "name": "median",
+        "type": "number"
+      },
+      {
+        "name": "upper_90",
+        "type": "number"
+      },
+      {
+        "name": "upper_95",
+        "type": "number"
+      }
+    ]
+  }
 ]
-

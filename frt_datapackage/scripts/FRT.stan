@@ -1,9 +1,9 @@
 ////////////////////////////////
 // FRT Stan Model
-// FRT Model Version 0.2--
+// FRT Model Version 0.3--
 // Stan Version 0.2.6
 // Christopher Gandrud
-// 17 February 2015
+// 9 April 2015
 // MIT License
 ////////////////////////////////
 
@@ -23,7 +23,7 @@ parameters {
     vector[C] alpha1;                 // initial alpha for t = 1 before recentering
     matrix[C,T] alpha;                // transparency for c,t - mean
     vector[K] beta;                   // difficulty of item k
-    vector<lower=0>[K] log_gamma;     // discrimination of k
+    vector<lower=0>[K] gamma;         // discrimination of k
 
     //// all scale parameters have an implicit half Cauchy prior ////
     real<lower=0> sigma_alpha[C];     // scale of abilities, per country
@@ -32,29 +32,28 @@ parameters {
 }
 
 transformed parameters {
-    //// re-centers transparency for t = 1 ////
     vector[C] recentered_alpha1;
-    real mean_alpha1;
-    real<lower=0> sd_alpha1;
-
+    real mean_alpha1; 
+    real<lower= 0> sd_alpha1;
+    
     mean_alpha1 <- mean(alpha1);
     sd_alpha1 <- sd(alpha1);
     for (c in 1:C)
-        recentered_alpha1[c] <- ( alpha1[c] - mean_alpha1 ) / sd_alpha1;
+        recentered_alpha1[c] <- (alpha1[c] - mean_alpha1 ) / sd_alpha1;
 }
 
+
 model {
-    alpha1 ~ normal(0,1);   // informed constraints on the ability
-                            // numerical issues with larger sd
+    alpha1 ~ normal(0,1);
+
     for (c in 1:C) {
         alpha[c,1] ~ normal(recentered_alpha1[c],0.001);
-            // addresses current Stan limitation
         for (t in 2:T)
             alpha[c,t] ~ normal(alpha[c,t-1], sigma_alpha[c]);
     }
 
     beta ~ normal(0,sigma_beta);
-    log_gamma ~ lognormal(0,sigma_gamma);
+    gamma ~ normal(0,sigma_gamma);
     delta ~ cauchy(0,0.05);
 
     sigma_alpha ~ cauchy(0,0.05);
@@ -63,6 +62,6 @@ model {
 
         for (n in 1:N)
             y[n] ~ bernoulli_logit(
-            log_gamma[kk[n]]
+           exp(gamma[kk[n]])
             * (alpha[cc[n],tt[n]] - beta[kk[n]] + delta) );
 }

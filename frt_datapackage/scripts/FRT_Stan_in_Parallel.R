@@ -1,7 +1,7 @@
 ###########################
 # Run model in parallel
 # Christopher Gandrud
-# 27 March 2015
+# 9 April 2015
 # MIT License
 ###########################
 
@@ -56,8 +56,8 @@ MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
 
 # ---------------------------------------------------------------------------- #
 #### Specify Model ####
-frt_code <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/FRT.stan' %>%
-            scan_https()
+# frt_code <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/FRT.stan' %>%
+#            scan_https()
 
 #### Create data list for Stan ####
 frt_data <- list(
@@ -72,15 +72,16 @@ frt_data <- list(
 )
 
 # Create Empty Stan model (so it only needs to compile once)
-empty_stan <- stan(model_code = frt_code, data = frt_data, chains = 0)
+# empty_stan <- stan(model_code = frt_code, data = frt_data, chains = 0)
+empty_stan <- stan(file = 'source/FRT.stan', data = frt_data, chains = 0)
 
 # Run on 4 cores
 sflist <-
     mclapply(1:4, mc.cores = 4,
         function(i) stan(fit = empty_stan, data = frt_data,
-                        seed = i, chains = 1,
-                        iter = 20000, chain_id = i,
-                        pars = c('delta', 'alpha', 'beta', 'log_gamma')
+                        seed = i, chains = 1, thin = 10,
+                        iter = 40000, chain_id = i,,
+                        pars = c('delta', 'alpha', 'beta', 'gamma')
         )
     )
 
