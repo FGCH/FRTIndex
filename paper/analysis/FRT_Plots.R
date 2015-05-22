@@ -1,7 +1,6 @@
 ####################################
 # Plot results from FRT_Stan
 # Christopher Gandrud
-# 15 April 2015
 # MIT License
 ####################################
 
@@ -39,7 +38,7 @@ countries <- unique(BaseSub$country)
 
 # Load simulations
 # Change location as needed
-load('/Volumes/Gandrud1TB/frt/fit_2015-04-16.RData')
+load('/Volumes/Gandrud1TB/frt/fit_2015-05-02.RData')
 
 # ---------------------------------------------------------------------------- #
 #### Plot by year ####
