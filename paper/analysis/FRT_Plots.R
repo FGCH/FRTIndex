@@ -206,7 +206,7 @@ pdf(file = paste0(dir, 'PropReported_countries_3.pdf'),
 dev.off()
 
 # Final 8
-pdf(file = paste0(dir, 'PropReported_countries_3.pdf'),
+pdf(file = paste0(dir, 'PropReported_countries_4.pdf'),
     width = 15, height = 11)
     do.call(grid.arrange, pprop[61:68])
 dev.off()
@@ -221,11 +221,11 @@ liedorp <- read.csv('misc/liedorp_et_al_2013_index.csv',
 liedorp$iso2c <- countrycode(liedorp$country, origin = 'country.name',
                              destination = 'iso2c')
 liedorp$year <- 2010
-liedorp <- select(liedorp, -country)
+liedorp <- dplyr::select(liedorp, -country)
 
 # Rescale
 liedorp_vars <- grep(pattern = '.*liedorp', names(liedorp))
-for (i in liedorp_vars){
+for (i in liedorp_vars) {
     liedorp[, i] <- rescale(liedorp[, i])
 }
 FRT$median_rescale <- rescale(FRT$median)
@@ -259,7 +259,7 @@ fl_plot <- function(y){
 liedorp_vars <- names(liedorp)[1:max(liedorp_vars)]
 
 pfl <- list()
-for (i in liedorp_vars){
+for (i in liedorp_vars) {
     pfl[[i]] <- fl_plot(i)
 }
 
