@@ -27,6 +27,8 @@ frt_new <- slide(frt_new, Var = 'frt', TimeVar = 'year', GroupVar = 'iso2c',
                    NewVar = 'lfrt')
 frt_new$dfrt <- frt_new$frt - frt_new$lfrt
 
+frt_new <- frt_new %>% select(iso2c, year, frt, dfrt, lfrt)
+
 # Merge
 frt <- merge(frt_new, frt_old, by = c('iso2c', 'year'))
 frt <- MoveFront(frt, c('country', 'ccode1'))
