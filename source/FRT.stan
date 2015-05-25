@@ -46,7 +46,7 @@ model {
     alpha1 ~ normal(0,1);
 
     for (c in 1:C) {
-        alpha[c,1] ~ normal(recentered_alpha1[c],0.001); # Overcome Stan issue
+        alpha[c,1] ~ normal(recentered_alpha1[c],0.001); // overcome Stan issue
         for (t in 2:T)
             alpha[c,t] ~ normal(alpha[c,t-1], sigma_alpha[c]);
     }
