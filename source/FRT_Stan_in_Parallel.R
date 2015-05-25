@@ -5,7 +5,7 @@
 ###########################
 
 # Load packages
-library(repmis)
+library(rio); library(repmis) 
 library(DataCombine)
 library(reshape2)
 library(dplyr)
@@ -23,7 +23,7 @@ source_url('https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/miscFu
 # Load data
 BaseSub <-
     'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/RawData/wdi_fred_combined.csv' %>%
-    source_data(stringsAsFactors = FALSE)
+    import
 
 # ---------------------------------------------------------------------------- #
 #### Keep only countries that report at least 1 item for the entire period  ####

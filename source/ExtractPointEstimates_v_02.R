@@ -7,9 +7,7 @@
 # Load packages
 if (!('StanCat' %in% installed.packages()[, 1])) devtools::install_github('christophergandrud/StanCat')
 library(StanCat)
-if (!('dpmr' %in% installed.packages()[, 1])) devtools::install_github('christophergandrud/dpmr')
 library(dpmr)
-library(repmis)
 library(tidyr)
 library(dplyr)
 library(DataCombine)
@@ -26,7 +24,7 @@ source('source/miscFunctions/report_min_once.R')
 # Load data
 BaseSub <-
     'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/RawData/wdi_fred_combined.csv' %>%
-    source_data(stringsAsFactors = FALSE)
+    import
 #### Keep only countries that report at least 1 item for the entire period  ####
 BaseSub <- report_min_once(BaseSub)
 

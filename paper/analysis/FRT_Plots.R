@@ -13,7 +13,7 @@ dir <- 'paper/paper_plots/'
 # Load packages
 if (!('StanCat' %in% installed.packages()[, 1])) devtools::install_github('christophergandrud/StanCat')
 library(StanCat)
-library(repmis)
+library(rio)
 library(devtools)
 library(gridExtra)
 library(ggplot2)
@@ -27,8 +27,7 @@ source('source/miscFunctions/report_min_once.R')
 # Load base data
 BaseSub <-
     'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/RawData/wdi_fred_combined.csv' %>%
-    source_data(stringsAsFactors = FALSE)
-
+    import
 #### Keep only countries that report at least 1 item for the entire period  ####
 dropped <- report_min_once(BaseSub, drop_names = TRUE)
 BaseSub <- report_min_once(BaseSub)
@@ -60,7 +59,7 @@ png(file = 'FRT_overview.png', width = 900)
 dev.off()
 
 # For paper
-pdf(file = paste0(dir, 'FRT_years.pdf'), width = 18)
+pdf(file = paste0(dir, 'FRT_years.pdf'), width = 20, height = 16)
     grid.arrange(y1, y2, ncol = 2, sub = 'FRT Index (HPD)')
 dev.off()
 
@@ -284,9 +283,9 @@ cor.test(FRT_HRV$median_rescale, FRT_HRV$hrv_median_rescale)
 # Drop Canada
 frt_hrv_noCA <- FRT_HRV %>% filter(iso2c != 'CA')
 
-# Plot 
+# Plot
 pdf(file = paste0(dir, 'FRT_HRV_Compare.pdf'))
-ggplot(frt_hrv_noCA, aes(median_rescale, hrv_median_rescale)) + 
+ggplot(frt_hrv_noCA, aes(median_rescale, hrv_median_rescale)) +
     geom_point(alpha = 0.5) +
     stat_smooth(method = 'loess', se = FALSE, size = 1) +
     stat_smooth(method = 'lm', se = FALSE, linetype = 'dashed',
