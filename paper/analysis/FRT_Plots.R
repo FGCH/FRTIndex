@@ -1,7 +1,6 @@
 ####################################
 # Plot results from FRT_Stan
 # Christopher Gandrud
-# 15 April 2015
 # MIT License
 ####################################
 
@@ -14,7 +13,7 @@ dir <- 'paper/paper_plots/'
 # Load packages
 if (!('StanCat' %in% installed.packages()[, 1])) devtools::install_github('christophergandrud/StanCat')
 library(StanCat)
-library(repmis)
+library(rio)
 library(devtools)
 library(gridExtra)
 library(ggplot2)
@@ -28,8 +27,7 @@ source('source/miscFunctions/report_min_once.R')
 # Load base data
 BaseSub <-
     'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/RawData/wdi_fred_combined.csv' %>%
-    source_data(stringsAsFactors = FALSE)
-
+    import
 #### Keep only countries that report at least 1 item for the entire period  ####
 dropped <- report_min_once(BaseSub, drop_names = TRUE)
 BaseSub <- report_min_once(BaseSub)
@@ -39,7 +37,7 @@ countries <- unique(BaseSub$country)
 
 # Load simulations
 # Change location as needed
-load('/Volumes/Gandrud1TB/frt/fit_2015-04-16.RData')
+load('/Volumes/Gandrud1TB/frt/fit_2015-05-02.RData')
 
 # ---------------------------------------------------------------------------- #
 #### Plot by year ####
@@ -61,7 +59,7 @@ png(file = 'FRT_overview.png', width = 900)
 dev.off()
 
 # For paper
-pdf(file = paste0(dir, 'FRT_years.pdf'), width = 18)
+pdf(file = paste0(dir, 'FRT_years.pdf'), width = 20, height = 16)
     grid.arrange(y1, y2, ncol = 2, sub = 'FRT Index (HPD)')
 dev.off()
 
@@ -207,7 +205,7 @@ pdf(file = paste0(dir, 'PropReported_countries_3.pdf'),
 dev.off()
 
 # Final 8
-pdf(file = paste0(dir, 'PropReported_countries_3.pdf'),
+pdf(file = paste0(dir, 'PropReported_countries_4.pdf'),
     width = 15, height = 11)
     do.call(grid.arrange, pprop[61:68])
 dev.off()
@@ -222,11 +220,11 @@ liedorp <- read.csv('misc/liedorp_et_al_2013_index.csv',
 liedorp$iso2c <- countrycode(liedorp$country, origin = 'country.name',
                              destination = 'iso2c')
 liedorp$year <- 2010
-liedorp <- select(liedorp, -country)
+liedorp <- dplyr::select(liedorp, -country)
 
 # Rescale
 liedorp_vars <- grep(pattern = '.*liedorp', names(liedorp))
-for (i in liedorp_vars){
+for (i in liedorp_vars) {
     liedorp[, i] <- rescale(liedorp[, i])
 }
 FRT$median_rescale <- rescale(FRT$median)
@@ -260,7 +258,7 @@ fl_plot <- function(y){
 liedorp_vars <- names(liedorp)[1:max(liedorp_vars)]
 
 pfl <- list()
-for (i in liedorp_vars){
+for (i in liedorp_vars) {
     pfl[[i]] <- fl_plot(i)
 }
 
@@ -285,9 +283,9 @@ cor.test(FRT_HRV$median_rescale, FRT_HRV$hrv_median_rescale)
 # Drop Canada
 frt_hrv_noCA <- FRT_HRV %>% filter(iso2c != 'CA')
 
-# Plot 
+# Plot
 pdf(file = paste0(dir, 'FRT_HRV_Compare.pdf'))
-ggplot(frt_hrv_noCA, aes(median_rescale, hrv_median_rescale)) + 
+ggplot(frt_hrv_noCA, aes(median_rescale, hrv_median_rescale)) +
     geom_point(alpha = 0.5) +
     stat_smooth(method = 'loess', se = FALSE, size = 1) +
     stat_smooth(method = 'lm', se = FALSE, linetype = 'dashed',

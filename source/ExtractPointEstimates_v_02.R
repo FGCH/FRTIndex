@@ -1,20 +1,18 @@
 ############################
 # Extract FRT Point Estimates and uncertainty
 # Christopher Gandrud
-# 17 April 2015
 # MIT License
 ############################
 
 # Load packages
 if (!('StanCat' %in% installed.packages()[, 1])) devtools::install_github('christophergandrud/StanCat')
 library(StanCat)
-if (!('dpmr' %in% installed.packages()[, 1])) devtools::install_github('christophergandrud/dpmr')
 library(dpmr)
-library(repmis)
 library(tidyr)
 library(dplyr)
 library(DataCombine)
 library(countrycode)
+library(rio)
 
 # Set working directory to save index data to. Change as needed
 setwd('/git_repositories/FRTIndex')
@@ -26,7 +24,7 @@ source('source/miscFunctions/report_min_once.R')
 # Load data
 BaseSub <-
     'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/RawData/wdi_fred_combined.csv' %>%
-    source_data(stringsAsFactors = FALSE)
+    import
 #### Keep only countries that report at least 1 item for the entire period  ####
 BaseSub <- report_min_once(BaseSub)
 
@@ -34,31 +32,36 @@ BaseSub <- report_min_once(BaseSub)
 countries <- unique(BaseSub$country)
 
 # Load simulations
-load('/Volumes/Gandrud1TB/frt/fit_2015-04-16.RData')
+load('/Volumes/Gandrud1TB/frt/fit_2015-05-02.RData')
 
 # Years
 years <- 1990:2011
 
 # Convert simulations to data.frame
 fit_df <- as.data.frame(fit)
-rm(fit)
+#rm(fit)
 
 # Keep only FRT scores (alpha)
 fit_df_sub <- fit_df[, grep(pattern = 'alpha', x = names(fit_df))]
 
 # Melt into long format and group
 gathered <- gather(fit_df_sub, variable, value)
+gathered$variable <- gathered$variable %>% as.character
 gathered <- group_by(gathered, variable)
 
-median <- summarize(gathered, median = median(value))
-lower_95 <- summarize(gathered, lower_95 = StanCat:::HPD(value, prob = 0.95,
-                                                        side = 'lower'))
-lower_90 <- summarize(gathered, lower_90 = StanCat:::HPD(value, prob = 0.9,
-                                                        side = 'lower'))
-upper_90 <- summarize(gathered, upper_90 = StanCat:::HPD(value, prob = 0.9,
-                                                        side = 'upper'))
-upper_95 <- summarize(gathered, upper_95 = StanCat:::HPD(value, prob = 0.95,
-                                                        side = 'upper'))
+median <- dplyr::summarize(gathered, median = median(value))
+lower_95 <- dplyr::summarize(gathered, lower_95 = StanCat:::HPD(value, 
+                                                    prob = 0.95, 
+                                                    side = 'lower'))
+lower_90 <- dplyr::summarize(gathered, lower_90 = StanCat:::HPD(value, 
+                                                    prob = 0.9, 
+                                                    side = 'lower'))
+upper_90 <- dplyr::summarize(gathered, upper_90 = StanCat:::HPD(value, 
+                                                    prob = 0.9, 
+                                                    side = 'upper'))
+upper_95 <- dplyr::summarize(gathered, upper_95 = StanCat:::HPD(value, 
+                                                    prob = 0.95, 
+                                                    side = 'upper'))
 
 comb <- merge(lower_95, lower_90) %>%
             merge(., median) %>%
@@ -78,7 +81,7 @@ comb <- FindReplace(comb, Var = 'country', replaceData = fr_country,
                     exact = FALSE)
 comb <- FindReplace(comb, Var = 'variable', replaceData = fr_year,
                     exact = FALSE)
-comb <- rename(comb, year = variable)
+comb <- dplyr::rename(comb, year = variable)
 
 # Add in iso2c codes
 comb$iso2c <- countrycode(comb$country, origin = 'country.name',
@@ -90,13 +93,12 @@ comb <- MoveFront(comb, c('country', 'iso2c', 'year'))
 comb <- arrange(comb, country, year)
 
 # Write file
-write.csv(comb, 'IndexData/FRTIndex.csv',
-          row.names = FALSE)
+export(comb, 'IndexData/FRTIndex.csv')
 
 # Create data package version
 meta_list <- list(name = 'frt_datapackage',
                   title = 'The Financial Regulatory Transparency Index',
-                  version = '0.3.1',
+                  version = '0.3.2',
                   maintainer = 'Christopher Gandrurd',
                   license = 'PDDL-1.0',
                   last_updated = Sys.Date(),

@@ -1,7 +1,7 @@
 Financial Regulatory Transparency Index
 ========
 
-**Version:** 0.3.1
+**Version:** 0.3.2
 
 **Maintainer:**
 [Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
@@ -60,13 +60,12 @@ The file `FRTIndex.csv` contains the following variables:
 ## Download into R
 
 To download the **working version** of the Index directly into
-[R](http://www.r-project.org/) as a data frame use the
-[repmis](http://cran.r-project.org/web/packages/repmis/index.html) package:
+[R](http://www.r-project.org/) as a data frame use:
 
 ```{S}
 URL <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex.csv'
 
-frt_index <- repmis::source_data(URL)
+frt_index <- rio::import(URL)
 ```
 
 ## Estimation Model
