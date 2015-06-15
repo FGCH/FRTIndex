@@ -78,8 +78,8 @@ empty_stan <- stan(file = 'source/FRT.stan', data = frt_data, chains = 0)
 sflist <-
     mclapply(1:4, mc.cores = 4,
         function(i) stan(fit = empty_stan, data = frt_data,
-                        seed = i, chains = 1, thin = 20,
-                        iter = 80000, chain_id = i,,
+                        seed = i, chains = 1, thin = 25,
+                        iter = 120000, chain_id = i,,
                         pars = c('delta', 'alpha', 'beta', 'gamma')
         )
     )
