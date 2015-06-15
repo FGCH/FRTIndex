@@ -37,7 +37,7 @@ countries <- unique(BaseSub$country)
 
 # Load simulations
 # Change location as needed
-load('/Volumes/Gandrud1TB/frt/fit_2015-05-02.RData')
+load('/Volumes/Gandrud1TB/frt/fit_2015-06-12.RData')
 
 # ---------------------------------------------------------------------------- #
 #### Plot by year ####
@@ -280,12 +280,9 @@ FRT_HRV <- merge(FRT_rescale, hrv_rescale, all.x = T)
 
 cor.test(FRT_HRV$median_rescale, FRT_HRV$hrv_median_rescale)
 
-# Drop Canada
-frt_hrv_noCA <- FRT_HRV %>% filter(iso2c != 'CA')
-
 # Plot
 pdf(file = paste0(dir, 'FRT_HRV_Compare.pdf'))
-ggplot(frt_hrv_noCA, aes(median_rescale, hrv_median_rescale)) +
+ggplot(FRT_HRV, aes(median_rescale, hrv_median_rescale)) +
     geom_point(alpha = 0.5) +
     stat_smooth(method = 'loess', se = FALSE, size = 1) +
     stat_smooth(method = 'lm', se = FALSE, linetype = 'dashed',

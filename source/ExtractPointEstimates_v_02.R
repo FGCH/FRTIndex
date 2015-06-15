@@ -98,7 +98,7 @@ export(comb, 'IndexData/FRTIndex.csv')
 # Create data package version
 meta_list <- list(name = 'frt_datapackage',
                   title = 'The Financial Regulatory Transparency Index',
-                  version = '0.3.2',
+                  version = '0.3.3',
                   maintainer = 'Christopher Gandrurd',
                   license = 'PDDL-1.0',
                   last_updated = Sys.Date(),

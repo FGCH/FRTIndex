@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.3.3
+
+- Run with 120,000 iterations. Thin = 25 due to memory limitations.
+
 ## Version 0.3.2
 
 - Run with 80,000 iterations. Thin = 20 due to memory limitations.
