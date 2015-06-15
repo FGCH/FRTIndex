@@ -3,7 +3,6 @@
 // FRT Model Version 0.3--
 // Stan Version 0.2.6
 // Christopher Gandrud
-// 9 April 2015
 // MIT License
 ////////////////////////////////
 
@@ -33,9 +32,9 @@ parameters {
 
 transformed parameters {
     vector[C] recentered_alpha1;
-    real mean_alpha1; 
+    real mean_alpha1;
     real<lower= 0> sd_alpha1;
-    
+
     mean_alpha1 <- mean(alpha1);
     sd_alpha1 <- sd(alpha1);
     for (c in 1:C)
@@ -47,7 +46,7 @@ model {
     alpha1 ~ normal(0,1);
 
     for (c in 1:C) {
-        alpha[c,1] ~ normal(recentered_alpha1[c],0.001);
+        alpha[c,1] ~ normal(recentered_alpha1[c],0.001); // overcome Stan issue
         for (t in 2:T)
             alpha[c,t] ~ normal(alpha[c,t-1], sigma_alpha[c]);
     }

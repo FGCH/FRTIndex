@@ -32,7 +32,7 @@ BaseSub <- report_min_once(BaseSub)
 countries <- unique(BaseSub$country)
 
 # Load simulations
-load('/Volumes/Gandrud1TB/frt/fit_2015-05-02.RData')
+load('/Volumes/Gandrud1TB/frt/fit_2015-06-12.RData')
 
 # Years
 years <- 1990:2011
