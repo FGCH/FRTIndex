@@ -22,7 +22,7 @@ setwd('/git_repositories/FRTIndex/paper/')
 # Get list of individual model tables
 AllFiles <- list.files('tables/')
 
-filesFRTnoninteract <- AllFiles[grep('^FRT_noninteract', AllFiles)]
+filesFRT <- AllFiles[grep('^FRT_', AllFiles)]
 
 # Combine into data frames
 CombineFiles <- function(file_list, start){
@@ -36,6 +36,9 @@ CombineFiles <- function(file_list, start){
 
 CleanUp <- data.frame(
     from = c('^.*?_stderr', '_coef', '_cons', 'N_clust', 'N$', 'r2_a',
+             'dfrtxdpub', 'lfrtxlpub', 
+             'lcgdpgrowth', 'dcgdpgrowth', 
+             'lpcgdp2005l', 'dpcgdp2005l',
              'dnewspread', 'lnewspread',
              '^lltrate$', '^lltspreadus$', '^lltratecov$',
              '^lfrt$', '^dfrt$',
@@ -51,6 +54,9 @@ CleanUp <- data.frame(
              'eurozone'
     ),
     to = c('', '', 'Constant', 'Countries', 'Observations', 'Adjusted R-squared',
+           '$\\\\Delta$ FRT * $\\\\Delta$ Public debt/GDP', 'FRT$_{t-1}$ * Public debt/GDP (\\\\%)$_{t-1}$',
+           'GDP Growth$_{t-1}$', '$\\\\Delta$ GDP Growth',
+           'Per Capita GDP$_{t-1}$', '$\\\\Delta$ Per Capita GDP',
            '$\\\\Delta$ Bond Spread', 'Bond Spread$_{t-1}$',
            'LT rate$_{t-1}$', 'LT rate spread$_{t-1}$', 'LT rate COV$_{t-1}$',
            'FRT$_{t-1}$', '$\\\\Delta$ FRT',
@@ -68,29 +74,30 @@ CleanUp <- data.frame(
 )
 
 
-#### FRT ####
-outputFRT_noninteract <- CombineFiles(filesFRTnoninteract, 
-                                      start = 'FRT_noninteract_1.dta')
-outputFRT_noninteract <- FindReplace(outputFRT_noninteract, Var = 'var', 
-                                     replaceData = CleanUp, exact = F)
-                         
-outputFRT_noninteract <- outputFRT_noninteract[c(69:72, 1:26, 32, 28, 36), ]
+#### FRT Interacted ####
+outputFRT <- CombineFiles(filesFRT, start = 'FRT_1.dta')
+outputFRT <- FindReplace(outputFRT, Var = 'var', replaceData = CleanUp, 
+                         exact = F)
+
+outputFRT <- outputFRT[c(84, 83, 81:82, 1:32, 80, 77, 78, 79, 33:34,
+                         40, 36, 44), ]
 
 # Insert blank row for formatting
-blank <- c('', '', '')
-row.names(outputFRT_noninteract) <- 1:nrow(outputFRT_noninteract)
-outputFRT_noninteract <- InsertRow(outputFRT_noninteract, New = blank, 
-                                   RowNum = 31)
-outputFRT_noninteract <- InsertRow(outputFRT_noninteract, New = blank, 
-                                   RowNum = 31)
+blank <- c('', '', '', '', '')
+row.names(outputFRT) <- 1:nrow(outputFRT)
+outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 43)
+outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 43)
 
-names(outputFRT_noninteract) <- c('',
-                      '$\\Delta$ Long-term (10-year) bond spread (US 10-year bond, \\%)',
-                      '$\\Delta$ Coefficient of variation, LT bond (annual, based on monthly data)'
+names(outputFRT) <- c('',
+                    '$\\Delta$ Long-term (10-year) bond spread (US 10-year bond, \\%)',
+                    '$\\Delta$ Long-term (10-year) bond spread (US 10-year bond, \\%)',
+                    '$\\Delta$ Coefficient of variation, LT bond spread (annual, based on monthly data)',
+                    '$\\Delta$ Coefficient of variation, LT bond spread (annual, based on monthly data)'
 )
 
 # Output
 tableFRT <- xtable(outputFRT, dcolumn = TRUE, booktabs = TRUE)
-align(tableFRT) <- 'llp{2cm}p{2cm}p{2cm}p{2cm}p{2cm}'
+align(tableFRT) <- 'llp{2.5cm}p{2.5cm}p{2.5cm}p{2.5cm}'
 print(tableFRT, include.rownames = FALSE, floating = FALSE, size = 'tiny',
       file = 'tables/frt_bond_results.tex')
+

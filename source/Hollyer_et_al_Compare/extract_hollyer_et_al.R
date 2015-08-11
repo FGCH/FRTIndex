@@ -1,7 +1,6 @@
 ################################################################################
 # Extract mean Hollyer et al. Transparency Scores
 # Christopher Gandrud
-# 28 January 2015
 # MIT License
 # Original estimates downloaded from: http://hrvtransparency.org/
 ################################################################################
@@ -12,12 +11,13 @@ library(tidyr)
 library(countrycode)
 library(DataCombine)
 library(foreign)
+library(rio)
 
 # Set working directory. Change as needed.
 setwd('~/Desktop/')
 
 # Saving directory. Change as needed/
-sd <- '/git_repositories/FRTIndex/source/Hollyer_et_al_Compare/'
+sd <- '/git_repositories/FRTIndex/'
 
 # Load jags result
 ### Data not stored in git repository due to large file size ####
@@ -49,10 +49,11 @@ gathered <- PercChange(gathered, Var = 'hrv_mean', GroupVar = 'iso2c',
 
 # Save basic Hollyer et al. medians
 simple <- gathered %>% select(iso2c, year, hrv_mean)
-write.csv(simple, file = paste0(sd, 'hrv_means.csv'), row.names = F)
+export(simple, file = paste0(sd, 'source/Hollyer_et_al_Compare/hrv_means.csv'), 
+       row.names = F)
 
 #### Merge with bond spread data set ####
-frt <- read.csv('frt_bondspread_28Jan.csv', stringsAsFactors = F)
+frt <- import(sprintf('%s/paper/analysis/frt0526.csv', sd))
 frt$iso2c <- countrycode(frt$wbcode, origin = 'wb',
                          destination = 'iso2c') 
 frt <- frt %>% select(-country)
@@ -63,8 +64,9 @@ comb <- merge(frt, gathered, all.x = T)
 comb <- MoveFront(comb, c('iso2c', 'ccode1', 'country', 'year', 'frt', 'dfrt',
                           'lfrt', 'hrv_mean', 'dhrv_mean', 'lhrv_mean')) %>%
             arrange(country, year) %>%
-            select(-X_merge, -sname, -wbcode)
+            select(-sname, -wbcode)
 
 # Save
-write.dta(comb, file = paste0(sd, 'frt_hrv_bond.dta'))
+export(comb, file = paste0(sd, 'source/Hollyer_et_al_Compare/frt_hrv_bond.csv'),
+       na = '')
 
