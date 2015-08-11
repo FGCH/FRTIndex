@@ -36,6 +36,7 @@ CombineFiles <- function(file_list, start){
 
 CleanUp <- data.frame(
     from = c('^.*?_stderr', '_coef', '_cons', 'N_clust', 'N$', 'r2_a',
+             'dhrvxdpub', 'lhrvxlpub',
              'dfrtxdpub', 'lfrtxlpub', 
              'lcgdpgrowth', 'dcgdpgrowth', 
              'lpcgdp2005l', 'dpcgdp2005l',
@@ -54,6 +55,7 @@ CleanUp <- data.frame(
              'eurozone'
     ),
     to = c('', '', 'Constant', 'Countries', 'Observations', 'Adjusted R-squared',
+           '$\\\\Delta$ HRV * $\\\\Delta$ Public debt/GDP', 'HRV$_{t-1}$ * Public debt/GDP (\\\\%)$_{t-1}$',
            '$\\\\Delta$ FRT * $\\\\Delta$ Public debt/GDP', 'FRT$_{t-1}$ * Public debt/GDP (\\\\%)$_{t-1}$',
            'GDP Growth$_{t-1}$', '$\\\\Delta$ GDP Growth',
            'Per Capita GDP$_{t-1}$', '$\\\\Delta$ Per Capita GDP',
@@ -97,7 +99,7 @@ names(outputFRT) <- c('',
 
 # Output
 tableFRT <- xtable(outputFRT, dcolumn = TRUE, booktabs = TRUE)
-align(tableFRT) <- 'llp{2.5cm}p{2.5cm}p{2.5cm}p{2.5cm}'
+align(tableFRT) <- 'llp{3cm}p{3cm}p{3cm}p{3cm}'
 print(tableFRT, include.rownames = FALSE, floating = FALSE, size = 'tiny',
       file = 'tables/frt_bond_results.tex')
 
