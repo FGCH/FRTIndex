@@ -22,6 +22,9 @@ main_sub1 <- main %>% DropNA(c('dnewspread', 'lnewspread', 'dfrt', 'dpubdebtgdp'
                      'dpcgdp2005l', 'loecdgrowth', 'doecdgrowth', 'lus3mrate',
                      'dus3mrate', 'lvix', 'dvix'))
 
+## Drop US
+main_sub1 <- main_sub1 %>% filter(country != 'United States')
+
 main_sub2 <- main %>% DropNA(c('dratecov', 'lltratecov', 'dfrt', 'dpubdebtgdp', 
                                'dfrtxdpub', 'lfrt', 'lpubdebtgdp', 'lfrtxlpub', 'linfl',
                                'dinfl', 'lcgdpgrowth', 'dcgdpgrowth', 'lpcgdp2005l',
