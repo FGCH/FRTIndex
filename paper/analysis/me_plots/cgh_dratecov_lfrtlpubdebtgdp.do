@@ -74,7 +74,9 @@ twoway (connect points1 points2 points3 points4, mcolor(navy maroon navy)/*
 */(histogram lpubdebtgdp if e(sample), bin(50) yaxis(2) blcolor(gray) bfcolor(none)), ytitle(Histogram of/*
 */ X-axis var, axis(2) size(3))/*
 */ ytitle("Coefficients and 95% CIs", size(4))/*
-*/ xlab(0 25 50 75 100 125 150 175 200 225) ylabel(, labsize(4)) yline(0, lwidth(medthick)) title("Coefficient on FRT", size(3)) xtitle("Public Debt/GDP (%)", size(3)) xscal(titlegap(2)) yscal(titlegap(2))/*
+*/ xlab(0 25 50 75 100 125 150 175 200 225) ylabel(, labsize(4)) yline(0, lwidth(medthick)) xtitle("Public Debt/GDP (%)", size(3)) xscal(titlegap(2)) yscal(titlegap(2))/*
 */  xsca(titlegap(2)) yscal(titlegap(2))/*
-*/  legend(off) scheme(s2mono)
+*/  legend(off) scheme(s2mono) graphregion(color(white))
+
+graph export paper_plots/me_levelfrt_yields_cov.pdf, replace
 

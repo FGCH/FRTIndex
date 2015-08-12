@@ -8,7 +8,10 @@
 clear
 set more off
 
-use "/Data/frt0526.dta"
+// Set working directory, change as needed/
+cd "/git_repositories/FRTIndex/paper/"
+
+insheet using "analysis/frt0526.csv", comma
 
 /* 3. Run standard regression. */
 
@@ -71,7 +74,9 @@ twoway (connect points1 points2 points3 points4, mcolor(navy maroon navy)/*
 */(histogram dpubdebtgdp if e(sample), bin(50) yaxis(2) blcolor(gray) bfcolor(none)), ytitle(Histogram of/*
 */ X-axis var, axis(2) size(3))/*
 */ ytitle("Coefficients and 95% CIs", size(4))/*
-*/ xlab(-20 -10 0 10 20 30 40 50) ylabel(, labsize(4)) yline(0, lwidth(medthick)) title("Coefficient on Change in FRT", size(3)) xtitle("Change in Public Debt/GDP (%)", size(3)) xscal(titlegap(2)) yscal(titlegap(2))/*
+*/ xlab(-20 -10 0 10 20 30 40 50) ylabel(, labsize(4)) yline(0, lwidth(medthick)) xtitle("Change in Public Debt/GDP (%)", size(3)) xscal(titlegap(2)) yscal(titlegap(2))/*
 */  xsca(titlegap(2)) yscal(titlegap(2))/*
-*/  legend(off) scheme(s2mono)
+*/  legend(off) scheme(s2mono) graphregion(color(white))
+
+graph export paper_plots/me_changefrt_yields_cov.pdf, replace
 

@@ -46,7 +46,7 @@ while `iter'<`numparams' {
    gen x1x2a=dfrt*dpubdebtgdpa
 
 
-xtreg dnewspread dfrt dpubdebtgdpa x1x2a lnewspread lfrt lpubdebtgdp lfrtxlpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l lcgdpgrowth dcgdpgrowth loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix, cluster(ccode1) i(ccode1) fe vsquish noomit
+xtreg dnewspread dfrt dpubdebtgdpa x1x2a lnewspread lfrt lpubdebtgdp lfrtxlpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l lcgdpgrowth dcgdpgrowth loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(ccode1) i(ccode1) fe vsquish noomit
 
 matrix betas=e(b)                /* Stop alterations. */
    scalar dfrtcoef=betas[1,`order']
@@ -74,6 +74,8 @@ twoway (connect points1 points2 points3 points4, mcolor(navy maroon navy)/*
 */(histogram dpubdebtgdp if e(sample), bin(50) yaxis(2) blcolor(gray) bfcolor(none)), ytitle(Histogram of/*
 */ X-axis var, axis(2) size(3))/*
 */ ytitle("Coefficients and 95% CIs", size(4))/*
-*/ xlab(-100 -80 -40 -20 0 20 40 60 80 100) ylabel(, labsize(4)) yline(0, lwidth(medthick)) title("Coefficient on Change in FRT", size(3)) xtitle("Change in Public Debt/GDP (%)", size(3)) xscal(titlegap(2)) yscal(titlegap(2))/*
+*/ xlab(-100 -80 -40 -20 0 20 40 60 80 100) ylabel(, labsize(4)) yline(0, lwidth(medthick)) xtitle("Change in Public Debt/GDP (%)", size(3)) xscal(titlegap(2)) yscal(titlegap(2))/*
 */  xsca(titlegap(2)) yscal(titlegap(2))/*
-*/  legend(off) scheme(s2mono)
+*/  legend(off) scheme(s2mono) graphregion(color(white))
+
+graph export paper_plots/me_changefrt_spreads.pdf, replace
