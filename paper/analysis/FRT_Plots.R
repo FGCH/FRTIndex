@@ -63,6 +63,15 @@ pdf(file = paste0(dir, 'FRT_years.pdf'), width = 20, height = 16)
     grid.arrange(y1, y2, ncol = 2, bottom = 'FRT Index (HPD)')
 dev.off()
 
+# For presentation
+pdf(file = paste0(dir, 'frt_1990.pdf'), width = 10, height = 10)
+    y1 + xlab('\nFRT Index (HPD)')
+dev.off()
+
+pdf(file = paste0(dir, 'frt_2011.pdf'), width = 10, height = 10)
+    y2 + xlab('\nFRT Index (HPD)')
+dev.off()
+
 # ---------------------------------------------------------------------------- #
 #### Plot individual countries ####
 sc_country <- function(country) {

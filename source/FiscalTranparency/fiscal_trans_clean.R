@@ -1,7 +1,6 @@
 ################################################################################
 # Add in OBI fiscal transparency indicators
 # Christopher Gandrud
-# 4 February 2015
 # MIT License
 ################################################################################
 
@@ -13,6 +12,7 @@ library(DataCombine)
 library(repmis)
 library(WDI)
 library(MASS)
+library(rio)
 
 # Set working directory. Change as needed
 setwd('/git_repositories/FRTIndex/')
@@ -36,6 +36,17 @@ obi <- read.csv('source/FiscalTranparency/ibp_data_summary.csv',
                 stringsAsFactors = F) %>%
                 dplyr::select(-RANK)
 names(obi) <- c('iso2c', 'year', 'obi_raw')
+
+
+# Basic comparison
+URL <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex.csv'
+frt_index <- rio::import(URL)
+raw_obi_frt <- merge(frt_index, obi, by = c('iso2c', 'year'))
+
+length(unique(raw_obi_frt$country))
+cor.test(raw_obi_frt$median, raw_obi_frt$obi_raw)
+
+# Expand over time
 obi <- TimeExpand(obi, GroupVar = 'iso2c', TimeVar = 'year')
 obi <- obi %>% group_by(iso2c) %>%
             mutate(obi_filled = FillDown(Var = obi_raw)) %>%
@@ -47,7 +58,7 @@ class(obi) <- 'data.frame'
 obi <- slide(obi, Var = 'obi_filled', TimeVar = 'year', GroupVar = 'iso2c',
                 NewVar = 'lobi_filled')
 obi <- PercChange(obi, Var = 'obi_filled', TimeVar = 'year', GroupVar = 'iso2c',
-                     NewVar = 'dobi_filled', type = 'proportion')
+                 NewVar = 'dobi_filled', type = 'proportion')
 
 #### GDP Growth Data
 growth <- WDI(indicator = 'NY.GDP.MKTP.KD.ZG', start = 1985, end = 2012) %>%
@@ -74,8 +85,7 @@ comb <- comb %>% MoveFront(c('iso2c', 'year',  'ccode1', 'country', 'frt',
                              'obi_filled', 'lobi_filled', 'dobi_filled'))
 
 #### Add Euro membership
-euro <- 'http://bit.ly/1yRvycq' %>%
-        source_data()
+euro <- 'http://bit.ly/1yRvycq' %>% source_data()
 euro$eurozone <- 1
 
 # Merge
@@ -83,7 +93,7 @@ comb <- merge(comb, euro, all.x = T)
 comb$eurozone[is.na(comb$eurozone)] <- 0
 
 # Save
-write.dta(comb, file = 'paper/analysis/frt_hrv_obi_bond.dta')
+export(comb, file = 'paper/analysis/frt_hrv_obi_bond.csv')
 
 #### Correlation with other transparency measures
 cor.test(comb$frt, comb$obi_filled)
@@ -96,7 +106,8 @@ cor.test(comb$hrv, comb$obi_filled)
 sub_2010 <- comb %>% filter(year == 2010) %>%
                 dplyr::select(frt, hrv_mean, obi_filled)
 
-names(sub_2010) <- c('Financial (FRT)', 
-                     'General (HRV)', 'Fiscal (OBI)')
+names(sub_2010) <- c('Financial (FRT)', 'General (HRV)', 'Fiscal (OBI)')
 
-parcoord(sub_2010, var.label = T)
+pdf(file = 'paper/paper_plots/frt_hrv_obi_compare.pdf', width = 12, height =  8)
+    parcoord(sub_2010, var.label = T)
+dev.off()
