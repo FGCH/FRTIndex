@@ -37,8 +37,8 @@ CombineFiles <- function(file_list, start){
 CleanUp <- data.frame(
     from = c('^.*?_stderr', '_coef', '_cons', 'N_clust', 'N$', 'r2_a',
              'dhrvxdpub', 'lhrvxlpub',
-             'dfrtxdpub', 'lfrtxlpub', 
-             'lcgdpgrowth', 'dcgdpgrowth', 
+             'dfrtxdpub', 'lfrtxlpub',
+             'lcgdpgrowth', 'dcgdpgrowth',
              'lpcgdp2005l', 'dpcgdp2005l',
              'dnewspread', 'lnewspread',
              '^lltrate$', '^lltspreadus$', '^lltratecov$',
@@ -78,7 +78,7 @@ CleanUp <- data.frame(
 
 #### FRT Interacted ####
 outputFRT <- CombineFiles(filesFRT, start = 'FRT_1.dta')
-outputFRT <- FindReplace(outputFRT, Var = 'var', replaceData = CleanUp, 
+outputFRT <- FindReplace(outputFRT, Var = 'var', replaceData = CleanUp,
                          exact = F)
 
 outputFRT <- outputFRT[c(84, 83, 81:82, 1:32, 80, 77, 78, 79, 33:34,
@@ -93,8 +93,8 @@ outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 43)
 names(outputFRT) <- c('',
                     '$\\Delta$ Long-term (10-year) bond spread (US 10-year bond, \\%)',
                     '$\\Delta$ Long-term (10-year) bond spread (US 10-year bond, \\%)',
-                    '$\\Delta$ Coefficient of variation, LT bond spread (annual, based on monthly data)',
-                    '$\\Delta$ Coefficient of variation, LT bond spread (annual, based on monthly data)'
+                    '$\\Delta$ Coefficient of variation, LT bond yields (annual, based on monthly data)',
+                    '$\\Delta$ Coefficient of variation, LT bond yields (annual, based on monthly data)'
 )
 
 # Output
@@ -102,4 +102,3 @@ tableFRT <- xtable(outputFRT, dcolumn = TRUE, booktabs = TRUE)
 align(tableFRT) <- 'llp{3cm}p{3cm}p{3cm}p{3cm}'
 print(tableFRT, include.rownames = FALSE, floating = FALSE, size = 'tiny',
       file = 'tables/frt_bond_results.tex')
-

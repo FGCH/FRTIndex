@@ -40,8 +40,8 @@ CleanUp <- data.frame(
              'lfrt_residuals', 'dfrt_residuals',
              'lfrt_residxlpub', 'dfrt_residxdpub',
              'dhrvxdpub', 'lhrvxlpub',
-             'dfrtxdpub', 'lfrtxlpub', 
-             'lcgdpgrowth', 'dcgdpgrowth', 
+             'dfrtxdpub', 'lfrtxlpub',
+             'lcgdpgrowth', 'dcgdpgrowth',
              'lpcgdp2005l', 'dpcgdp2005l',
              'dnewspread', 'lnewspread',
              '^lltrate$', '^lltspreadus$', '^lltratecov$',
@@ -82,9 +82,9 @@ CleanUp <- data.frame(
 
 
 outputHRV <- CombineFiles(filesHRV, start = 'HRV_1.dta')
-outputHRV <- FindReplace(outputHRV, Var = 'var', replaceData = CleanUp, 
+outputHRV <- FindReplace(outputHRV, Var = 'var', replaceData = CleanUp,
                          exact = F)
-outputHRV <- outputHRV[c(74, 73, 84, 83, 75, 76, 77, 78, 87, 88, 
+outputHRV <- outputHRV[c(74, 73, 84, 83, 75, 76, 77, 78, 87, 88,
                          89, 86, 1:28, 81, 82, 79, 80, 90, 91, 92, 85,
                          29:30, 36, 32, 40), ]
 
@@ -97,8 +97,8 @@ outputHRV <- InsertRow(outputHRV, New = blank, RowNum = 51)
 names(outputHRV) <- c('',
                       '$\\Delta$ Long-term (10-year) bond spread (US 10-year bond, \\%)',
                       '$\\Delta$ Long-term (10-year) bond spread (US 10-year bond, \\%)',
-                      '$\\Delta$ Coefficient of variation, LT bond spread (annual, based on monthly data)',
-                      '$\\Delta$ Coefficient of variation, LT bond spread (annual, based on monthly data)',
+                      '$\\Delta$ Coefficient of variation, LT bond yields (annual, based on monthly data)',
+                      '$\\Delta$ Coefficient of variation, LT bond yields (annual, based on monthly data)',
                       '$\\Delta$ Long-term (10-year) bond spread (US 10-year bond, \\%)'
 )
 
