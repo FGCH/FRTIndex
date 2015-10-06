@@ -19,15 +19,19 @@ library(gridExtra)
 library(ggplot2)
 library(countrycode)
 library(dplyr)
+library(lubridate)
 
 # Load function to subset the data frame to countries that report
 # at least 1 item.
 source('source/miscFunctions/report_min_once.R')
 
 # Load base data
-BaseSub <-
+try(
+    BaseSub <-
     'https://raw.githubusercontent.com/FGCH/FRTIndex/master/source/RawData/wdi_fred_combined.csv' %>%
-    import
+    import, silent = T
+)
+try(BaseSub <- 'source/RawData/wdi_fred_combined.csv' %>% import, silent = T)
 #### Keep only countries that report at least 1 item for the entire period  ####
 dropped <- report_min_once(BaseSub, drop_names = TRUE)
 BaseSub <- report_min_once(BaseSub)
@@ -54,7 +58,7 @@ y1 <- sc_year(1990)
 y2 <- sc_year(2011)
 
 # For github
-png(file = 'FRT_overview.png', width = 900)
+png(file = 'FRT_overview.png', width = 1500, height = 1000)
     grid.arrange(y1, y2, ncol = 2, bottom = 'FRT Index (HPD)')
 dev.off()
 
@@ -145,7 +149,12 @@ dev.off()
 # ---------------------------------------------------------------------------- #
 #### Median trend overview ####
 # Load data
-FRT <- read.csv('IndexData/FRTIndex.csv', stringsAsFactors = FALSE)
+FRT <- import('IndexData/FRTIndex.csv')
+
+FRT$year <- FRT$year %>% as.numeric
+
+year_medians <- FRT %>% group_by(year) %>% 
+                dplyr::summarise(mean_FRT = mean(median))
 
 all_plot <- ggplot(FRT, aes(year, median, group = iso2c)) +
         geom_line(alpha = 0.3) +
