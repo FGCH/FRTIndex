@@ -4,12 +4,9 @@
 # - FRED: http://research.stlouisfed.org/fred2/
 # Also generates simple graphs/statistics comparing the data sources.
 # Christopher Gandrud
-# 26 March 2015
+# 5 November 2015
 # MIT License
 ################################################################################
-
-# Set working directory. Change as needed.
-setwd('/git_repositories/FRTIndex/')
 
 # Load packages
 library(repmis)
@@ -21,6 +18,12 @@ library(DataCombine)
 library(ggplot2)
 library(countrycode)
 
+# Set working directory. Change as needed.
+possibles <- c('/git_repositories/FRTIndex/',
+              'FRTIndex/')
+
+set_valid_wd(possibles)
+
 # ---------------------------------------------------------------------------- #
 # ---------------------------------------------------------------------------- #
 #### Download GFDD data from the World Bank ####
@@ -30,7 +33,7 @@ Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04',
                 'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02',
                 'GFDD.SI.04')
 
-## EMBI+ + China country list
+## EMBI+ + China + India country list
 EMBI <- c(
     'Argentina',
     'Brazil',
@@ -39,6 +42,7 @@ EMBI <- c(
     'Colombia',
     'Ecuador',
     'Egypt',
+    'India',
     'Mexico',
     'Morocco',
     'Nigeria',
@@ -205,7 +209,6 @@ for (i in IndSub){
     BaseSub[, paste0('Rep_', i)][is.na(BaseSub[, i])] <- 0
 }
 
-
 # ---------------------------------------------------------------------------- #
 #### Find the proportion of items reported ####
 source('source/miscFunctions/PropReported.R')
@@ -216,4 +219,4 @@ write.csv(PropRepor, file = paste0('IndexData/alternate/PropReported.csv'),
 
 # ---------------------------------------------------------------------------- #
 #### Save data ####
-write.csv(BaseSub, 'source/RawData/wdi_fred_combined.csv', row.names = FALSE)
+write.csv(BaseSub, 'source/RawData/wdi_fred_combined_GFDDv2015.csv', row.names = FALSE)
