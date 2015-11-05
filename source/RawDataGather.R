@@ -131,7 +131,7 @@ for (i in 1:ncol(fred_id_temp)) fred_id <- c(fred_id,
 
                 # Sleep to avoid being locked out
                 Sys.sleep(3)
-            }
+    }
 
 ## Clean
 fred_combined <- subset(fred_combined, year >= 1990)
