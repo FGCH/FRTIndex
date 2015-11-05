@@ -58,7 +58,7 @@ EMBI <- c(
 )
 
 # Download indicators
-Base <- WDI(indicator = Indicators, start = 1990, end = 2013, extra = TRUE)
+Base <- WDI(indicator = Indicators, start = 1990, end = 2015, extra = TRUE)
 
 # Keep countries with 'High income' (OECD and non-OECD classification)
 BaseSub <- grepl.sub(data = Base, Var = 'income', pattern = 'High income')
