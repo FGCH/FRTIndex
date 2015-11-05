@@ -46,7 +46,9 @@ completer.hist
 
 paper/tables/*dta
 
-misc/*
+misc/FinStress/*
+misc/notes/*
+misc/bruegel_wp/figures
 
 nohup.out
 .nohup.out.swp
