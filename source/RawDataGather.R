@@ -174,7 +174,7 @@ prop_combined$diff <- prop_combined$fred_PropReport -
 # Only plot those country-years where there is a difference
 prop_comb_sub <- subset(prop_combined, diff != 0)
 
-pdf(file = 'paper/paper_plots/FRED_vs_WorldBank.pdf')
+pdf(file = 'paper/paper_plots/FRED_vs_WorldBank_GFDDv2015.pdf')
     ggplot(prop_comb_sub, aes(FRT_PropReport, fred_PropReport, label = iso2c)) +
         geom_text(position = position_jitter(w = 0.05), alpha = 0.5) +
         scale_y_continuous(limits = c(0, 1)) +
@@ -214,7 +214,7 @@ for (i in IndSub){
 source('source/miscFunctions/PropReported.R')
 PropRepor <- PropReported(BaseSub)
 PropRepor <- PropRepor[order(PropRepor$country, PropRepor$year), ]
-write.csv(PropRepor, file = paste0('IndexData/alternate/PropReported.csv'),
+write.csv(PropRepor, file = paste0('IndexData/alternate/PropReported_GFDDv2015.csv'),
           row.names = FALSE)
 
 # ---------------------------------------------------------------------------- #
