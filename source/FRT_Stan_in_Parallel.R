@@ -15,7 +15,7 @@ library(rstan)
 library(parallel)
 
 # Set working directory
-possibles <- c('FRTIndex/')
+possibles <- c('FRTIndex/', 'git_repositories/FRTIndex/')
 
 set_valid_wd(possibles)
 
