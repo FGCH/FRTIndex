@@ -52,6 +52,7 @@ load('/Volumes/Gandrud1TB/frt/fit_2015-06-12.RData')
 ## Compare top and bottom 5
 FRT$year <- FRT$year %>% as.numeric
 
+# Custom plotting functions ----------
 sc_year <- function(x = FRT, selection) {
     temp <- subset(x, year == selection)
     # Find top 10 and bottom 10
@@ -71,6 +72,18 @@ sc_year <- function(x = FRT, selection) {
         xlab('') + ylab('') + 
         ggtitle(paste0(selection, '\n')) +
         theme_bw()
+}
+
+# One country plotting function
+sc_country <- function(country) {
+    cnumber <- grep(pattern = country, x = countries)
+    param_temp <- paste0('alpha\\[', cnumber, ',.*\\]')
+    stan_caterpillar(fit, pars = param_temp,
+                     pars_labels = 1990:2011, horizontal = FALSE,
+                     order_medians = FALSE, hpd = TRUE) +
+        scale_y_discrete(breaks = c('1990','2010')) +
+        scale_x_continuous(breaks = c(1990, 2000, 2011)) +
+        ggtitle(paste0(country, '\n'))
 }
 
 y1 <- sc_year(selection = 1990)
@@ -215,6 +228,21 @@ dev.off()
 
 grid.arrange(mean_eurozone_high, mean_eu15_high, nrow = 1, widths = c(1.65, 2))
 
+# All EU
+eu_all <- unique(eu$iso2c)
+country_eu <- countrycode(eu_all, origin = 'iso2c', 
+                          destination = 'country.name')
+
+eu_list <- list()
+for (i in country_eu) {
+    message(i)
+    eu_list[[i]] <- suppressMessages(sc_country(i))
+}
+
+png(file = paste0(dir, 'FRT_eu_all.png'), width = 700, height = 600)
+do.call(grid.arrange, eu_list)
+dev.off()
+
 # ---------------------------------------------------------------------------- #
 ## Change
 changed <- change(FRT, Var = 'median', GroupVar = 'iso2c', type = 'absolute',
@@ -229,18 +257,6 @@ cum_changed <- changed %>% group_by(iso2c) %>%
 cum_2000 <- cum_changed %>% filter(year == 2000) %>% arrange(desc(cum_diff))
 cum_2005 <- cum_changed %>% filter(year == 2005) %>% arrange(desc(cum_diff))
 cum_2011 <- cum_changed %>% filter(year == 2011) %>% arrange(desc(cum_diff))
-
-# One country plotting function
-sc_country <- function(country) {
-    cnumber <- grep(pattern = country, x = countries)
-    param_temp <- paste0('alpha\\[', cnumber, ',.*\\]')
-    stan_caterpillar(fit, pars = param_temp,
-                     pars_labels = 1990:2011, horizontal = FALSE,
-                     order_medians = FALSE, hpd = TRUE) +
-        scale_y_discrete(breaks = c('1990','2010')) +
-        scale_x_continuous(breaks = c(1990, 2000, 2011)) +
-        ggtitle(paste0(country, '\n'))
-}
 
 # Most improved plots
 top_15_list <- list()
