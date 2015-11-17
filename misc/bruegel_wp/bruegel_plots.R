@@ -82,7 +82,7 @@ sc_country <- function(country) {
                      pars_labels = 1990:2011, horizontal = FALSE,
                      order_medians = FALSE, hpd = TRUE) +
         scale_y_discrete(breaks = c('1990','2010')) +
-        scale_x_continuous(breaks = c(1990, 2000, 2011)) +
+        #scale_x_continuous(breaks = c(1990, 2000, 2011)) +
         ggtitle(paste0(country, '\n'))
 }
 
@@ -233,6 +233,8 @@ eu_all <- unique(eu$iso2c)
 country_eu <- countrycode(eu_all, origin = 'iso2c', 
                           destination = 'country.name')
 
+country_eu <- country_eu[country_eu %in% unique(FRT$country)]
+
 eu_list <- list()
 for (i in country_eu) {
     message(i)
@@ -240,11 +242,11 @@ for (i in country_eu) {
 }
 
 png(file = paste0(dir, 'FRT_eu_all.png'), width = 700, height = 600)
-do.call(grid.arrange, eu_list)
+    do.call(grid.arrange, eu_list)
 dev.off()
 
 # ---------------------------------------------------------------------------- #
-## Change
+# Most changed ------
 changed <- change(FRT, Var = 'median', GroupVar = 'iso2c', type = 'absolute',
                    NewVar = 'median_diff')
 
