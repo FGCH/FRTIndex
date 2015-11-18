@@ -191,7 +191,7 @@ mean_eurozone_high <- ggplot(year_means_euro, aes(year, centre,
                        guide = FALSE) +
     scale_y_continuous(limits = c(-0.2, 1.2)) +
     xlab('') + ylab('Mean FRT Score\n') + ggtitle('Eurozone\n') +
-    theme_bw()
+    theme_bw(base_size = 15)
 
 ## EU-15
 eu_15 <- c('Austria', 'Belgium', 'Denmark', 'Finland', 'France', 'Germany', 
@@ -201,7 +201,7 @@ eu_15 <- c('Austria', 'Belgium', 'Denmark', 'Finland', 'France', 'Germany',
 FRT$eu15_not <- 'blank'
 FRT$eu15_not[FRT$country %in% eu_15 & FRT$eu_member == 1] <- 'EU'
 FRT$eu15_not[FRT$income == 'High income: OECD' & FRT$eu15_not != 'EU'] <- 
-    'Other High income OECD,\n not EU'
+    'Other high income OECD,\n not EU'
 FRT$eu15_not[FRT$iso2c == 'US'] <- 'US'
 
 
@@ -220,7 +220,7 @@ mean_eu15_high <- ggplot(year_means_eu15, aes(year, centre,
                        guide = guide_legend(reverse = TRUE)) +
     scale_y_continuous(limits = c(-0.2, 1.2)) +
     xlab('') + ylab('') + ggtitle('EU-15\n') +
-    theme_bw()
+    theme_bw(base_size = 15)
 
 png(file = paste0(dir, 'FRT_eurozone_eu15.png'), width = 1000, height = 700)
     grid.arrange(mean_eurozone_high, mean_eu15_high, nrow = 1, widths = c(1.65, 2))
@@ -229,19 +229,27 @@ dev.off()
 grid.arrange(mean_eurozone_high, mean_eu15_high, nrow = 1, widths = c(1.65, 2))
 
 # All EU
-eu_all <- unique(eu$iso2c)
-country_eu <- countrycode(eu_all, origin = 'iso2c', 
-                          destination = 'country.name')
-
-country_eu <- country_eu[country_eu %in% unique(FRT$country)]
-
-eu_list <- list()
-for (i in country_eu) {
-    message(i)
-    eu_list[[i]] <- suppressMessages(sc_country(i))
+sc_country_eu_scale <- function(country) {
+    cnumber <- grep(pattern = country, x = countries)
+    param_temp <- paste0('alpha\\[', cnumber, ',.*\\]')
+    stan_caterpillar(fit, pars = param_temp,
+                     pars_labels = 1990:2011, horizontal = FALSE,
+                     order_medians = FALSE, hpd = TRUE) +
+        scale_y_discrete(breaks = c('1990','2010')) +
+        scale_x_continuous(limits = c(-0.5, 2.1), breaks = c(-0.5, 0, 0.5, 1, 2)) +
+        ggtitle(paste0(country, '\n'))
 }
 
-png(file = paste0(dir, 'FRT_eu_all.png'), width = 700, height = 600)
+eurozone_vector <- countrycode(euro_all, origin = 'iso2c', 
+                               destination = 'country.name')
+
+eu_list <- list()
+for (i in eurozone_vector) {
+    message(i)
+    eu_list[[i]] <- suppressMessages(sc_country_eu_scale(i))
+}
+
+png(file = paste0(dir, 'FRT_eu_15_indiv.png'), width = 900, height =750)
     do.call(grid.arrange, eu_list)
 dev.off()
 
