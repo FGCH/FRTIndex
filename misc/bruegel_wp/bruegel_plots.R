@@ -243,13 +243,15 @@ sc_country_eu_scale <- function(country) {
 eurozone_vector <- countrycode(euro_all, origin = 'iso2c', 
                                destination = 'country.name')
 
+eurozone_vector <- eurozone_vector[eurozone_vector %in% unique(FRT$country)]
+
 eu_list <- list()
 for (i in eurozone_vector) {
     message(i)
     eu_list[[i]] <- suppressMessages(sc_country_eu_scale(i))
 }
 
-png(file = paste0(dir, 'FRT_eu_15_indiv.png'), width = 900, height =750)
+png(file = paste0(dir, 'FRT_eurozone_indiv.png'), width = 900, height =750)
     do.call(grid.arrange, eu_list)
 dev.off()
 
