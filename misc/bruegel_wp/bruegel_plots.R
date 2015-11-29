@@ -103,8 +103,8 @@ year_means$iso2c = 'none'
 year_means <- year_means %>% MoveFront(c('year', 'centre', 'trend'))
 
 mean_trend <- ggplot(year_means, aes(year, centre)) +
-    geom_point(size = 2) +
-    geom_line(alpha = 0.5) +
+    #geom_point(size = 2) +
+    geom_line(alpha = 0.5, size = 1) +
     xlab('') + ylab('Mean FRT Score\n') +
     theme_bw()
 
@@ -119,7 +119,7 @@ comb <- rbind(FRT_stripped, year_means)
 
 ggplot(comb, aes(year, centre, group = iso2c, color = as.factor(trend),
                  alpha = as.factor(trend), size = as.factor(trend))) +
-    geom_line() +
+    geom_line(size = 1) +
     scale_color_manual(values = c('gray', 'red'), name = '') +
     scale_alpha_discrete(range = c(0.5, 1), name = '') +
     scale_size_manual(values = c(0.5, 3), name = '') +
@@ -154,8 +154,8 @@ year_means_eu <- frt_eu_comp %>% group_by(eu_not, year) %>%
 
 mean_eu_high <- ggplot(year_means_eu, aes(year, centre, 
                                           group = eu_not, colour = eu_not)) +
-    geom_point(size = 2) +
-    geom_line(alpha = 0.5) +
+    #geom_point(size = 2) +
+    geom_line(size = 1) +
     scale_color_manual(values = wes_palette('Moonrise2'), name = '',
                        guide = guide_legend(reverse = TRUE)) +
     xlab('') + ylab('Mean FRT Score\n') +
@@ -185,8 +185,8 @@ year_means_euro <- frt_euro %>% group_by(euro_member, year) %>%
 
 mean_eurozone_high <- ggplot(year_means_euro, aes(year, centre, 
                           group = euro_member, colour = euro_member)) +
-    geom_point(size = 2) +
-    geom_line(alpha = 0.5) +
+    #geom_point(size = 2) +
+    geom_line(size = 1) +
     scale_color_manual(values = wes_palette('Moonrise2'), name = '',
                        guide = FALSE) +
     scale_y_continuous(limits = c(-0.2, 1.2)) +
@@ -201,7 +201,7 @@ eu_15 <- c('Austria', 'Belgium', 'Denmark', 'Finland', 'France', 'Germany',
 FRT$eu15_not <- 'blank'
 FRT$eu15_not[FRT$country %in% eu_15 & FRT$eu_member == 1] <- 'EU'
 FRT$eu15_not[FRT$income == 'High income: OECD' & FRT$eu15_not != 'EU'] <- 
-    'Other high income OECD,\n not EU'
+    'Other high income\nOECD, not EU'
 FRT$eu15_not[FRT$iso2c == 'US'] <- 'US'
 
 
@@ -214,8 +214,8 @@ year_means_eu15 <- frt_eu15_comp %>% group_by(eu15_not, year) %>%
 
 mean_eu15_high <- ggplot(year_means_eu15, aes(year, centre, 
                                           group = eu15_not, colour = eu15_not)) +
-    geom_point(size = 2) +
-    geom_line(alpha = 0.5) +
+    #geom_point(size = 2) +
+    geom_line(size = 1) +
     scale_color_manual(values = wes_palette('Moonrise2'), name = '',
                        guide = guide_legend(reverse = TRUE)) +
     scale_y_continuous(limits = c(-0.2, 1.2)) +
