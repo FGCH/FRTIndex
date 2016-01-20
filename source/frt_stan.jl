@@ -1,5 +1,6 @@
 #=
 Run FRT Stan Model from Julia
+Reason: This was initially done due to easy parallel set up and saving
 =#
 
 ENV["CMDSTAN_HOME"] = "/Users/christophergandrud/cmdstan"
@@ -25,8 +26,9 @@ monitor = ["delta", "alpha", "beta", "gamma"]
 stan_model = Stanmodel(name = "frt_model",
                        model = model_code,
                        monitors = monitor,
-                       adapt = 50,
-                       update = 50,
+                       adapt = 60000,
+                       update = 60000,
+                       thin = 25
                        );
 stan_model |> display
 
@@ -51,6 +53,6 @@ const frt_data = [
 ]
 
 # Run model
-save_dir = string("frt_out_", Dates.today())
+# save_dir = string("frt_out_", Dates.today())
 
-fit = stan(stan_model, frt_data, ProjDir = save_dir, CmdStanDir = CMDSTAN_HOME)
+fit = stan(stan_model, frt_data, CmdStanDir = CMDSTAN_HOME)
