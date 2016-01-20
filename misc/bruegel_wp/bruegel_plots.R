@@ -52,6 +52,7 @@ load('/Volumes/Gandrud1TB/frt/fit_2015-06-12.RData')
 ## Compare top and bottom 5
 FRT$year <- FRT$year %>% as.numeric
 
+# Custom plotting functions ----------
 sc_year <- function(x = FRT, selection) {
     temp <- subset(x, year == selection)
     # Find top 10 and bottom 10
@@ -73,6 +74,18 @@ sc_year <- function(x = FRT, selection) {
         theme_bw()
 }
 
+# One country plotting function
+sc_country <- function(country) {
+    cnumber <- grep(pattern = country, x = countries)
+    param_temp <- paste0('alpha\\[', cnumber, ',.*\\]')
+    stan_caterpillar(fit, pars = param_temp,
+                     pars_labels = 1990:2011, horizontal = FALSE,
+                     order_medians = FALSE, hpd = TRUE) +
+        scale_y_discrete(breaks = c('1990','2010')) +
+        #scale_x_continuous(breaks = c(1990, 2000, 2011)) +
+        ggtitle(paste0(country, '\n'))
+}
+
 y1 <- sc_year(selection = 1990)
 y2 <- sc_year(selection = 2011)
 
@@ -90,8 +103,8 @@ year_means$iso2c = 'none'
 year_means <- year_means %>% MoveFront(c('year', 'centre', 'trend'))
 
 mean_trend <- ggplot(year_means, aes(year, centre)) +
-    geom_point(size = 2) +
-    geom_line(alpha = 0.5) +
+    #geom_point(size = 2) +
+    geom_line(alpha = 0.5, size = 1) +
     xlab('') + ylab('Mean FRT Score\n') +
     theme_bw()
 
@@ -106,7 +119,7 @@ comb <- rbind(FRT_stripped, year_means)
 
 ggplot(comb, aes(year, centre, group = iso2c, color = as.factor(trend),
                  alpha = as.factor(trend), size = as.factor(trend))) +
-    geom_line() +
+    geom_line(size = 1) +
     scale_color_manual(values = c('gray', 'red'), name = '') +
     scale_alpha_discrete(range = c(0.5, 1), name = '') +
     scale_size_manual(values = c(0.5, 3), name = '') +
@@ -141,8 +154,8 @@ year_means_eu <- frt_eu_comp %>% group_by(eu_not, year) %>%
 
 mean_eu_high <- ggplot(year_means_eu, aes(year, centre, 
                                           group = eu_not, colour = eu_not)) +
-    geom_point(size = 2) +
-    geom_line(alpha = 0.5) +
+    #geom_point(size = 2) +
+    geom_line(size = 1) +
     scale_color_manual(values = wes_palette('Moonrise2'), name = '',
                        guide = guide_legend(reverse = TRUE)) +
     xlab('') + ylab('Mean FRT Score\n') +
@@ -172,13 +185,13 @@ year_means_euro <- frt_euro %>% group_by(euro_member, year) %>%
 
 mean_eurozone_high <- ggplot(year_means_euro, aes(year, centre, 
                           group = euro_member, colour = euro_member)) +
-    geom_point(size = 2) +
-    geom_line(alpha = 0.5) +
+    #geom_point(size = 2) +
+    geom_line(size = 1) +
     scale_color_manual(values = wes_palette('Moonrise2'), name = '',
                        guide = FALSE) +
     scale_y_continuous(limits = c(-0.2, 1.2)) +
     xlab('') + ylab('Mean FRT Score\n') + ggtitle('Eurozone\n') +
-    theme_bw()
+    theme_bw(base_size = 15)
 
 ## EU-15
 eu_15 <- c('Austria', 'Belgium', 'Denmark', 'Finland', 'France', 'Germany', 
@@ -188,7 +201,7 @@ eu_15 <- c('Austria', 'Belgium', 'Denmark', 'Finland', 'France', 'Germany',
 FRT$eu15_not <- 'blank'
 FRT$eu15_not[FRT$country %in% eu_15 & FRT$eu_member == 1] <- 'EU'
 FRT$eu15_not[FRT$income == 'High income: OECD' & FRT$eu15_not != 'EU'] <- 
-    'Other High income OECD,\n not EU'
+    'Other high income\nOECD, not EU'
 FRT$eu15_not[FRT$iso2c == 'US'] <- 'US'
 
 
@@ -201,13 +214,13 @@ year_means_eu15 <- frt_eu15_comp %>% group_by(eu15_not, year) %>%
 
 mean_eu15_high <- ggplot(year_means_eu15, aes(year, centre, 
                                           group = eu15_not, colour = eu15_not)) +
-    geom_point(size = 2) +
-    geom_line(alpha = 0.5) +
+    #geom_point(size = 2) +
+    geom_line(size = 1) +
     scale_color_manual(values = wes_palette('Moonrise2'), name = '',
                        guide = guide_legend(reverse = TRUE)) +
     scale_y_continuous(limits = c(-0.2, 1.2)) +
     xlab('') + ylab('') + ggtitle('EU-15\n') +
-    theme_bw()
+    theme_bw(base_size = 15)
 
 png(file = paste0(dir, 'FRT_eurozone_eu15.png'), width = 1000, height = 700)
     grid.arrange(mean_eurozone_high, mean_eu15_high, nrow = 1, widths = c(1.65, 2))
@@ -215,8 +228,35 @@ dev.off()
 
 grid.arrange(mean_eurozone_high, mean_eu15_high, nrow = 1, widths = c(1.65, 2))
 
+# All EU
+sc_country_eu_scale <- function(country) {
+    cnumber <- grep(pattern = country, x = countries)
+    param_temp <- paste0('alpha\\[', cnumber, ',.*\\]')
+    stan_caterpillar(fit, pars = param_temp,
+                     pars_labels = 1990:2011, horizontal = FALSE,
+                     order_medians = FALSE, hpd = TRUE) +
+        scale_y_discrete(breaks = c('1990','2010')) +
+        scale_x_continuous(limits = c(-0.5, 2.1), breaks = c(-0.5, 0, 0.5, 1, 2)) +
+        ggtitle(paste0(country, '\n'))
+}
+
+eurozone_vector <- countrycode(euro_all, origin = 'iso2c', 
+                               destination = 'country.name')
+
+eurozone_vector <- eurozone_vector[eurozone_vector %in% unique(FRT$country)]
+
+eu_list <- list()
+for (i in eurozone_vector) {
+    message(i)
+    eu_list[[i]] <- suppressMessages(sc_country_eu_scale(i))
+}
+
+png(file = paste0(dir, 'FRT_eurozone_indiv.png'), width = 900, height =750)
+    do.call(grid.arrange, eu_list)
+dev.off()
+
 # ---------------------------------------------------------------------------- #
-## Change
+# Most changed ------
 changed <- change(FRT, Var = 'median', GroupVar = 'iso2c', type = 'absolute',
                    NewVar = 'median_diff')
 
@@ -229,18 +269,6 @@ cum_changed <- changed %>% group_by(iso2c) %>%
 cum_2000 <- cum_changed %>% filter(year == 2000) %>% arrange(desc(cum_diff))
 cum_2005 <- cum_changed %>% filter(year == 2005) %>% arrange(desc(cum_diff))
 cum_2011 <- cum_changed %>% filter(year == 2011) %>% arrange(desc(cum_diff))
-
-# One country plotting function
-sc_country <- function(country) {
-    cnumber <- grep(pattern = country, x = countries)
-    param_temp <- paste0('alpha\\[', cnumber, ',.*\\]')
-    stan_caterpillar(fit, pars = param_temp,
-                     pars_labels = 1990:2011, horizontal = FALSE,
-                     order_medians = FALSE, hpd = TRUE) +
-        scale_y_discrete(breaks = c('1990','2010')) +
-        scale_x_continuous(breaks = c(1990, 2000, 2011)) +
-        ggtitle(paste0(country, '\n'))
-}
 
 # Most improved plots
 top_15_list <- list()
