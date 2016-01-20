@@ -1,4 +1,4 @@
-###########################
+# ##########################
 # Run model in parallel
 # Christopher Gandrud
 # MIT License
@@ -6,7 +6,8 @@
 ###########################
 
 # Load packages
-library(rio); library(repmis)
+library(rio)
+library(repmis)
 library(DataCombine)
 library(reshape2)
 library(dplyr)
@@ -61,6 +62,9 @@ MoltenBase$variable <- as.factor(MoltenBase$variable) %>% as.numeric()
 # Order data
 MoltenReady <- arrange(MoltenBase, countrynum, yearnum, variable)
 
+# Save Molton ready
+export(MoltenReady, 'misc/stan_molten_ready.csv')
+
 # ---------------------------------------------------------------------------- #
 #### Specify Model ####
 
@@ -77,7 +81,7 @@ frt_data <- list(
 )
 
 # Create Empty Stan model (so it only needs to compile once)
-empty_stan <- stan(model_code = frt_code, data = frt_data, chains = 0)
+#empty_stan <- stan(model_code = frt_code, data = frt_data, chains = 0)
 empty_stan <- stan(file = 'source/FRT.stan', data = frt_data, chains = 0)
 
 # Run on 4 cores
@@ -85,7 +89,7 @@ sflist <-
     mclapply(1:4, mc.cores = 4,
         function(i) stan(fit = empty_stan, data = frt_data,
                         seed = i, chains = 1, thin = 25,
-                        iter = 100, chain_id = i,,
+                        iter = 15000, chain_id = i,
                         pars = c('delta', 'alpha', 'beta', 'gamma')
         )
     )

@@ -53,3 +53,6 @@ misc/bruegel_wp/figures
 nohup.out
 .nohup.out.swp
 frt_sims_diagnostic*
+
+tmp/*
+frt_out*
