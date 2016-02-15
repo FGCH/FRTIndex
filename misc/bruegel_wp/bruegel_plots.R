@@ -11,7 +11,8 @@ setwd('/git_repositories/FRTIndex/')
 dir <- 'misc/bruegel_wp/figures/'
 
 # Load packages
-if (!('StanCat' %in% installed.packages()[, 1])) devtools::install_github('christophergandrud/StanCat')
+if (!('StanCat' %in% installed.packages()[, 1])) 
+    devtools::install_github('christophergandrud/StanCat')
 library(StanCat)
 library(rio)
 library(devtools)
@@ -80,7 +81,8 @@ sc_country <- function(country) {
     param_temp <- paste0('alpha\\[', cnumber, ',.*\\]')
     stan_caterpillar(fit, pars = param_temp,
                      pars_labels = 1990:2011, horizontal = FALSE,
-                     order_medians = FALSE, hpd = TRUE) +
+                     order_medians = FALSE, hpd = TRUE,
+                     alpha_bounds = 1) +
         scale_y_discrete(breaks = c('1990','2010')) +
         #scale_x_continuous(breaks = c(1990, 2000, 2011)) +
         ggtitle(paste0(country, '\n'))
@@ -89,7 +91,6 @@ sc_country <- function(country) {
 y1 <- sc_year(selection = 1990)
 y2 <- sc_year(selection = 2011)
 
-# For github
 png(file = paste0(dir, 'FRT_overview.png'), width = 750, height = 500)
     grid.arrange(y1, y2, nrow = 1, bottom = '\nFRT Transparency Index')
 dev.off()
@@ -104,11 +105,11 @@ year_means <- year_means %>% MoveFront(c('year', 'centre', 'trend'))
 
 mean_trend <- ggplot(year_means, aes(year, centre)) +
     #geom_point(size = 2) +
-    geom_line(alpha = 0.5, size = 1) +
+    geom_line() +
     xlab('') + ylab('Mean FRT Score\n') +
     theme_bw()
 
-ggsave(mean_trend, filename = paste0(dir, 'FRT_mean_trend.png'))
+ggsave(mean_trend, filename = paste0(dir, 'FRT_mean_trend.eps'))
 
 
 FRT_stripped <- FRT[, c('iso2c', 'year', 'median')]
@@ -155,13 +156,13 @@ year_means_eu <- frt_eu_comp %>% group_by(eu_not, year) %>%
 mean_eu_high <- ggplot(year_means_eu, aes(year, centre, 
                                           group = eu_not, colour = eu_not)) +
     #geom_point(size = 2) +
-    geom_line(size = 1) +
+    geom_line() +
     scale_color_manual(values = wes_palette('Moonrise2'), name = '',
                        guide = guide_legend(reverse = TRUE)) +
     xlab('') + ylab('Mean FRT Score\n') +
     theme_bw()
 
-ggsave(mean_eu_high, filename = paste0(dir, 'FRT_eu_high_mean_trend.png'))
+ggsave(mean_eu_high, filename = paste0(dir, 'FRT_eu_high_mean_trend.eps'))
 
 
 # Find current Eurozone members
@@ -186,7 +187,7 @@ year_means_euro <- frt_euro %>% group_by(euro_member, year) %>%
 mean_eurozone_high <- ggplot(year_means_euro, aes(year, centre, 
                           group = euro_member, colour = euro_member)) +
     #geom_point(size = 2) +
-    geom_line(size = 1) +
+    geom_line() +
     scale_color_manual(values = wes_palette('Moonrise2'), name = '',
                        guide = FALSE) +
     scale_y_continuous(limits = c(-0.2, 1.2)) +
@@ -215,12 +216,18 @@ year_means_eu15 <- frt_eu15_comp %>% group_by(eu15_not, year) %>%
 mean_eu15_high <- ggplot(year_means_eu15, aes(year, centre, 
                                           group = eu15_not, colour = eu15_not)) +
     #geom_point(size = 2) +
-    geom_line(size = 1) +
+    geom_line() +
     scale_color_manual(values = wes_palette('Moonrise2'), name = '',
                        guide = guide_legend(reverse = TRUE)) +
     scale_y_continuous(limits = c(-0.2, 1.2)) +
     xlab('') + ylab('') + ggtitle('EU-15\n') +
-    theme_bw(base_size = 15)
+    theme_bw(base_size = 15) +
+    theme(legend.position = c(0.84, 0.76))
+
+setEPS()
+postscript(file = paste0(dir, 'FRT_eurozone_eu15.eps'))
+    grid.arrange(mean_eurozone_high, mean_eu15_high, nrow = 1)
+dev.off()
 
 png(file = paste0(dir, 'FRT_eurozone_eu15.png'), width = 1000, height = 700)
     grid.arrange(mean_eurozone_high, mean_eu15_high, nrow = 1, widths = c(1.65, 2))
@@ -228,31 +235,40 @@ dev.off()
 
 grid.arrange(mean_eurozone_high, mean_eu15_high, nrow = 1, widths = c(1.65, 2))
 
-# All EU
+# All Eurozone
 sc_country_eu_scale <- function(country) {
     cnumber <- grep(pattern = country, x = countries)
     param_temp <- paste0('alpha\\[', cnumber, ',.*\\]')
     stan_caterpillar(fit, pars = param_temp,
                      pars_labels = 1990:2011, horizontal = FALSE,
-                     order_medians = FALSE, hpd = TRUE) +
+                     order_medians = FALSE, hpd = TRUE,
+                     alpha_bounds = 1) +
         scale_y_discrete(breaks = c('1990','2010')) +
         scale_x_continuous(limits = c(-0.5, 2.1), breaks = c(-0.5, 0, 0.5, 1, 2)) +
         ggtitle(paste0(country, '\n'))
 }
 
-eurozone_vector <- countrycode(euro_all, origin = 'iso2c', 
+euro_all <- unique(eurozone$iso2c)
+
+euro_vector <- countrycode(euro_all, origin = 'iso2c', 
                                destination = 'country.name')
 
-eurozone_vector <- eurozone_vector[eurozone_vector %in% unique(FRT$country)]
+euro_vector <- euro_vector[euro_vector %in% unique(FRT$country)]
 
-eu_list <- list()
-for (i in eurozone_vector) {
+euro_list <- list()
+for (i in euro_vector) {
     message(i)
-    eu_list[[i]] <- suppressMessages(sc_country_eu_scale(i))
+    euro_list[[i]] <- suppressMessages(sc_country_eu_scale(i))
 }
 
+setEPS()
+postscript(file = paste0(dir, 'FRT_eurozone_indiv.eps'))
+    do.call(grid.arrange, euro_list)
+dev.off()
+
+
 png(file = paste0(dir, 'FRT_eurozone_indiv.png'), width = 900, height =750)
-    do.call(grid.arrange, eu_list)
+    do.call(grid.arrange, euro_list)
 dev.off()
 
 # ---------------------------------------------------------------------------- #
@@ -278,6 +294,12 @@ for (i in top_15_countries) {
     top_15_list[[i]] <- suppressMessages(sc_country(i))
 }
 
+setEPS()
+postscript(file = paste0(dir, 'FRT_top_15.eps'))
+    do.call(grid.arrange, top_15_list)
+dev.off()
+
+
 png(file = paste0(dir, 'FRT_top_15.png'), width = 600, height = 750)
     do.call(grid.arrange, top_15_list)
 dev.off()
@@ -290,6 +312,11 @@ for (i in bottom_15_countries) {
     message(i)
     bottom_15_list[[i]] <- suppressMessages(sc_country(i))
 }
+
+setEPS()
+postscript(file = paste0(dir, 'FRT_bottom_15.eps'))
+    do.call(grid.arrange, bottom_15_list)
+dev.off()
 
 png(file = paste0(dir, 'FRT_bottom_15.png'), width = 600, height = 750)
     do.call(grid.arrange, bottom_15_list)
@@ -304,10 +331,16 @@ for (i in gulf) {
     gulf_list[[i]] <- suppressMessages(sc_country(i))
 }
 
+setEPS()
+postscript(file = paste0(dir, 'FRT_gulf.eps'))
+    do.call(grid.arrange, gulf_list)
+dev.off()
+
 png(file = paste0(dir, 'FRT_gulf.png'), width = 600, height = 750)
     do.call(grid.arrange, gulf_list)
 dev.off()
 
+# Credit Lyonnais
 fr_benelux <- c('France', 'Austria', 'Belgium', 'Luxembourg', 'Netherlands')
 fr_benelux_list <- list()
 
@@ -315,6 +348,11 @@ for (i in fr_benelux) {
     message(i)
     fr_benelux_list[[i]] <- suppressMessages(sc_country(i))
 }
+
+setEPS()
+postscript(file = paste0(dir, 'FRT_fr_benelux.eps'))
+    do.call(grid.arrange, fr_benelux_list)
+dev.off()
 
 png(file = paste0(dir, 'FRT_fr_benelux.png'), width = 700, height = 600)
     do.call(grid.arrange, fr_benelux_list)
@@ -450,7 +488,7 @@ eu_items <- ggplot(items_tidy_sub, aes(year, value, group = item_id, color = hig
     xlab('') + ylab('Proportion Reported\n') + 
     theme_bw()
 
-ggsave(eu_items, filename = paste0(dir, 'FRT_eu_items.png'))
+ggsave(eu_items, filename = paste0(dir, 'FRT_eu_items.eps'))
 
 # Euro vs non-Euro
 items_euro <- items[, c(32, 2, 17:29)]
