@@ -4,9 +4,12 @@
 # - FRED: http://research.stlouisfed.org/fred2/
 # Also generates simple graphs/statistics comparing the data sources.
 # Christopher Gandrud
-# 5 November 2015
+# 26 March 2015
 # MIT License
 ################################################################################
+
+# Set working directory. Change as needed.
+setwd('/git_repositories/FRTIndex/')
 
 # Load packages
 library(repmis)
@@ -18,12 +21,6 @@ library(DataCombine)
 library(ggplot2)
 library(countrycode)
 
-# Set working directory. Change as needed.
-possibles <- c('/git_repositories/FRTIndex/',
-              'FRTIndex/')
-
-set_valid_wd(possibles)
-
 # ---------------------------------------------------------------------------- #
 # ---------------------------------------------------------------------------- #
 #### Download GFDD data from the World Bank ####
@@ -33,7 +30,7 @@ Indicators <- c('GFDD.DI.01', 'GFDD.DI.03', 'GFDD.DI.04',
                 'GFDD.EI.02', 'GFDD.EI.08', 'GFDD.OI.02',
                 'GFDD.SI.04')
 
-## EMBI+ + China + India country list
+## EMBI+ + China country list
 EMBI <- c(
     'Argentina',
     'Brazil',
@@ -42,7 +39,6 @@ EMBI <- c(
     'Colombia',
     'Ecuador',
     'Egypt',
-    'India',
     'Mexico',
     'Morocco',
     'Nigeria',
@@ -58,7 +54,7 @@ EMBI <- c(
 )
 
 # Download indicators
-Base <- WDI(indicator = Indicators, start = 1990, end = 2015, extra = TRUE)
+Base <- WDI(indicator = Indicators, start = 1990, end = 2013, extra = TRUE)
 
 # Keep countries with 'High income' (OECD and non-OECD classification)
 BaseSub <- grepl.sub(data = Base, Var = 'income', pattern = 'High income')
@@ -131,7 +127,7 @@ for (i in 1:ncol(fred_id_temp)) fred_id <- c(fred_id,
 
                 # Sleep to avoid being locked out
                 Sys.sleep(3)
-    }
+            }
 
 ## Clean
 fred_combined <- subset(fred_combined, year >= 1990)
@@ -174,7 +170,7 @@ prop_combined$diff <- prop_combined$fred_PropReport -
 # Only plot those country-years where there is a difference
 prop_comb_sub <- subset(prop_combined, diff != 0)
 
-pdf(file = 'paper/paper_plots/FRED_vs_WorldBank_GFDDv2015.pdf')
+pdf(file = 'paper/paper_plots/FRED_vs_WorldBank.pdf')
     ggplot(prop_comb_sub, aes(FRT_PropReport, fred_PropReport, label = iso2c)) +
         geom_text(position = position_jitter(w = 0.05), alpha = 0.5) +
         scale_y_continuous(limits = c(0, 1)) +
@@ -209,14 +205,15 @@ for (i in IndSub){
     BaseSub[, paste0('Rep_', i)][is.na(BaseSub[, i])] <- 0
 }
 
+
 # ---------------------------------------------------------------------------- #
 #### Find the proportion of items reported ####
 source('source/miscFunctions/PropReported.R')
 PropRepor <- PropReported(BaseSub)
 PropRepor <- PropRepor[order(PropRepor$country, PropRepor$year), ]
-write.csv(PropRepor, file = paste0('IndexData/alternate/PropReported_GFDDv2015.csv'),
+write.csv(PropRepor, file = paste0('IndexData/alternate/PropReported.csv'),
           row.names = FALSE)
 
 # ---------------------------------------------------------------------------- #
 #### Save data ####
-write.csv(BaseSub, 'source/RawData/wdi_fred_combined_GFDDv2015.csv', row.names = FALSE)
+write.csv(BaseSub, 'source/RawData/wdi_fred_combined.csv', row.names = FALSE)

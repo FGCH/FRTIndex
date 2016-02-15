@@ -2,10 +2,10 @@
   {
     "name": ["frt_datapackage"],
     "title": ["The Financial Regulatory Transparency Index"],
-    "version": ["2.0"],
+    "version": ["0.3.3"],
     "maintainer": ["Christopher Gandrurd"],
     "license": ["PDDL-1.0"],
-    "last_updated": ["2016-02-15"],
+    "last_updated": ["2015-06-15"],
     "homepage": ["https://github.com/FGCH/FRTIndex"]
   },
   {

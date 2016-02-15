@@ -15,7 +15,9 @@ library(countrycode)
 library(rio)
 
 # Set working directory to save index data to. Change as needed
-setwd('/git_repositories/FRTIndex')
+possibles <- c('/git_repositories/FRTIndex', '~/git_repositories/FRTIndex/')
+
+setwd(possibles)
 
 # Load function to subset the data frame to countries that report
 # at least 1 item.
