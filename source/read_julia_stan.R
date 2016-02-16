@@ -98,6 +98,9 @@ comb <- MoveFront(comb, c('country', 'iso2c', 'year'))
 
 comb <- arrange(comb, country, year)
 
+# Drop non-country transparency alpha paramaters
+comb <- comb %>% DropNA('iso2c')
+
 # Write file
 export(comb, 'IndexData/FRTIndex_v2.csv')
 
@@ -117,3 +120,28 @@ datapackage_init(comb, meta = meta_list,
                                     'source/read_julia_stan.R',
                                     'source/FRT.stan'),
                  source_cleaner_rename = F)
+
+
+# Create plots for non-alpha parameters of interest ------------------------------------
+## Not included in frt_plots_v2.R in order to avoid loading fit in more than once, which is
+## computationally expensive
+
+# Main figure output directory
+dir <- 'paper/paper_plots/'
+
+indicators_df <- import('paper/IndicatorDescript/IndicatorDescription.csv')
+indicator_labels <- indicators_df[, 2]
+
+# Difficulty
+pdf(file = paste0(dir, 'difficultyPlot.pdf'), width = 10, height = 5.5)
+stan_caterpillar(fit, 'beta\\[.*\\]',
+                 pars_labels = indicator_labels) +
+  ylab('') + xlab('\nCoefficient')
+dev.off()
+
+# Discrimination
+pdf(file = paste0(dir, 'discriminationPlot.pdf'), width = 10, height = 5.5)
+stan_caterpillar(fit, 'gamma\\[.*\\]',
+                 pars_labels = indicator_labels) +
+  ylab('') + xlab('\nCoefficient')
+dev.off()
