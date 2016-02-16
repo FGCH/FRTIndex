@@ -15,7 +15,7 @@ use "/git_repositories/FRTIndex/paper/analysis/frt0215.dta"
 
 /* 3. Run standard regression. */
 
-xtreg dnewspread dfrt dpubdebtgdp dfrtxdpub lnewspread lfrt lpubdebtgdp lfrtxlpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l lcgdpgrowth dcgdpgrowth loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
+xtreg dltratecov lfrt lpubdebtgdp lfrtxlpub lltratecov dfrt dpubdebtgdp dfrtxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l lcgdpgrowth dcgdpgrowth loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix, cluster(imf_code) i(imf_code) fe vsquish noomit
 
 /* 4. Gather parameters, initialize matrix for runs */
 quietly summarize lpubdebtgdp if e(sample), detail /* Change x2 to variable that you want to appear on X-axis */
@@ -40,13 +40,13 @@ local order=1  /* Replace this number with a number that will tell Stata which I
                /* listed in the regress command, so we would enter a 1. */
 
 /* 5. Calculate coefficients for x1 across range of x2, store in matrix foo2 */
-while `iter'<`numparams' {
+while `iter'<`numparams' { 
    gen lpubdebtgdpa=lpubdebtgdp-`min'-(`inc'*`iter')  /* Alter these four lines to fit your model. */
    summarize lpubdebtgdpa
    gen x1x2a=lfrt*lpubdebtgdpa
-
-
-xtreg dnewspread lfrt lpubdebtgdpa x1x2a lnewspread dfrt dpubdebtgdp dfrtxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l lcgdpgrowth dcgdpgrowth loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
+   
+   
+xtreg dltratecov lfrt lpubdebtgdpa x1x2a lltratecov dfrt dpubdebtgdp dfrtxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l lcgdpgrowth dcgdpgrowth loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix, cluster(imf_code) i(imf_code) fe vsquish noomit
 
 matrix betas=e(b)                /* Stop alterations. */
    scalar lfrtcoef=betas[1,`order']
@@ -78,4 +78,5 @@ twoway (connect points1 points2 points3 points4, mcolor(navy maroon navy)/*
 */  xsca(titlegap(2)) yscal(titlegap(2))/*
 */  legend(off) scheme(s2mono) graphregion(color(white))
 
-graph export paper_plots/me_levelfrt_spreads.pdf, replace
+graph export paper_plots/me_levelfrt_yields_cov.pdf, replace
+

@@ -15,9 +15,7 @@ use "/git_repositories/FRTIndex/paper/analysis/frt0215.dta"
 
 /* 3. Run standard regression. */
 
-xtreg dnewspread dfrt dpubdebtgdp dfrtxdpub lnewspread lfrt lpubdebtgdp lfrtxlpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l lcgdpgrowth dcgdpgrowth loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(xtreg dnewspread lnewspread lfrt dfrt lpubdebtgdp dpubdebtgdp lfrtxlpub dfrtxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
-xtreg dnewspread lnewspread lfrt dfrt lpubdebtgdp dpubdebtgdp lfrtxlpub dfrtxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
-imf_code) fe vsquish noomit
+xtreg dnewspread dfrt dpubdebtgdp dfrtxdpub lnewspread lfrt lpubdebtgdp lfrtxlpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l lcgdpgrowth dcgdpgrowth loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
 
 /* 4. Gather parameters, initialize matrix for runs */
 quietly summarize dpubdebtgdp if e(sample), detail /* Change x2 to variable that you want to appear on X-axis */
@@ -48,11 +46,7 @@ while `iter'<`numparams' {
    gen x1x2a=dfrt*dpubdebtgdpa
 
 
-xtreg dnewspread dfrt dpubdebtgdpa x1x2a lnewspread lfrt lpubdebtgdp lfrtxlpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l lcgdpgrowth dcgdpgrowth loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(xtreg dnewspread lnewspread lfrt dfrt lpubdebtgdp dpubdebtgdp lfrtxlpub dfrtxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
-xtreg dnewspread lnewspread lfrt dfrt lpubdebtgdp dpubdebtgdp lfrtxlpub dfrtxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
-imf_code) i(xtreg dnewspread lnewspread lfrt dfrt lpubdebtgdp dpubdebtgdp lfrtxlpub dfrtxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
-xtreg dnewspread lnewspread lfrt dfrt lpubdebtgdp dpubdebtgdp lfrtxlpub dfrtxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
-imf_code) fe vsquish noomit
+xtreg dnewspread dfrt dpubdebtgdpa x1x2a lnewspread lfrt lpubdebtgdp lfrtxlpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l lcgdpgrowth dcgdpgrowth loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
 
 matrix betas=e(b)                /* Stop alterations. */
    scalar dfrtcoef=betas[1,`order']
