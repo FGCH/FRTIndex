@@ -9,7 +9,7 @@ set more off
 // Set working directory, change as needed/
 cd "/git_repositories/FRTIndex/paper/"
 
-use "/git_repositories/FRTIndex/paper/analysis/frt0215.dta"
+use "analysis/frt0215.dta"
 
 
 /* ECM Models */
