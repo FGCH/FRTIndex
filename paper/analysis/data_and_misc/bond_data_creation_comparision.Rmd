@@ -51,7 +51,7 @@ Figure 1 shows a scatterplot matrix comparing the three sets of bond spreads for
 
 Though we will lose eight cases, the large differences between the Data Market and other data sources makes it inappropriate to include this data along side the others. As such, we combine only the FRED and Datastream data, with a preference for the FRED data when available. Table 2 shows the sample of cases for which we have this data
 
-The final step in creating our spreads dependent variable was to find the year-on-year change in FRED/Datastream bond spread variable. Figure 2 shows the distribution of this data. There are two notable outliers with values of this variable greater than 200 (Ireland in 2002) or less than -100 (Malta in 2001). See Figure 3 for the distribution with these cases dropped.
+The final step in creating our spreads dependent variable was to find the year-on-year change in FRED/Datastream bond spread variable. Figure 2 shows the distribution of this data.
 
 
 ```{r, fig.cap='Scatterplot Matrix Comparing 3 Sources of Long-term Bond Spreads'}

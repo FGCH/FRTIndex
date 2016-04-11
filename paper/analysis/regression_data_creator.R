@@ -129,7 +129,7 @@ for (i in vars) {
     comb <- slide(comb, Var = i, TimeVar = 'year', GroupVar = 'iso2c',
                   NewVar = new_lag)
     comb <- change(comb, Var = i, TimeVar = 'year', GroupVar = 'iso2c',
-                   NewVar = new_d, type = 'proportion')
+                   NewVar = new_d, type = 'absolute')
     comb[, new_lag][comb[, new_lag] == -Inf] <- NA
     comb[, new_lag][comb[, new_lag] == Inf] <- NA
     comb[, new_lag][is.nan(comb[, new_lag])] <- NA
