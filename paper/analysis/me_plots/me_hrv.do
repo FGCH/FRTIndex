@@ -4,27 +4,26 @@
 // MIT License
 ///////////////////////
 
+/* 1. Clean the slate. */
 clear
-
 set more off
 
 // Set working directory, change as needed/
-cd "/git_repositories/FRTIndex/"
+cd "/git_repositories/FRTIndex/paper/"
 
-// Load data
-insheet using "source/Hollyer_et_al_Compare/frt_hrv_bond.csv", comma
+use "analysis/frt04_16_v1.dta"
 
 // Create interactions
-gen lhrvxlpub = lhrv_mean * lpubdebtgdp
-gen dhrvxdpub = dhrv_mean * dpubdebtgdp
+gen l_hrvxl_pub = l_hrv_mean * l_pubdebtgdp
+gen d_hrvxd_pub = d_hrv_mean * d_pubdebtgdp
 
 
 /* 3. Run standard regression. */
 
-xtreg dnewspread lhrv_mean lpubdebtgdp lhrvxlpub lnewspread  dhrv_mean dpubdebtgdp dhrvxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(ccode1) i(ccode1) fe vsquish noomit
+xtreg d_bond_spread_fred l_hrv_mean l_pubdebtgdp l_hrvxl_pub l_bond_spread_fred  d_hrv_mean d_pubdebtgdp d_hrvxd_pub l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
 
 /* 4. Gather parameters, initialize matrix for runs */
-quietly summarize lpubdebtgdp if e(sample), detail /* Change x2 to variable that you want to appear on X-axis */
+quietly summarize l_pubdebtgdp if e(sample), detail /* Change x2 to variable that you want to appear on X-axis */
 local min=r(min)
 local max=r(max)
 local cen10=r(p10)
@@ -47,22 +46,22 @@ local order=1  /* Replace this number with a number that will tell Stata which I
 
 /* 5. Calculate coefficients for x1 across range of x2, store in matrix foo2 */
 while `iter'<`numparams' {
-   gen lpubdebtgdpa=lpubdebtgdp-`min'-(`inc'*`iter')  /* Alter these four lines to fit your model. */
-   summarize lpubdebtgdpa
-   gen x1x2a=lhrv_mean*lpubdebtgdpa
+   gen l_pubdebtgdpa=l_pubdebtgdp-`min'-(`inc'*`iter')  /* Alter these four lines to fit your model. */
+   summarize l_pubdebtgdpa
+   gen x1x2a=l_hrv_mean*l_pubdebtgdpa
 
-xtreg dnewspread lhrv_mean dhrv_mean x1x2a lnewspread lpubdebtgdp dpubdebtgdp dhrvxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(ccode1) i(ccode1) fe vsquish noomit
+xtreg d_bond_spread_fred l_hrv_mean d_hrv_mean x1x2a l_bond_spread_fred l_pubdebtgdp d_pubdebtgdp d_hrvxd_pub l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
 
 matrix betas=e(b)                /* Stop alterations. */
-   scalar lfrtcoef=betas[1,`order']
+   scalar l_hrvcoef=betas[1,`order']
    matrix ses=e(V)
-   scalar lfrtse=sqrt(ses[`order',`order'])
+   scalar l_hrvse=sqrt(ses[`order',`order'])
    local obs=e(N)                   /* Calculate 95% confidence intervals.  Assumes t-tests for signif.; */
    scalar ci95=invnorm(0.975) /* if using procedure that produces z-tests, use invnorm(0.975) */
    local xval = `min'+(`inc'*`iter')
-   matrix foo = lfrtcoef-ci95*lfrtse, lfrtcoef, lfrtcoef+ci95*lfrtse, `xval'
+   matrix foo = l_hrvcoef-ci95*l_hrvse, l_hrvcoef, l_hrvcoef+ci95*l_hrvse, `xval'
    matrix foo2 = foo2 \ foo
-   drop lpubdebtgdpa x1x2a
+   drop l_pubdebtgdpa x1x2a
    local iter=`iter'+1
    }
 
@@ -70,17 +69,17 @@ matrix betas=e(b)                /* Stop alterations. */
 matrix points=foo2[2..(`numparams'+1),1..4]
 svmat points
 
-/* 7. Produce graph if lpubdebtgdp is continuous, or if lpubdebtgdp is ordinal but */
+/* 7. Produce graph if l_pubdebtgdp is continuous, or if l_pubdebtgdp is ordinal but */
 /* fractional values are not conceptually inconceivable (e.g. some */
 /* continuous quantity for which only ordinal measures are available). */
 /* Change titles, labels, etc., to fit your particular needs */
 twoway (connect points1 points2 points3 points4, mcolor(navy maroon navy)/*
 */ clcolor(black maroon black) lpattern(dash solid dash) lwidth(medium medthick medium) msize(small small small) msym(i D i))/*
-*/(histogram lpubdebtgdp if e(sample), bin(50) yaxis(2) blcolor(gray) bfcolor(none)), ytitle(Histogram of/*
+*/(histogram l_pubdebtgdp if e(sample), bin(50) yaxis(2) blcolor(gray) bfcolor(none)), ytitle(Histogram of/*
 */ X-axis var, axis(2) size(3))/*
 */ ytitle("Coefficients and 95% CIs", size(4))/*
 */ xlab(0 25 50 75 100 125 150 175 200 225) ylabel(, labsize(4)) yline(0, lwidth(medthick)) xtitle("Public Debt/GDP (%)", size(3)) xscal(titlegap(2)) yscal(titlegap(2))/*
 */  xsca(titlegap(2)) yscal(titlegap(2))/*
 */  legend(off) scheme(s2mono) graphregion(color(white))
 
-graph export paper/paper_plots/me_levelhrv_mean_spreads.pdf, replace
+graph export paper_plots/me_level_hrv_mean_spreads.pdf, replace

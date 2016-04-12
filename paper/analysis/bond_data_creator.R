@@ -64,9 +64,9 @@ fred_combined <- import('paper/analysis/data_and_misc/fred_bond_spreads.csv')
 
 ########## Temp ###########
 fred_combined <- fred_combined %>% rename(bond_yld_10yr_fred = bond_10yr)
-
-# Create annual average FRED spread
 fred_combined$year <- fred_combined$date %>% ymd %>% year
+
+# Create annual average FRED spread -- Calendar year ---------
 bonds_fred <- fred_combined %>% select(iso2c, year, bond_yld_10yr_fred) %>%
     group_by(iso2c, year) %>%
     summarise(bond_yld_10yr_fred = mean(bond_yld_10yr_fred))
@@ -83,6 +83,36 @@ bonds_fred <- merge(bonds_fred, usa, by = 'year')
 
 bonds_fred$bond_spread_fred <- bonds_fred$bond_yld_10yr_fred - bonds_fred$us_bond_10yr
 
+# Create annual average FRED spread -- Data release year ---------
+## Data tends to be released after the first quarter
+fred_combined <- slide(fred_combined, Var = 'date', GroupVar = 'iso2c', 
+                       TimeVar = 'date', slideBy = -3, NewVar = 'release_date')
+fred_combined$release_year <- fred_combined$release_date %>% ymd %>% year
+
+bonds_fred_release <- fred_combined %>% 
+    select(iso2c, release_year, bond_yld_10yr_fred) %>%
+    group_by(iso2c, release_year) %>%
+    summarise(bond_yld_10yr_fred = mean(bond_yld_10yr_fred))
+
+# Find bond yield spread vs US 10-year -------
+usa_release <- fred_combined %>% filter(iso2c == 'US') %>% 
+    group_by(iso2c, release_year) %>%
+    summarise(us_bond_10yr = mean(bond_yld_10yr_fred)) %>%
+    as_data_frame
+
+usa_release <- usa_release %>% select(-iso2c)
+
+bonds_fred_release <- merge(bonds_fred_release, usa_release, 
+                            by = 'release_year')
+
+bonds_fred_release$bond_spread_fred_release_year <- bonds_fred_release$bond_yld_10yr_fred - 
+                                        bonds_fred_release$us_bond_10yr
+
+bonds_fred_release <- bonds_fred_release %>% select(iso2c, release_year, 
+                                                    bond_spread_fred_release_year) %>%
+                            rename(year = release_year) %>%
+                            arrange(iso2c, year)
+
 # Create coefficient of variation--Only for Fred as Data Market is annual ---------
 cOv <- function(x) {
         (sd(x, na.rm = T) / mean(x, na.rm = T)) * 100
@@ -91,8 +121,20 @@ cOv <- function(x) {
 bonds_cov_fred <- fred_combined %>% group_by(iso2c, year) %>%
                     summarise(lt_ratecov_fred = cOv(bond_yld_10yr_fred))
 
+bonds_cov_fred_release <- fred_combined %>% group_by(iso2c, release_year) %>%
+                            summarise(lt_ratecov_fred_release_year = 
+                                          cOv(bond_yld_10yr_fred))
+
+bonds_cov_fred_release <- bonds_cov_fred_release %>% select(iso2c, release_year, 
+                                                            lt_ratecov_fred_release_year) %>%
+                                rename(year = release_year) %>% arrange(iso2c, year)
+
 # Merge spreads and coefficients of variation
+bonds_fred <- merge(bonds_fred, bonds_fred_release, by = c('iso2c', 'year'), 
+                    all = TRUE)
 bonds_fred <- merge(bonds_fred, bonds_cov_fred, by = c('iso2c', 'year'), 
+                    all = TRUE)
+bonds_fred <- merge(bonds_fred, bonds_cov_fred_release, by = c('iso2c', 'year'), 
                     all = TRUE)
 
 FindDups(bonds_fred, c('iso2c', 'year'))
@@ -166,6 +208,8 @@ bonds_ds <- bonds %>% select(iso2c, year, bond_spread_datastream)
 bonds$bond_spread_fred_datastream <- bonds$bond_spread_fred
 bonds <- FillIn(D1 = bonds, D2 = bonds_ds, Var1 = 'bond_spread_fred_datastream',
                 Var2 = 'bond_spread_datastream')
+
+bonds <- DropNA(bonds, 'year')
 
 
 #bonds_ds <- bonds %>% select(iso2c, year, bond_spread_fred)

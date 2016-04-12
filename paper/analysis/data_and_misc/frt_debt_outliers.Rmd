@@ -1,0 +1,32 @@
+---
+title: "FRT vs Public Debt Comparison"
+author: "Christopher Gandrud"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+header-includes:
+    - \usepackage{setspace}\doublespacing
+    - \usepackage{lscape}
+output: 
+    pdf_document:
+        fig_caption: true
+---
+
+```{r setup, include=FALSE}
+library(rio)
+library(knitr)
+library(tidyr)
+library(ggplot2)
+
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(error = FALSE)
+
+full <- import(file = '/git_repositories/FRTIndex/paper/analysis/frt04_16_v1.dta')
+```
+
+```{r}
+ggplot(full, aes(l_pubdebtgdp, l_frt, label = iso2c)) +
+    geom_text(alpha = 0.3) +
+    theme_bw()
+
+```

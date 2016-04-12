@@ -11,16 +11,16 @@ set more off
 // Set working directory, change as needed/
 cd "/git_repositories/FRTIndex/paper/"
 
-use "/git_repositories/FRTIndex/paper/analysis/frt0215.dta"
+use "analysis/frt04_16_v1.dta"
+drop if country == "Japan"
 
 /* 3. Run standard regression. */
 
-xtreg dnewspread dfrt dpubdebtgdp dfrtxdpub lnewspread lfrt lpubdebtgdp lfrtxlpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l lcgdpgrowth dcgdpgrowth loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(xtreg dnewspread lnewspread lfrt dfrt lpubdebtgdp dpubdebtgdp lfrtxlpub dfrtxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
-xtreg dnewspread lnewspread lfrt dfrt lpubdebtgdp dpubdebtgdp lfrtxlpub dfrtxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
-imf_code) fe vsquish noomit
+xtreg d_bond_spread_fred d_frt d_pubdebtgdp d_frtxd_pub l_bond_spread_fred l_frt l_pubdebtgdp l_frtxl_pub l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_cgdpgrowth d_cgdpgrowth l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix if country != "United States", cluster(imf_code) i(xtreg d_bond_spread_fred l_bond_spread_fred l_frt d_frt l_pubdebtgdp d_pubdebtgdp l_frtxl_pub d_frtxd_pub l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
+xtreg d_bond_spread_fred l_bond_spread_fred l_frt d_frt l_pubdebtgdp d_pubdebtgdp l_frtxl_pub d_frtxd_pub l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
 
 /* 4. Gather parameters, initialize matrix for runs */
-quietly summarize dpubdebtgdp if e(sample), detail /* Change x2 to variable that you want to appear on X-axis */
+quietly summarize d_pubdebtgdp if e(sample), detail /* Change x2 to variable that you want to appear on X-axis */
 local min=r(min)
 local max=r(max)
 local cen10=r(p10)
@@ -43,27 +43,27 @@ local order=1  /* Replace this number with a number that will tell Stata which I
 
 /* 5. Calculate coefficients for x1 across range of x2, store in matrix foo2 */
 while `iter'<`numparams' {
-   gen dpubdebtgdpa=dpubdebtgdp-`min'-(`inc'*`iter')  /* Alter these four lines to fit your model. */
-   summarize dpubdebtgdpa
-   gen x1x2a=dfrt*dpubdebtgdpa
+   gen d_pubdebtgdpa=d_pubdebtgdp-`min'-(`inc'*`iter')  /* Alter these four lines to fit your model. */
+   summarize d_pubdebtgdpa
+   gen x1x2a=d_frt*d_pubdebtgdpa
 
 
-xtreg dnewspread dfrt dpubdebtgdpa x1x2a lnewspread lfrt lpubdebtgdp lfrtxlpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l lcgdpgrowth dcgdpgrowth loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(xtreg dnewspread lnewspread lfrt dfrt lpubdebtgdp dpubdebtgdp lfrtxlpub dfrtxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
-xtreg dnewspread lnewspread lfrt dfrt lpubdebtgdp dpubdebtgdp lfrtxlpub dfrtxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
-imf_code) i(xtreg dnewspread lnewspread lfrt dfrt lpubdebtgdp dpubdebtgdp lfrtxlpub dfrtxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
-xtreg dnewspread lnewspread lfrt dfrt lpubdebtgdp dpubdebtgdp lfrtxlpub dfrtxdpub linfl dinfl lcgdpgrowth dcgdpgrowth lpcgdp2005l dpcgdp2005l loecdgrowth doecdgrowth lus3mrate dus3mrate lvix dvix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
+xtreg d_bond_spread_fred d_frt d_pubdebtgdpa x1x2a l_bond_spread_fred l_frt l_pubdebtgdp l_frtxl_pub l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_cgdpgrowth d_cgdpgrowth l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix if country != "United States", cluster(xtreg d_bond_spread_fred l_bond_spread_fred l_frt d_frt l_pubdebtgdp d_pubdebtgdp l_frtxl_pub d_frtxd_pub l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
+xtreg d_bond_spread_fred l_bond_spread_fred l_frt d_frt l_pubdebtgdp d_pubdebtgdp l_frtxl_pub d_frtxd_pub l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
+imf_code) i(xtreg d_bond_spread_fred l_bond_spread_fred l_frt d_frt l_pubdebtgdp d_pubdebtgdp l_frtxl_pub d_frtxd_pub l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
+xtreg d_bond_spread_fred l_bond_spread_fred l_frt d_frt l_pubdebtgdp d_pubdebtgdp l_frtxl_pub d_frtxd_pub l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
 imf_code) fe vsquish noomit
 
 matrix betas=e(b)                /* Stop alterations. */
-   scalar dfrtcoef=betas[1,`order']
+   scalar d_frtcoef=betas[1,`order']
    matrix ses=e(V)
-   scalar dfrtse=sqrt(ses[`order',`order'])
+   scalar d_frtse=sqrt(ses[`order',`order'])
    local obs=e(N)                   /* Calculate 95% confidence intervals.  Assumes t-tests for signif.; */
    scalar ci95=invnorm(0.975) /* if using procedure that produces z-tests, use invnorm(0.975) */
    local xval = `min'+(`inc'*`iter')
-   matrix foo = dfrtcoef-ci95*dfrtse, dfrtcoef, dfrtcoef+ci95*dfrtse, `xval'
+   matrix foo = d_frtcoef-ci95*d_frtse, d_frtcoef, d_frtcoef+ci95*d_frtse, `xval'
    matrix foo2 = foo2 \ foo
-   drop dpubdebtgdpa x1x2a
+   drop d_pubdebtgdpa x1x2a
    local iter=`iter'+1
    }
 
@@ -71,13 +71,13 @@ matrix betas=e(b)                /* Stop alterations. */
 matrix points=foo2[2..(`numparams'+1),1..4]
 svmat points
 
-/* 7. Produce graph if dpubdebtgdp is continuous, or if dpubdebtgdp is ordinal but */
+/* 7. Produce graph if d_pubdebtgdp is continuous, or if d_pubdebtgdp is ordinal but */
 /* fractional values are not conceptually inconceivable (e.g. some */
 /* continuous quantity for which only ordinal measures are available). */
 /* Change titles, labels, etc., to fit your particular needs */
 twoway (connect points1 points2 points3 points4, mcolor(navy maroon navy)/*
 */ clcolor(black maroon black) lpattern(dash solid dash) lwidth(medium medthick medium) msize(small small small) msym(i D i))/*
-*/(histogram dpubdebtgdp if e(sample), bin(50) yaxis(2) blcolor(gray) bfcolor(none)), ytitle(Histogram of/*
+*/(histogram d_pubdebtgdp if e(sample), bin(50) yaxis(2) blcolor(gray) bfcolor(none)), ytitle(Histogram of/*
 */ X-axis var, axis(2) size(3))/*
 */ ytitle("Coefficients and 95% CIs", size(4))/*
 */ xlab(-100 -80 -40 -20 0 20 40 60 80 100) ylabel(, labsize(4)) yline(0, lwidth(medthick)) xtitle("Change in Public Debt/GDP (%)", size(3)) xscal(titlegap(2)) yscal(titlegap(2))/*

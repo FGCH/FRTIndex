@@ -14,9 +14,10 @@ cd "/git_repositories/FRTIndex/paper/"
 use "analysis/frt04_16_v1.dta"
 drop if country == "Japan"
 
+
 /* 3. Run standard regression. */
 
-xtreg d_lt_ratecov_fred d_frt d_pubdebtgdp d_frtxd_pub l_lt_ratecov_fred l_frt l_pubdebtgdp l_frtxl_pub l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_cgdpgrowth d_cgdpgrowth l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix, cluster(imf_code) i(imf_code) fe vsquish noomit
+xtreg d_bond_spread_fred d_frt d_pubdebtgdp d_frtxd_pub l_bond_spread_fred l_frt l_pubdebtgdp l_frtxl_pub l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_cgdpgrowth d_cgdpgrowth l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
 
 /* 4. Gather parameters, initialize matrix for runs */
 quietly summarize d_pubdebtgdp if e(sample), detail /* Change x2 to variable that you want to appear on X-axis */
@@ -47,7 +48,7 @@ while `iter'<`numparams' {
    gen x1x2a=d_frt*d_pubdebtgdpa
 
 
-xtreg d_lt_ratecov_fred d_frt d_pubdebtgdpa x1x2a l_lt_ratecov_fred l_frt l_pubdebtgdp l_frtxl_pub l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_cgdpgrowth d_cgdpgrowth l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix, cluster(imf_code) i(imf_code) fe vsquish noomit
+xtreg d_bond_spread_fred d_frt d_pubdebtgdpa x1x2a l_bond_spread_fred l_frt l_pubdebtgdp l_frtxl_pub l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_cgdpgrowth d_cgdpgrowth l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix if country != "United States", cluster(imf_code) i(imf_code) fe vsquish noomit
 
 matrix betas=e(b)                /* Stop alterations. */
    scalar d_frtcoef=betas[1,`order']
@@ -75,8 +76,8 @@ twoway (connect points1 points2 points3 points4, mcolor(navy maroon navy)/*
 */(histogram d_pubdebtgdp if e(sample), bin(50) yaxis(2) blcolor(gray) bfcolor(none)), ytitle(Histogram of/*
 */ X-axis var, axis(2) size(3))/*
 */ ytitle("Coefficients and 95% CIs", size(4))/*
-*/ xlab(-20 -10 0 10 20 30 40 50) ylabel(, labsize(4)) yline(0, lwidth(medthick)) xtitle("Change in Public Debt/GDP (%)", size(3)) xscal(titlegap(2)) yscal(titlegap(2))/*
+*/ xlab(-100 -80 -40 -20 0 20 40 60 80 100) ylabel(, labsize(4)) yline(0, lwidth(medthick)) xtitle("Change in Public Debt/GDP (%)", size(3)) xscal(titlegap(2)) yscal(titlegap(2))/*
 */  xsca(titlegap(2)) yscal(titlegap(2))/*
 */  legend(off) scheme(s2mono) graphregion(color(white))
 
-graph export paper_plots/me_changefrt_yields_cov.pdf, replace
+graph export paper_plots/me_changefrt_spreads.pdf, replace

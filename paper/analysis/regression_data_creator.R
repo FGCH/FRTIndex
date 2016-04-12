@@ -110,7 +110,8 @@ fiscal_trans <- fiscal_trans %>% gather(year, fiscal_trans_gfs,
 fiscal_trans$year <- fiscal_trans$year %>% as.numeric
 
 # Combine ------------
-comb <- merge(frt, bonds, by = c('iso2c', 'year'), all.x = T)
+comb <- merge(frt, hrv, by = c('iso2c', 'year'), all.x = T)
+comb <- merge(comb, bonds, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, wdi, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, fred_iv, by = 'year', all.x = T)
 comb <- merge(comb, fiscal_trans, by = c('iso2c', 'year'), all.x = T)
@@ -162,8 +163,8 @@ comb_full <- comb
 #                   by = c('iso2c', 'year'), all = T)
 
 # Interactions
-comb_full$l_frtxlpub <- comb_full$l_frt * comb_full$l_pubdebtgdp
-comb_full$d_frtxdpub <- comb_full$d_frt * comb_full$d_pubdebtgdp
+comb_full$l_frtxl_pub <- comb_full$l_frt * comb_full$l_pubdebtgdp
+comb_full$d_frtxd_pub <- comb_full$d_frt * comb_full$d_pubdebtgdp
 
 # Final clean up
 comb_full$country <- countrycode(comb_full$iso2c, origin = 'iso2c',
