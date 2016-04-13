@@ -9,7 +9,7 @@ set more off
 // Set working directory, change as needed/
 cd "/git_repositories/FRTIndex/paper/"
 
-insheet using "analysis/frt0526.csv", comma
+insheet using "analysis/old/frt0526.csv", comma
 
 /* ECM Models */
 

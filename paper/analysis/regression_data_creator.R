@@ -51,25 +51,31 @@ wdi <- wdi %>% select(iso2c, year, pubdebtgdp, infl, cgdpgrowth,
 wdi <- merge(wdi, oecd_growth, by = 'year')
 
 
-## IMF Historical Public Debt Data ---------------
-# From: https://www.imf.org/external/pubs/cat/longres.aspx?sk=24332.0
-hist_pubdebtgdp <- import('paper/analysis/data_and_misc/Debt Database Fall 2013 Vintage.xlsx',
-                          sheet = 2)
-hist_pubdebtgdp <- hist_pubdebtgdp[, c(1, 4:322)]
-hist_pubdebtgdp <- hist_pubdebtgdp %>% gather(year, pubdebtgdp, 
-                          2:ncol(hist_pubdebtgdp))
 
-hist_pubdebtgdp$iso2c <- countrycode(hist_pubdebtgdp$country, 
-                                     origin = 'country.name', 
+
+## IMF Historical Public Debt Data ---------------
+# From: https://www.imf.org/external/pubs/ft/weo/2015/02/weodata/download.aspx
+hist_pubdebtgdp <- import('paper/analysis/data_and_misc/WEOOct2015all.csv',
+                          na.string = 'n/a', header = TRUE)
+
+hist_pubdebtgdp <- hist_pubdebtgdp %>% filter(`WEO Subject Code` == 'GGXWDG_NGDP')
+
+hist_pubdebtgdp <- hist_pubdebtgdp[, c(2, 11:44)] 
+hist_pubdebtgdp <- hist_pubdebtgdp %>%
+    gather(year, pubdebtgdp, 2:ncol(hist_pubdebtgdp))
+
+hist_pubdebtgdp$iso2c <- countrycode(hist_pubdebtgdp$ISO, 
+                                     origin = 'iso3c', 
                                      destination = 'iso2c')
 
 hist_pubdebtgdp[, 2:3] <- sapply(hist_pubdebtgdp[, 2:3], as.numeric)
 hist_pubdebtgdp <- hist_pubdebtgdp %>% filter(year >= 1989) %>% 
-                        arrange(country, year) %>% select(-country)
+    arrange(iso2c, year) %>% select(-ISO)
+hist_pubdebtgdp <- hist_pubdebtgdp %>% DropNA('iso2c')
 
 # Fill in Missing values of public debt
 wdi <- FillIn(D1 = wdi, D2 = hist_pubdebtgdp, Var1 = 'pubdebtgdp', 
-              Var2 = 'pubdebtgdp')
+                          Var2 = 'pubdebtgdp')
 
 FindDups(wdi, c('iso2c', 'year'))
 

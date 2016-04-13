@@ -13,6 +13,7 @@ library(lubridate)
 library(DataCombine)
 library(tidyr)
 library(ggplot2)
+library(xtable)
 
 # Set working directory. Change as needed ---------
 setwd('/git_repositories/FRTIndex/')
@@ -223,8 +224,23 @@ FindDups(bonds, c('iso2c', 'year'))
 rmExcept('bonds')
 
 export(bonds, file = 'paper/analysis/data_and_misc/combined_bond_data.csv')
-    
 
+# Create sample table ----------
+cases <- CasesTable(data = bonds, GroupVar = 'iso2c', TimeVar = 'year',
+                    Vars = 'bond_spread_fred')
+
+cases$begin[cases$begin < 1990] <- 1990
+cases$end[cases$end > 2013] <- 2013
+
+cases$Country <- countrycode(cases$iso2c, origin = 'iso2c', 
+                             destination = 'country.name')
+
+cases <- cases %>% select(-iso2c) %>% MoveFront('Country') %>% 
+                arrange(Country) %>% rename('First Year' = begin) %>%
+                rename('Last Year' = end) 
+    
+print(xtable(cases), include.rownames = FALSE, floating = FALSE, size = 'tiny',
+      file = 'paper/tables/spreads_sample.tex')
 
 # Combine with original (need source) ---------
 #old <- import('paper/analysis/frt0526.csv')

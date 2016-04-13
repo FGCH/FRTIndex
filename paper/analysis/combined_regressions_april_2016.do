@@ -13,7 +13,7 @@ use "analysis/frt04_16_v1.dta"
 
 /* ECM Models */
 
-drop if country == "Japan"
+drop if country == "Japan" 
 
 /* Non-Interactive Models */
 
