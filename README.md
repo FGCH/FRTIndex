@@ -1,7 +1,7 @@
 Financial Regulatory Transparency Index
 ========
 
-**Version:** 0.3.3
+**Version:** 2.1
 
 **Maintainer:**
 [Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
@@ -37,8 +37,7 @@ in a CSV formatted file called:
 [FRTIndex.csv](https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex.csv).
 
 It covers the **68 countries** classified by the World Bank as
-'**High Income**', [EMBI](http://en.wikipedia.org/wiki/JPMorgan_EMBI) countries,
-and China for the years **1990 through 2011**.
+'**High Income**', [EMBI](http://en.wikipedia.org/wiki/JPMorgan_EMBI) countries, China, and India for the years **1990 through 2011**.
 
 #### FRT Index Scores for selected years
 
@@ -56,6 +55,7 @@ The file `FRTIndex.csv` contains the following variables:
 | median        | median of the FRT index posterior distribution             |
 | upper_90      | upper bound of the 90% highest probability density interval|
 | upper_95      | upper bound of the 95% highest probability density interval|
+| se            | standard error of the posterior distribution               |
 
 ## Download into R
 
