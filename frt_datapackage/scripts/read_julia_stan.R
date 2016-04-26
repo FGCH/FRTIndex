@@ -16,8 +16,11 @@ library(rio)
 library(rstan)
 library(repmis)
 
+# Function to find standard error
+se <- function(x) sqrt(var(x) / length(x))
+
 # Set working directory to save index data to. Change as needed
-setwd('/git_repositories/FRTIndex')
+setwd('git_repositories/FRTIndex/')
 
 # Load function to subset the data frame to countries that report
 # at least 1 item.
@@ -30,7 +33,7 @@ BaseSub <-
 #### Keep only countries that report at least 1 item for the entire period  ####
 BaseSub <- report_min_once(BaseSub)
 
-# Country list from FRT_Stan_v_02_1990.R
+# Country list
 countries <- unique(BaseSub$country)
 
 # Load in simulations ------
@@ -55,32 +58,29 @@ gathered <- gather(fit_df_sub, variable, value)
 gathered$variable <- gathered$variable %>% as.character
 gathered <- group_by(gathered, variable)
 
-median <- dplyr::summarize(gathered, median = median(value))
-lower_95 <- dplyr::summarize(gathered, lower_95 = StanCat:::HPD(value, 
-                                                                prob = 0.95, 
-                                                                side = 'lower'))
-lower_90 <- dplyr::summarize(gathered, lower_90 = StanCat:::HPD(value, 
-                                                                prob = 0.9, 
-                                                                side = 'lower'))
-upper_90 <- dplyr::summarize(gathered, upper_90 = StanCat:::HPD(value, 
-                                                                prob = 0.9, 
-                                                                side = 'upper'))
-upper_95 <- dplyr::summarize(gathered, upper_95 = StanCat:::HPD(value, 
-                                                                prob = 0.95, 
-                                                                side = 'upper'))
+comb <- gathered %>% dplyr::summarize(median = median(value),
+                                      lower_95 = StanCat:::HPD(value, 
+                                                prob = 0.95, side = 'lower'),
+                                      lower_90 = StanCat:::HPD(value, 
+                                                 prob = 0.90, side = 'lower'),
+                                      upper_90 = StanCat:::HPD(value, 
+                                                 prob = 0.90, side = 'lower'),
+                                      upper_95 = StanCat:::HPD(value, 
+                                                 prob = 0.95, side = 'lower'),
+                                      se = se(value)
+                                      )
 
-comb <- merge(lower_95, lower_90) %>%
-  merge(., median) %>%
-  merge(., upper_90) %>%
-  merge(., upper_95)
+comb_backup <- comb
 
-for (i in 2:ncol(comb)) comb[, i] <- round(comb[, i], digits = 3)
+for (i in 2:ncol(comb)) comb[, i] <- round(comb[, i], digits = 7)
+
+comb <- as.data.frame(comb)
 
 # Clean up identifiers
 fr_country <- data.frame(from = paste0('alpha\\[', 1:length(countries), ',.*'),
-                         to = countries)
+                         to = countries, stringsAsFactors = FALSE)
 fr_year <- data.frame(from = paste0('alpha\\[.*,', 1:length(years), '\\]'),
-                      to = years)
+                      to = years, stringsAsFactors = FALSE)
 comb$country <- comb$variable
 
 comb <- FindReplace(comb, Var = 'country', replaceData = fr_country,
@@ -98,13 +98,16 @@ comb <- MoveFront(comb, c('country', 'iso2c', 'year'))
 
 comb <- arrange(comb, country, year)
 
+# Drop non-country transparency alpha paramaters
+comb <- comb %>% DropNA('iso2c')
+
 # Write file
 export(comb, 'IndexData/FRTIndex_v2.csv')
 
 # Create data package version
 meta_list <- list(name = 'frt_datapackage',
                   title = 'The Financial Regulatory Transparency Index',
-                  version = '2.0',
+                  version = '2.1',
                   maintainer = 'Christopher Gandrurd',
                   license = 'PDDL-1.0',
                   last_updated = Sys.Date(),
@@ -117,3 +120,28 @@ datapackage_init(comb, meta = meta_list,
                                     'source/read_julia_stan.R',
                                     'source/FRT.stan'),
                  source_cleaner_rename = F)
+
+
+# Create plots for non-alpha parameters of interest ------------------------------------
+## Not included in frt_plots_v2.R in order to avoid loading fit in more than once, which is
+## computationally expensive
+
+# Main figure output directory
+dir <- 'paper/paper_plots/'
+
+indicators_df <- import('paper/IndicatorDescript/IndicatorDescription.csv')
+indicator_labels <- indicators_df[, 2]
+
+# Difficulty
+pdf(file = paste0(dir, 'difficultyPlot.pdf'), width = 10, height = 5.5)
+stan_caterpillar(fit, 'beta\\[.*\\]',
+                 pars_labels = indicator_labels) +
+  ylab('') + xlab('\nCoefficient')
+dev.off()
+
+# Discrimination
+pdf(file = paste0(dir, 'discriminationPlot.pdf'), width = 10, height = 5.5)
+stan_caterpillar(fit, 'gamma\\[.*\\]',
+                 pars_labels = indicator_labels) +
+  ylab('') + xlab('\nCoefficient')
+dev.off()
