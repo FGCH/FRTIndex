@@ -12,6 +12,7 @@ library(countrycode)
 library(lubridate)
 library(DataCombine)
 library(tidyr)
+library(R.cache)
 library(fredr) # if not installed use devtools::github_install('christophergandrud/fredr')
 
 # Set working directory. Change as needed. --------
@@ -60,13 +61,20 @@ wdi <- wdi %>% select(iso2c, year, infl, cgdpgrowth,
 wdi <- merge(wdi, oecd_growth, by = 'year')
 
 ## FRED central government debt -----------------
-debt_fred <- fred_loop(prefix = 'DEBTTL', suffix = 'A188A', 
-                       iso2c = unique(frt$iso2c),
-                       var_name = 'pubdebtgdp_cent_fred')
+# Time consuming download, so cache
+iso2c_fred <- unique(frt$iso2c)
+cache_key <- as.list(iso2c_fred)
+debt_fred <- loadCache(key = cache_key)
+
+if (is.null(debt_fred)) {
+    debt_fred <- fred_loop(prefix = 'DEBTTL', suffix = 'A188A', 
+                           iso2c = iso2c_fred,
+                           var_name = 'pubdebtgdp_cent_fred')
+    saveCache(debt_fred, key = cache_key)
+}
 
 debt_fred$year <- year(debt_fred$date)
 debt_fred <- debt_fred %>% select(-date)
-
 
 ## Eurostat central government debt -------------
 # Downloaded from http://ec.europa.eu/eurostat/data/database
@@ -127,8 +135,7 @@ weo_debt <- weo_debt %>% filter(year >= 1989) %>% arrange(iso2c, year) %>%
                     select(-ISO)
 weo_debt <- weo_debt %>% DropNA('iso2c')
 
-
-# Create debt measures data frame
+# Create debt measures data frame --------------
 debt_comb <- merge(debt_eurostat, wdi_debt, by = c('iso2c', 'year'), 
                    all = TRUE)
 debt_comb <- merge(debt_comb, debt_fred, by = c('iso2c', 'year'), 
@@ -141,19 +148,29 @@ debt_comb <- merge(debt_comb, weo_debt, by = c('iso2c', 'year'),
 debt_comb <- subset(debt_comb, year > 1988)
 debt_comb <- DropNA(debt_comb, 'iso2c')
 
-debt_comb$pubdebtgdp <- debt_comb$pubdebtgdp_cent_wdi
 
-# Fill in Missing values of public debt
-debt_comb <- FillIn(D1 = debt_comb, D2 = debt_fred, Var1 = 'pubdebtgdp', 
+# Fill in Missing values of public debt (t)
+debt_comb$pubdebtgdp_cent <- debt_comb$pubdebtgdp_cent_wdi
+
+debt_comb <- FillIn(D1 = debt_comb, D2 = debt_fred, Var1 = 'pubdebtgdp_cent', 
                           Var2 = 'pubdebtgdp_cent_fred')
-
+# 228 filled in
 debt_comb <- FillIn(D1 = debt_comb, D2 = debt_eurostat, 
-                    Var1 = 'pubdebtgdp', 
+                    Var1 = 'pubdebtgdp_cent', 
                     Var2 = 'pubdebtgdp_cent_eu')
+# 37 filled in
+
+# Fill in Missing values of public debt (general government)
+debt_comb$pubdebtgdp_gen <- debt_comb$pubdebtgdp_gen_imf
+
+debt_comb <- FillIn(D1 = debt_comb, D2 = weo_debt, 
+                    Var1 = 'pubdebtgdp_gen', 
+                    Var2 = 'pubdebtgdp_gen_weo')
+# 625 filled in
 
 FindDups(wdi, c('iso2c', 'year'))
 
-# FRED Data --------------------------
+# FRED (other) data --------------------------
 # US 3-Month Yield (WTB3MS)
 us_3month <- getSymbols(Symbols = 'WTB3MS', src = 'FRED', auto.assign = FALSE) %>%
                         data.frame %>% rename(us_3month = WTB3MS)
@@ -202,7 +219,7 @@ comb$year <- comb$year %>% as.numeric
 comb <- comb %>% arrange(iso2c, year)
 comb <- comb %>% MoveFront('income')
 
-# Create lags and changes
+# Create lags and changes --------------
 vars <- names(comb)[4:ncol(comb)]
 
 for (i in vars) {
@@ -244,9 +261,12 @@ comb_full <- comb
 #                                  ],
 #                   by = c('iso2c', 'year'), all = T)
 
-# Interactions
-comb_full$l_frtxl_pub <- comb_full$l_frt * comb_full$l_pubdebtgdp
-comb_full$d_frtxd_pub <- comb_full$d_frt * comb_full$d_pubdebtgdp
+# Interactions ------------
+comb_full$l_frtxl_pub_cent <- comb_full$l_frt * comb_full$l_pubdebtgdp_cent
+comb_full$d_frtxd_pub_cent <- comb_full$d_frt * comb_full$d_pubdebtgdp_cent
+
+comb_full$l_frtxl_pub_gen <- comb_full$l_frt * comb_full$l_pubdebtgdp_gen
+comb_full$d_frtxd_pub_gen <- comb_full$d_frt * comb_full$d_pubdebtgdp_gen
 
 # Final clean up
 comb_full$country <- countrycode(comb_full$iso2c, origin = 'iso2c',
