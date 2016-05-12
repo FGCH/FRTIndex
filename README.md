@@ -63,7 +63,7 @@ To download the **working version** of the Index directly into
 [R](http://www.r-project.org/) as a data frame use:
 
 ```{S}
-URL <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex.csv'
+URL <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex_v2.csv'
 
 frt_index <- rio::import(URL)
 ```
