@@ -1,0 +1,133 @@
+---
+title: "Long-Term Bond Variables Creation and Comparision"
+author: "Christopher Gandrud"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+header-includes:
+    - \usepackage{setspace}\doublespacing
+    - \usepackage{lscape}
+output: 
+    pdf_document:
+        fig_caption: true
+---
+
+```{r setup, include=FALSE}
+library(rio)
+library(knitr)
+library(tidyr)
+library(ggplot2)
+
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(error = FALSE)
+
+source('/git_repositories/FRTIndex/paper/analysis/bond_data_creator.R')
+full <- import(file = '/git_repositories/FRTIndex/paper/analysis/frt04_16_v1.dta')
+```
+
+# Bond spread sources
+
+We examined three sources of long-term bond yield data in order to create our bond spread and bond coefficient of variation dependent variables. The first was the Federal Reserve Bank of St. Louis' **FRED** database which makes available long-term bond yields at a monthly frequency.[^fredcode] The second source was the Thomson Reuters **Datastream** service. This data was available on a quarterly basis. It is unfortunately often unclear from the Datastream documentation what the maturity of these bonds is. The final source was for EMBI countries from **Data Market**.[^datamarket] Data Market makes this data available at annual intervals. They claim to have sourced their data on the EMBI+ countries from Datastream via the World Bank. However, we were unable to find this data in the World Bank's Development Indicators database. 
+
+# Case coverage
+
+Table 1 shows the coverage of these three data sets for countries for which we also have FRT data. It is important to note that Data Market is the only source with data for Argentina, Colombia, Ecuador, Panama, Peru, the Philippines, Ukraine, and Venezuala. 
+
+# Transformations to underlying variables
+
+We made a number of transformations to create our dependent variables. The first was to convert the bond yield data to bond spreads with US 10-year T-bills. For the FRED data we subtracted non-US T-bill annual average yields from annual average FRED US T-bill yields from the same year. We did the same for the Datastream data, this time using the US T-bill data from Datastream. For the Data Market yields we used the FRED T-Bill yields to find the spreads, as this source did not include US data. Before doing so, we also divided the yields by 100 to place them on a comparable scale to the FRED and Datastream data.
+
+Being monthly, the FRED data was the only source with sufficient frequency to find bond spread variation with the coefficient of variation. This was found using:
+
+$$
+\mathrm{Bond_{cov}} = \frac{sd(x_{c,t})}{\bar{x_{c,t}}} * 100,
+$$
+
+where $x$ is the long-term bond yield for country $c$ in year $t$.
+
+# Comparision and measurement selection.
+
+Figure 1 shows a scatterplot matrix comparing the three sets of bond spreads for which they have overlapping data. We can see that the data from FRED and Datastream is very similar. However, the Data Market data is notably different to the point where we have to wonder if they data source is measuring the same thing as the FRED and Datastream data. 
+
+Though we will lose eight cases, the large differences between the Data Market and other data sources makes it inappropriate to include this data along side the others. As such, we combine only the FRED and Datastream data, with a preference for the FRED data when available. Table 2 shows the sample of cases for which we have this data
+
+The final step in creating our spreads dependent variable was to find the year-on-year change in FRED/Datastream bond spread variable. Figure 2 shows the distribution of this data.
+
+
+```{r, fig.cap='Scatterplot Matrix Comparing 3 Sources of Long-term Bond Spreads'}
+pairs(~bond_spread_fred + bond_spread_datastream + bond_spread_datamarket,
+      data = bonds)
+```
+
+```{r, fig.cap='Distributions of FRED/Datastream Bond Spread Change'}
+
+ggplot(full, aes(d_bond_spread_fred_datastream, ..density..)) +
+    geom_freqpoly() +
+    theme_bw()
+```
+
+```{r, fig.cap='Distributions of FRED/Datastream Bond Spread Change (3 Outlier Drop)'}
+outliers <- full %>% filter(d_bond_spread_fred_datastream > 200 | d_bond_spread_fred_datastream < -100) %>% 
+                select(iso2c, year, d_bond_spread_fred_datastream)
+
+sub <- full %>% filter(d_bond_spread_datastream < 200 & d_bond_spread_fred_datastream > -100)
+
+
+ggplot(sub, aes(d_bond_spread_fred_datastream, ..density..)) +
+    geom_freqpoly() +
+    theme_bw()
+```
+
+
+
+```{r size='footnotesize'}
+# Load frt -------------------
+frt <- import('/git_repositories/FRTIndex/IndexData/FRTIndex_v2.csv')
+frt <- frt %>% select(iso2c, year, median) %>% rename(frt = median)
+
+# Delineate Cases
+fred_cases <- CasesTable(data = bonds[, c('iso2c', 'year', 'bond_spread_fred')], 
+                        GroupVar = 'iso2c', TimeVar = 'year')
+names(fred_cases) <- c('ISO2C', 'FRED Begin', 'FRED End') 
+
+Datastream_cases <- CasesTable(data = bonds[, c('iso2c', 'year', 'bond_spread_datastream')], 
+                        GroupVar = 'iso2c', TimeVar = 'year')
+names(Datastream_cases) <- c('ISO2C', 'DS Begin', 'DS End') 
+
+datamarket_cases <- CasesTable(data = bonds[, c('iso2c', 'year', 'bond_spread_datamarket')], 
+                        GroupVar = 'iso2c', TimeVar = 'year')
+names(datamarket_cases) <- c('ISO2C', 'DM Begin', 'DM End') 
+
+comb_cases <- merge(fred_cases, Datastream_cases, all = TRUE)
+comb_cases <- merge(comb_cases, datamarket_cases, all = TRUE)
+
+# Keep only cases with FRT Scores
+comb_cases <- comb_cases[comb_cases$ISO2C %in% frt$iso2c, ]
+
+#comb_cases$Country <- countrycode(comb_cases$ISO2C, origin = 'iso2c', 
+#                                  destination = 'country.name')
+#comb_cases <- comb_cases %>% select(-ISO2C) %>% MoveFront('Country')
+
+for (i in names(comb_cases)) comb_cases[, i][is.na(comb_cases[, i])] <- ''
+
+kable(comb_cases, caption = 'Comparision of Available Bond Spread Data Across 3 Sources',
+      row.names = FALSE)
+```
+
+```{r}
+full_sample <- CasesTable(bonds[, c('iso2c', 'year', 'bond_spread_fred_datastream')], 
+                          GroupVar = 'iso2c', TimeVar = 'year')
+full_sample$Country <- countrycode(full_sample$iso2c, origin = 'iso2c', 
+                                   destination = 'country.name')
+
+full_sample <- full_sample %>% select(-iso2c) %>% MoveFront('Country') %>%
+                arrange(Country)
+names(full_sample) <- c('Country', 'Combined Begin', 'Combined End')
+
+kable(full_sample, caption = 'Bond Spread Data Available From Both FRED or Datastream')
+```
+
+
+[^fredcode]: We used the series following the format `RLTLT01%sM156N` where `%s` stands for a given country's ISO two letter country code.
+
+[^datamarket]: <https://datamarket.com/data/set/1dme/jp-morgan-emerging-markets-bond-index-embi#!ds=1dme!x88=7.k.b.9.a.i.4.c.f.g.e.m.2.d.5.h.8.n&display=choropleth&map=world&classifier=natural&numclasses=5>

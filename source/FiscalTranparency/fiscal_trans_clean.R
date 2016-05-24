@@ -28,7 +28,7 @@ fiscal <- fiscal %>% dplyr::select(iso2c, year, obi3)
 # Create lags/percent change
 fiscal <- slide(fiscal, Var = 'obi3', TimeVar = 'year', GroupVar = 'iso2c',
                 NewVar = 'lobi3')
-fiscal <- PercChange(fiscal, Var = 'obi3', TimeVar = 'year', GroupVar = 'iso2c',
+fiscal <- change(fiscal, Var = 'obi3', TimeVar = 'year', GroupVar = 'iso2c',
                      NewVar = 'dobi3', type = 'proportion')
 
 # Raw OBI index
@@ -39,7 +39,7 @@ names(obi) <- c('iso2c', 'year', 'obi_raw')
 
 
 # Basic comparison
-URL <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex.csv'
+URL <- 'https://raw.githubusercontent.com/FGCH/FRTIndex/master/IndexData/FRTIndex_v2.csv'
 frt_index <- rio::import(URL)
 raw_obi_frt <- merge(frt_index, obi, by = c('iso2c', 'year'))
 

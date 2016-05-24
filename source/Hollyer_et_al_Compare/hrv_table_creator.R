@@ -37,24 +37,24 @@ CombineFiles <- function(file_list, start){
 
 CleanUp <- data.frame(
     from = c('^.*?_stderr', '_coef', '_cons', 'N_clust', 'N$', 'r2_a',
-             'lfrt_residuals', 'dfrt_residuals',
-             'lfrt_residxlpub', 'dfrt_residxdpub',
-             'dhrvxdpub', 'lhrvxlpub',
-             'dfrtxdpub', 'lfrtxlpub',
-             'lcgdpgrowth', 'dcgdpgrowth',
-             'lpcgdp2005l', 'dpcgdp2005l',
-             'dnewspread', 'lnewspread',
-             '^lltrate$', '^lltspreadus$', '^lltratecov$',
-             '^lfrt$', '^dfrt$',
-             '^lfrt_log$', '^dfrt_log$',
-             'lhrv_mean', 'dhrv_mean',
-             'lstrucbalgdp', 'dstrucbalgdp',
-             'lpubdebtgdp', 'dpubdebtgdp',
-             'linfl', 'dinfl',
-             'lus3mrate', 'dus3mrate',
-             'loecdgrowth', 'doecdgrowth',
-             'lvix', 'dvix',
-             'lcountry_growth', 'dcountry_growth',
+             'l_frt_residuals', 'd_frt_residuals',
+             'l_frt_residxlpub', 'd_frt_residxdpub',
+             'd_hrvxd_pubdebtgdp_gen', 'l_hrvxl_pub_gen',
+             'd_frtxd_pub', 'l_frtxl_pub',
+             'l_cgdpgrowth', 'd_cgdpgrowth',
+             'l_pcgdp2005l', 'd_pcgdp2005l',
+             '^d_bond_spread_fred', '^l_bond_spread_fred',
+             '^lltrate$', '^lltspreadus$', '^l_lt_ratecov_fred$',
+             '^l_frt$', '^d_frt$',
+             '^l_frt_log$', '^d_frt_log$',
+             'l_hrv_mean', 'd_hrv_mean',
+             'l_strucbalgdp', 'd_strucbalgdp',
+             'l_pubdebtgdp_gen', 'd_pubdebtgdp_gen',
+             'l_infl', 'd_infl',
+             'l_us3mrate', 'd_us3mrate',
+             'l_oecdgrowth', 'd_oecdgrowth',
+             'l_vix', 'd_vix',
+             'l_country_growth', 'd_country_growth',
              'eurozone'
     ),
     to = c('', '', 'Constant', 'Countries', 'Observations', 'Adjusted R-squared',
@@ -83,9 +83,9 @@ CleanUp <- data.frame(
 
 outputHRV <- CombineFiles(filesHRV, start = 'HRV_1.dta')
 outputHRV <- FindReplace(outputHRV, Var = 'var', replaceData = CleanUp,
-                         exact = F)
-outputHRV <- outputHRV[c(74, 73, 84, 83, 75, 76, 77, 78, 87, 88,
-                         89, 86, 1:28, 81, 82, 79, 80, 90, 91, 92, 85,
+                         exact = FALSE)
+outputHRV <- outputHRV[c(74, 73, 88, 87, 75, 76, 77, 78, 91, 92, 93, 90, 1:28,
+                         85, 86, 83, 84, 94, 95, 96, 89,
                          29:30, 36, 32, 40), ]
 
 # Insert blank row for formatting
