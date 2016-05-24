@@ -13,24 +13,28 @@ library(DataCombine)
 library(xtable)
 
 # Load data
-main <- import('analysis/frt0526.csv')
-main <- main %>% arrange(sname)
+main <- import('analysis/frt04_16_v2.dta')
+main <- main %>% arrange(country, year)
 
-main_sub1 <- main %>% DropNA(c('dnewspread', 'lnewspread', 'dfrt', 'dpubdebtgdp', 
-                     'dfrtxdpub', 'lfrt', 'lpubdebtgdp', 'lfrtxlpub', 'linfl',
-                     'dinfl', 'lcgdpgrowth', 'dcgdpgrowth', 'lpcgdp2005l',
-                     'dpcgdp2005l', 'loecdgrowth', 'doecdgrowth', 'lus3mrate',
-                     'dus3mrate', 'lvix', 'dvix'))
+# Drop non-OECD countries
+main <- subset(main, country != 'Russian Federation')
+main <- subset(main, country != 'South Africa')
 
-## Drop US
-main_sub1 <- main_sub1 %>% filter(country != 'United States')
+model_vars <- c('d_bond_spread_fred', 'l_bond_spread_fred', 
+                'd_frt_2015', 'd_pubdebtgdp_gen', 
+                'l_frt_2015', 'l_pubdebtgdp_gen', 'l_infl',
+                'd_infl', 'l_cgdpgrowth', 'd_cgdpgrowth', 'l_pcgdp2005l',
+                'd_pcgdp2005l', 'l_oecdgrowth', 'd_oecdgrowth', 'l_us3mrate',
+                'd_us3mrate', 'l_vix', 'd_vix')
 
-main_sub2 <- main %>% DropNA(c('dratecov', 'lltratecov', 'dfrt', 'dpubdebtgdp', 
-                               'dfrtxdpub', 'lfrt', 'lpubdebtgdp', 'lfrtxlpub', 'linfl',
-                               'dinfl', 'lcgdpgrowth', 'dcgdpgrowth', 'lpcgdp2005l',
-                               'dpcgdp2005l', 'loecdgrowth', 'doecdgrowth', 'lus3mrate',
-                               'dus3mrate', 'lvix', 'dvix'
-                               ))
+cases <- CasesTable(main, GroupVar = 'country', TimeVar = 'year', Vars = model_vars)
+
+names(cases) <- c('Country', 'First Year', 'Last Year')
+
+print(xtable(cases, digits = 0), include.rownames = FALSE, 
+      floating = FALSE, size = 'tiny', file = 'tables/oecd_sample.tex')
+
+# ------------------ Old ----------------------------------------------------- #
 
 spreads_sample <- unique(main_sub1$sname)
 cov_sample <- unique(main_sub2$sname)
@@ -70,8 +74,8 @@ equal_columns <- function(x) {
 spreads_sample <- equal_columns(spreads_sample)
 cov_sample <- equal_columns(cov_sample)
 
-print(xtable(spreads_sample), include.rownames = FALSE, include.colnames = F,
-      floating = FALSE, size = 'tiny', file = 'tables/spreads_sample.tex')
+#print(xtable(spreads_sample), include.rownames = FALSE, include.colnames = F,
+#      floating = FALSE, size = 'tiny', file = 'tables/spreads_sample.tex')
 
-print(xtable(cov_sample), include.rownames = FALSE, include.colnames = F,
-      floating = FALSE, size = 'tiny', file = 'tables/cof_var_sample.tex')
+#print(xtable(cov_sample), include.rownames = FALSE, include.colnames = F,
+#      floating = FALSE, size = 'tiny', file = 'tables/cof_var_sample.tex')
