@@ -1,52 +1,56 @@
 [
   {
-    "name": ["frt_datapackage"],
-    "title": ["The Financial Regulatory Transparency Index"],
-    "version": ["2.0"],
-    "maintainer": ["Christopher Gandrurd"],
-    "license": ["PDDL-1.0"],
-    "last_updated": ["2016-02-15"],
-    "homepage": ["https://github.com/FGCH/FRTIndex"]
+    "name": "frt_datapackage",
+    "title": "The Financial Regulatory Transparency Index",
+    "version": "2.1",
+    "maintainer": "Christopher Gandrurd",
+    "license": "PDDL-1.0",
+    "last_updated": "2016-04-25",
+    "homepage": "https://github.com/FGCH/FRTIndex"
   },
-  {
-    "resources": [
-      {
-        "path": "data/frt_datapackage_data.csv"
+  [
+    {
+      "path": "data/frt_datapackage-data.csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "country",
+            "type": "character"
+          },
+          {
+            "name": "iso2c",
+            "type": "character"
+          },
+          {
+            "name": "year",
+            "type": "character"
+          },
+          {
+            "name": "median",
+            "type": "number"
+          },
+          {
+            "name": "lower_95",
+            "type": "number"
+          },
+          {
+            "name": "lower_90",
+            "type": "number"
+          },
+          {
+            "name": "upper_90",
+            "type": "number"
+          },
+          {
+            "name": "upper_95",
+            "type": "number"
+          },
+          {
+            "name": "se",
+            "type": "number"
+          }
+        ]
       }
-    ],
-    "schema": [
-      {
-        "name": "country",
-        "type": "character"
-      },
-      {
-        "name": "iso2c",
-        "type": "character"
-      },
-      {
-        "name": "year",
-        "type": "character"
-      },
-      {
-        "name": "lower_95",
-        "type": "number"
-      },
-      {
-        "name": "lower_90",
-        "type": "number"
-      },
-      {
-        "name": "median",
-        "type": "number"
-      },
-      {
-        "name": "upper_90",
-        "type": "number"
-      },
-      {
-        "name": "upper_95",
-        "type": "number"
-      }
-    ]
-  }
+    }
+  ]
 ]
