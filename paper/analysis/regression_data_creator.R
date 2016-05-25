@@ -13,7 +13,8 @@ library(lubridate)
 library(DataCombine)
 library(tidyr)
 library(R.cache)
-library(fredr) # if not installed use devtools::github_install('christophergandrud/fredr')
+library(devtools)
+library(fredr) # if not installed use devtools::install_github('christophergandrud/fredr')
 
 # Set working directory. Change as needed. --------
 setwd('/git_repositories/FRTIndex/')
@@ -32,6 +33,9 @@ frt_2015 <- frt_2015 %>% select(iso2c, year, median) %>%
 
 # Load hrv ----------------
 hrv <- import('source/Hollyer_et_al_Compare/hrv_means.csv')
+
+# OECD membership dummy ----------------
+source_gist('ca640f6effcdd9fedc3a6452de7c9f48')
 
 # Download data from WDI data ---------------
 max_year <- max(frt$year)
@@ -102,7 +106,7 @@ debt_eurostat <- DropNA(debt_eurostat, 'iso2c') %>% select(-GEO)
 ## IMF Historical Public Debt Data ---------------
 # From: https://www.imf.org/external/pubs/cat/longres.aspx?sk=24332.0
 hist_pubdebtgdp <- import('paper/analysis/data_and_misc/Debt Database Fall 2013 Vintage.xlsx',
-                          sheet = 2)
+                          which = 2)
 hist_pubdebtgdp <- hist_pubdebtgdp[, c(1, 4:324)]
 hist_pubdebtgdp <- hist_pubdebtgdp %>% gather(year, pubdebtgdp_gen_imf, 
                                               2:ncol(hist_pubdebtgdp))
@@ -194,7 +198,7 @@ fred_iv <- merge(us_3month, vix, by = 'year', all = T)
 # Wang et al. GFS Fiscal transparency -----------
 # Downloaded from https://www.imf.org/External/pubs/cat/longres.aspx?sk=43177.0
 fiscal_trans <- import('paper/analysis/data_and_misc/wp15188.xlsx', 
-                       sheet = "GFS Index Score", skip = 2)
+                       which = 4, skip = 2)
 fiscal_trans$iso2c <- countrycode(fiscal_trans$Country, origin = 'country.name',
                                   destination = 'iso2c')
 fiscal_trans <- fiscal_trans[, c(-1, -2, -3)]
@@ -209,6 +213,7 @@ fiscal_trans$year <- fiscal_trans$year %>% as.numeric
 # Combine ------------
 comb <- merge(frt, frt_2015, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, hrv, by = c('iso2c', 'year'), all.x = T)
+comb <- merge(comb, oecd_members, c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, bonds, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, debt_comb, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, wdi, by = c('iso2c', 'year'), all.x = T)
@@ -217,10 +222,11 @@ comb <- merge(comb, fiscal_trans, by = c('iso2c', 'year'), all.x = T)
 
 comb$year <- comb$year %>% as.numeric
 comb <- comb %>% arrange(iso2c, year)
-comb <- comb %>% MoveFront('income')
+comb$oecd_member[is.na(comb$oecd_member)] <- 0
+comb <- comb %>% MoveFront(c('income', 'oecd_member'))
 
 # Create lags and changes --------------
-vars <- names(comb)[4:ncol(comb)]
+vars <- names(comb)[5:ncol(comb)]
 
 for (i in vars) {
     message(i)
@@ -276,11 +282,11 @@ comb_full$imf_code <- countrycode(comb_full$iso2c, origin = 'iso2c',
 
 
 comb_full <- MoveFront(comb_full, c('country', 'iso2c', 'imf_code',
-                                    'year', 'income', 'frt'))
+                                    'year', 'oecd_member', 'income', 'frt'))
 
 FindDups(comb_full, c('iso2c', 'year'))
 
 rmExcept('comb_full')
 
 # Save
-foreign::write.dta(comb_full, file = 'paper/analysis/frt04_16_v1.dta')
+foreign::write.dta(comb_full, file = 'paper/analysis/frt04_16_v2.dta')

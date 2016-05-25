@@ -19,6 +19,7 @@ gen d_frt_2015xd_pubdebtgdp_gen = d_frt_2015 * d_pubdebtgdp_gen
 * Subset sample to OECD/non-Japan
 keep if country != "Russian Federation" & country != "South Africa" & country != "Japan"
 
+
 /* ECM Models */
 
 /************** Spreads ********************/
