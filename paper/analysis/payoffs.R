@@ -215,7 +215,7 @@ scen <- scen %>% group_by(scenario_id_2) %>%
 # Forced REVEAL under very high interest rates ------------
 scen$forced <- ''
 scen$forced[scen$trans1 == 'HIDE' & scen$trans2 == 'REVEAL' & 
-                scen$r1 == 3 & !(scen$x1 == 'V' & scen$x2 == 'H') &
+                scen$r3 == 3 & !(scen$x1 == 'V' & scen$x2 == 'H') &
                 !(scen$x1 == 'H' & scen$x2 == 'L')
             ] <- 'F'
 
