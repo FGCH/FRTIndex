@@ -227,13 +227,13 @@ scen$scenario_id <- scen$scenario_id %>%
                         factor(levels = unique(scen$scenario_id_2)) %>% as.numeric
 
 sub <- scen %>% select(scenario_id_2, x1, x2, gamma1, gamma2, trans1, trans2, 
-                       r1, r2, delta_r, u2, u2_costly, u2_benefit, 
+                       r1, r2, u2, u2_costly, u2_benefit, 
                        preferred2_costless, preferred2_costly, preferred2_benefit,
                        forced)
 
 names(sub) <- c('ID', '$X_{1}$', '$X_{2}$', '$\\Gamma_{1}$', '$\\Gamma_{2}$',
                 '$Transp._{1}$', '$Transp._{2}$', '$r_{1}$', '$r_{2}$',
-                '$\\Delta r$', '$U^{G}_{c = 0}$', '$U^{G}_{c = -1}$', 
+                '$U^{G}_{c = 0}$', '$U^{G}_{c = -1}$', 
                 '$U^{G}_{c = 1}$', '$P^{G}_{c=0}$', '$P^{G}_{c = -1}$',
                 '$P^{G}_{c = 1}$', 'Forced?'
                 )
