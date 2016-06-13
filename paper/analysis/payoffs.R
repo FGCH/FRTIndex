@@ -215,7 +215,7 @@ scen <- scen %>% group_by(scenario_id_2) %>%
 # Forced REVEAL under very high interest rates ------------
 scen$forced <- ''
 scen$forced[scen$trans1 == 'HIDE' & scen$trans2 == 'REVEAL' & 
-                scen$r3 == 3 & !(scen$x1 == 'V' & scen$x2 == 'H') &
+                scen$r2 == 3 & !(scen$x1 == 'V' & scen$x2 == 'H') &
                 !(scen$x1 == 'H' & scen$x2 == 'L')
             ] <- 'F'
 
@@ -223,7 +223,7 @@ scen$forced[scen$trans1 == 'HIDE' & scen$trans2 == 'REVEAL' &
 # Export as LaTeX table -----------------------
 library(xtable)
 
-scen$scenario_id <- scen$scenario_id %>% 
+scen$scenario_id_2 <- scen$scenario_id %>% 
                         factor(levels = unique(scen$scenario_id_2)) %>% as.numeric
 
 sub <- scen %>% select(scenario_id_2, x1, x2, gamma1, gamma2, trans1, trans2, 
@@ -325,7 +325,10 @@ ids2 <- cbind(ids2, out_df2)
 comb <- rbind(ids1, ids2)
 
 comb$x <- factor(comb$x, levels = c('L', 'H', 'V'))
-comb$cost <- factor(comb$cost, levels = c('Stage 1', 'c = -1', 'c = 0', 'c = 1'))
+comb$cost <- factor(comb$cost, levels = c('Stage 1', 'c = -1', 
+                                          'c = 0', 'c = 1'),
+                    labels = c('Stage 1', 'Stage 2: c = -1', 
+                                          'Stage 2: c = 0', 'Stage 2: c = 1'))
 comb$Transparency <- factor(comb$Transparency, levels = c('HIDE', 'REVEAL'))
 
 comb <- subset(comb, !is.na(mean_r))
@@ -428,7 +431,7 @@ ids <- subset(ids, !is.na(mean_r))
 ggplot(ids, aes(x_change, mean_r, 
                 group = Trans_Change, linetype = Trans_Change)) +
     facet_grid(.~cost) +
-    geom_line(alpha = 0.5) +
+    geom_line(position = position_dodge(width = 0.1)) +
     xlab('\nDebt level Change from Stage 1 to 2') + 
     ylab('Mean interest rates in Stage 2\n across all possible scenarios\n')
 
