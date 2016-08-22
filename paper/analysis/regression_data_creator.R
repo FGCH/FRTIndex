@@ -14,6 +14,7 @@ library(DataCombine)
 library(tidyr)
 library(R.cache)
 library(devtools)
+library(psData)
 library(fredr) # if not installed use devtools::install_github('christophergandrud/fredr')
 
 # Set working directory. Change as needed. --------
@@ -35,7 +36,7 @@ frt_2015 <- frt_2015 %>% select(iso2c, year, median) %>%
 hrv <- import('source/Hollyer_et_al_Compare/hrv_means.csv')
 
 # OECD membership dummy ----------------
-source_gist('ca640f6effcdd9fedc3a6452de7c9f48')
+source('https://gist.githubusercontent.com/christophergandrud/ca640f6effcdd9fedc3a6452de7c9f48/raw/6d8f0ef8081ea02221a79eb7f4b451699725800a/oecd_membership_dummy.R')
 
 # Download data from WDI data ---------------
 max_year <- max(frt$year)
@@ -210,6 +211,33 @@ fiscal_trans <- fiscal_trans %>% gather(year, fiscal_trans_gfs,
                                 arrange(iso2c, year)
 fiscal_trans$year <- fiscal_trans$year %>% as.numeric
 
+# DPI Executive election timing (Gandrud corrected) ----------------------------
+elections <- import('https://raw.githubusercontent.com/christophergandrud/yrcurnt_corrected/master/data/yrcurnt_original_corrected.csv') 
+
+elections$exec_election_yr <- 0
+elections$exec_election_yr[elections$yrcurnt_corrected == 0] <- 1
+
+elections <- elections %>% select(iso2c, year, exec_election_yr)
+
+# DPI Executive left-right ideology --------------------------------------------
+dpi <- DpiGet(vars = 'execrlc') %>% select(iso2c, year, execrlc) %>%
+        rename(dpi_execrlc = execrlc)
+dpi$dpi_execrlc[dpi$dpi_execrlc == -999] <- NA
+
+dpi$dpi_left <- 0
+dpi$dpi_left[dpi$dpi_execrlc == 3] <- 1 
+
+dpi <- dpi %>% select(iso2c, year, dpi_left)
+
+# Unified Democracy Scores ---------------------------------------------------------
+## Downloaded from: http://www.unified-democracy-scores.org/uds.html 
+uds <- import('paper/analysis/data_and_misc/uds_summary.csv')
+
+uds$iso2c <- countrycode(uds$country, origin = 'country.name', 
+                         destination = 'iso2c')
+
+uds <- uds %>% select(iso2c, year, mean) %>% rename(uds = mean)
+
 # Combine ------------
 comb <- merge(frt, frt_2015, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, hrv, by = c('iso2c', 'year'), all.x = T)
@@ -219,6 +247,10 @@ comb <- merge(comb, debt_comb, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, wdi, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, fred_iv, by = 'year', all.x = T)
 comb <- merge(comb, fiscal_trans, by = c('iso2c', 'year'), all.x = T)
+comb <- merge(comb, elections, by = c('iso2c', 'year'), all.x = T)
+comb <- merge(comb, dpi, by = c('iso2c', 'year'), all.x = T)
+comb <- merge(comb, uds, by = c('iso2c', 'year'), all.x = T)
+
 
 comb$year <- comb$year %>% as.numeric
 comb <- comb %>% arrange(iso2c, year)
@@ -289,4 +321,4 @@ FindDups(comb_full, c('iso2c', 'year'))
 rmExcept('comb_full')
 
 # Save
-foreign::write.dta(comb_full, file = 'paper/analysis/frt04_16_v2.dta')
+foreign::write.dta(comb_full, file = 'paper/analysis/frt08_16_v1.dta')
