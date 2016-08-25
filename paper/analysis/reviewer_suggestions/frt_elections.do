@@ -11,7 +11,7 @@ set more off
 // Set working directory, change as needed/
 cd "/git_repositories/FRTIndex/paper/"
 
-use "analysis/frt08_16_v1.dta"
+use "analysis/frt08_16_v2.dta"
 
 * Create interactions
 gen l_frt2015xl_pub_gen = l_frt_2015 * l_pubdebtgdp_gen
@@ -28,8 +28,7 @@ keep if country != "Russian Federation" & country != "South Africa" & country !=
 xtreg d_bond_spread_fred l_bond_spread_fred l_frt_2015 d_frt_2015 l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l ///
 	l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix ///
-	l_exec_election_yr d_exec_election_yr l_dpi_left d_dpi_left ///
-	exec_election_yr dpi_left ///
+	l_exec_election_yr l_dpi_left ///
 	if country!="United States", cluster(imf_code) i(imf_code) fe vsquish noomit
 
 regsave using "tables/reviewer_suggestions/FRT_1_elections.dta", detail(all) replace table(nonInteractSpread, ///
@@ -40,8 +39,7 @@ xtreg d_bond_spread_fred l_bond_spread_fred l_frt_2015 d_frt_2015 l_pubdebtgdp_g
 	l_frt2015xl_pub_gen d_frt_2015xd_pubdebtgdp_gen l_infl d_infl ///
 	l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth ///
 	l_us3mrate d_us3mrate l_vix d_vix ///
-	l_exec_election_yr d_exec_election_yr
-	l_dpi_left d_dpi_left ///
+	l_exec_election_yr l_dpi_left ///
 	if country!="United States", ///
 	cluster(imf_code) i(imf_code) fe vsquish noomit
 
@@ -53,7 +51,7 @@ regsave using "tables/reviewer_suggestions/FRT_2_elections.dta", detail(all) rep
 xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_frt_2015 d_frt_2015 l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l ///
 	d_pcgdp2005l l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix ///
-	l_exec_election_yr d_exec_election_yr l_dpi_left d_dpi_left, ///
+	l_exec_election_yr l_dpi_left, ///
 	cluster(imf_code) i(imf_code) fe vsquish noomit
 
 regsave using "tables/reviewer_suggestions/FRT_3_elections.dta", detail(all) replace table(frt1, ///
@@ -65,8 +63,7 @@ xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_frt_2015 d_frt_2015 l_pubdebtgdp_gen
 	l_frt2015xl_pub_gen d_frt_2015xd_pubdebtgdp_gen ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l ///
 	l_cgdpgrowth d_cgdpgrowth l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate ///
-	l_vix d_vix ///
-	l_exec_election_yr d_exec_election_yr l_dpi_left d_dpi_left, ///
+	l_exec_election_yr l_dpi_left, ///
 	cluster(imf_code) i(imf_code) fe vsquish noomit
 
 regsave using "tables/reviewer_suggestions/FRT_4_elections.dta", detail(all) replace table(frt2, ///

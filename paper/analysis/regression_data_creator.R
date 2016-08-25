@@ -16,6 +16,7 @@ library(R.cache)
 library(devtools)
 library(psData)
 library(fredr) # if not installed use devtools::install_github('christophergandrud/fredr')
+library(spatialWeights) # if not installed use devtools::install_github('christophergandrud/spatialWeights')
 
 # Set working directory. Change as needed. --------
 setwd('/git_repositories/FRTIndex/')
@@ -29,7 +30,7 @@ frt <- frt %>% select(iso2c, year, median) %>% rename(frt = median)
 
 # Load frt (v2015) -------------------
 frt_2015 <- import('IndexData/FRTIndex.csv')
-frt_2015 <- frt_2015 %>% select(iso2c, year, median) %>% 
+frt_2015 <- frt_2015 %>% select(iso2c, year, median) %>%
     rename(frt_2015 = median)
 
 # Load hrv ----------------
@@ -50,6 +51,9 @@ wdi <- wdi %>%
         rename(cgdpgrowth = NY.GDP.MKTP.KD.ZG) %>%
         rename(pcgdp2005l = NY.GDP.PCAP.KD)
 
+# Convert Per capita GDP to 1000s of dollars 
+wdi$pcgdp2005l <- wdi$pcgdp2005l/1000
+
 # Create list of OECD countries ---------------
 oecd <- subset(wdi, income == 'High income: OECD')
 oecd_growth <- oecd %>% group_by(year) %>%
@@ -61,7 +65,7 @@ wdi_debt$pubdebtgdp_cent_wdi[wdi_debt$pubdebtgdp_cent_wdi >= 5102.68132] <- NA
 
 
 wdi <- wdi %>% select(iso2c, year, infl, cgdpgrowth,
-                      pcgdp2005l, income)
+                      pcgdp2005l, income, region)
 
 wdi <- merge(wdi, oecd_growth, by = 'year')
 
@@ -72,7 +76,7 @@ cache_key <- as.list(iso2c_fred)
 debt_fred <- loadCache(key = cache_key)
 
 if (is.null(debt_fred)) {
-    debt_fred <- fred_loop(prefix = 'DEBTTL', suffix = 'A188A', 
+    debt_fred <- fred_loop(prefix = 'DEBTTL', suffix = 'A188A',
                            iso2c = iso2c_fred,
                            var_name = 'pubdebtgdp_cent_fred')
     saveCache(debt_fred, key = cache_key)
@@ -91,7 +95,7 @@ eurostat <- import('paper/analysis/data_and_misc/gov_q_ggdebt_1_Data.csv',
 eurostat <- eurostat %>% filter(SECTOR == 'Central government') %>%
                 filter(UNIT == "Percentage of gross domestic product (GDP)") %>%
                 filter(INDIC_NA == 'Government consolidated gross debt') %>%
-                select(-UNIT, -INDIC_NA, -SECTOR) 
+                select(-UNIT, -INDIC_NA, -SECTOR)
 
 eurostat$year <- as.numeric(gsub('Q.', '', eurostat$TIME))
 eurostat$Value <- as.numeric(eurostat$Value)
@@ -109,15 +113,15 @@ debt_eurostat <- DropNA(debt_eurostat, 'iso2c') %>% select(-GEO)
 hist_pubdebtgdp <- import('paper/analysis/data_and_misc/Debt Database Fall 2013 Vintage.xlsx',
                           which = 2)
 hist_pubdebtgdp <- hist_pubdebtgdp[, c(1, 4:324)]
-hist_pubdebtgdp <- hist_pubdebtgdp %>% gather(year, pubdebtgdp_gen_imf, 
+hist_pubdebtgdp <- hist_pubdebtgdp %>% gather(year, pubdebtgdp_gen_imf,
                                               2:ncol(hist_pubdebtgdp))
 
-hist_pubdebtgdp$iso2c <- countrycode(hist_pubdebtgdp$country, 
-                                     origin = 'country.name', 
+hist_pubdebtgdp$iso2c <- countrycode(hist_pubdebtgdp$country,
+                                     origin = 'country.name',
                                      destination = 'iso2c')
 
 hist_pubdebtgdp[, 2:3] <- sapply(hist_pubdebtgdp[, 2:3], as.numeric)
-hist_pubdebtgdp <- hist_pubdebtgdp %>% filter(year >= 1989) %>% 
+hist_pubdebtgdp <- hist_pubdebtgdp %>% filter(year >= 1989) %>%
     arrange(country, year) %>% select(-country)
 
 
@@ -128,26 +132,26 @@ weo_debt <- import('paper/analysis/data_and_misc/WEOOct2015all.csv',
 
 weo_debt <- weo_debt %>% filter(`WEO Subject Code` == 'GGXWDG_NGDP')
 
-weo_debt <- weo_debt[, c(2, 11:44)] 
+weo_debt <- weo_debt[, c(2, 11:44)]
 weo_debt <- weo_debt %>% gather(year, pubdebtgdp_gen_weo, 2:ncol(weo_debt))
 
-weo_debt$iso2c <- countrycode(weo_debt$ISO, 
-                                     origin = 'iso3c', 
+weo_debt$iso2c <- countrycode(weo_debt$ISO,
+                                     origin = 'iso3c',
                                      destination = 'iso2c')
 
 weo_debt[, 2:3] <- sapply(weo_debt[, 2:3], as.numeric)
-weo_debt <- weo_debt %>% filter(year >= 1989) %>% arrange(iso2c, year) %>% 
+weo_debt <- weo_debt %>% filter(year >= 1989) %>% arrange(iso2c, year) %>%
                     select(-ISO)
 weo_debt <- weo_debt %>% DropNA('iso2c')
 
 # Create debt measures data frame --------------
-debt_comb <- merge(debt_eurostat, wdi_debt, by = c('iso2c', 'year'), 
+debt_comb <- merge(debt_eurostat, wdi_debt, by = c('iso2c', 'year'),
                    all = TRUE)
-debt_comb <- merge(debt_comb, debt_fred, by = c('iso2c', 'year'), 
+debt_comb <- merge(debt_comb, debt_fred, by = c('iso2c', 'year'),
                    all = TRUE)
-debt_comb <- merge(debt_comb, hist_pubdebtgdp, by = c('iso2c', 'year'), 
+debt_comb <- merge(debt_comb, hist_pubdebtgdp, by = c('iso2c', 'year'),
                    all = TRUE)
-debt_comb <- merge(debt_comb, weo_debt, by = c('iso2c', 'year'), 
+debt_comb <- merge(debt_comb, weo_debt, by = c('iso2c', 'year'),
                    all = TRUE)
 
 debt_comb <- subset(debt_comb, year > 1988)
@@ -157,19 +161,19 @@ debt_comb <- DropNA(debt_comb, 'iso2c')
 # Fill in Missing values of public debt (t)
 debt_comb$pubdebtgdp_cent <- debt_comb$pubdebtgdp_cent_wdi
 
-debt_comb <- FillIn(D1 = debt_comb, D2 = debt_fred, Var1 = 'pubdebtgdp_cent', 
+debt_comb <- FillIn(D1 = debt_comb, D2 = debt_fred, Var1 = 'pubdebtgdp_cent',
                           Var2 = 'pubdebtgdp_cent_fred')
 # 228 filled in
-debt_comb <- FillIn(D1 = debt_comb, D2 = debt_eurostat, 
-                    Var1 = 'pubdebtgdp_cent', 
+debt_comb <- FillIn(D1 = debt_comb, D2 = debt_eurostat,
+                    Var1 = 'pubdebtgdp_cent',
                     Var2 = 'pubdebtgdp_cent_eu')
 # 37 filled in
 
 # Fill in Missing values of public debt (general government)
 debt_comb$pubdebtgdp_gen <- debt_comb$pubdebtgdp_gen_imf
 
-debt_comb <- FillIn(D1 = debt_comb, D2 = weo_debt, 
-                    Var1 = 'pubdebtgdp_gen', 
+debt_comb <- FillIn(D1 = debt_comb, D2 = weo_debt,
+                    Var1 = 'pubdebtgdp_gen',
                     Var2 = 'pubdebtgdp_gen_weo')
 # 625 filled in
 
@@ -198,7 +202,7 @@ fred_iv <- merge(us_3month, vix, by = 'year', all = T)
 
 # Wang et al. GFS Fiscal transparency -----------
 # Downloaded from https://www.imf.org/External/pubs/cat/longres.aspx?sk=43177.0
-fiscal_trans <- import('paper/analysis/data_and_misc/wp15188.xlsx', 
+fiscal_trans <- import('paper/analysis/data_and_misc/wp15188.xlsx',
                        which = 4, skip = 2)
 fiscal_trans$iso2c <- countrycode(fiscal_trans$Country, origin = 'country.name',
                                   destination = 'iso2c')
@@ -212,7 +216,7 @@ fiscal_trans <- fiscal_trans %>% gather(year, fiscal_trans_gfs,
 fiscal_trans$year <- fiscal_trans$year %>% as.numeric
 
 # DPI Executive election timing (Gandrud corrected) ----------------------------
-elections <- import('https://raw.githubusercontent.com/christophergandrud/yrcurnt_corrected/master/data/yrcurnt_original_corrected.csv') 
+elections <- import('https://raw.githubusercontent.com/christophergandrud/yrcurnt_corrected/master/data/yrcurnt_original_corrected.csv')
 
 elections$exec_election_yr <- 0
 elections$exec_election_yr[elections$yrcurnt_corrected == 0] <- 1
@@ -222,18 +226,22 @@ elections <- elections %>% select(iso2c, year, exec_election_yr)
 # DPI Executive left-right ideology --------------------------------------------
 dpi <- DpiGet(vars = 'execrlc') %>% select(iso2c, year, execrlc) %>%
         rename(dpi_execrlc = execrlc)
+
+# Remove downloaded file
+unlink('DPI2015', recursive = TRUE)
+
 dpi$dpi_execrlc[dpi$dpi_execrlc == -999] <- NA
 
 dpi$dpi_left <- 0
-dpi$dpi_left[dpi$dpi_execrlc == 3] <- 1 
+dpi$dpi_left[dpi$dpi_execrlc == 3] <- 1
 
 dpi <- dpi %>% select(iso2c, year, dpi_left)
 
 # Unified Democracy Scores ---------------------------------------------------------
-## Downloaded from: http://www.unified-democracy-scores.org/uds.html 
+## Downloaded from: http://www.unified-democracy-scores.org/uds.html
 uds <- import('paper/analysis/data_and_misc/uds_summary.csv')
 
-uds$iso2c <- countrycode(uds$country, origin = 'country.name', 
+uds$iso2c <- countrycode(uds$country, origin = 'country.name',
                          destination = 'iso2c')
 
 uds <- uds %>% select(iso2c, year, mean) %>% rename(uds = mean)
@@ -255,10 +263,40 @@ comb <- merge(comb, uds, by = c('iso2c', 'year'), all.x = T)
 comb$year <- comb$year %>% as.numeric
 comb <- comb %>% arrange(iso2c, year)
 comb$oecd_member[is.na(comb$oecd_member)] <- 0
-comb <- comb %>% MoveFront(c('income', 'oecd_member'))
+comb <- comb %>% MoveFront(c('income', 'region', 'oecd_member'))
+
+# Create spatial weigths (GDP per capita) --------------------------
+gdp_weights_spread <- monadic_spatial_weights(comb, id_var = 'iso2c', 
+                                location_var = 'pcgdp2005l',
+                                y_var = 'bond_spread_fred', 
+                                time = 'year', mc_cores = 4)
+
+gdp_weights_volatility <- monadic_spatial_weights(comb, id_var = 'iso2c', 
+                                              location_var = 'pcgdp2005l',
+                                              y_var = 'lt_ratecov_fred', 
+                                              time = 'year', mc_cores = 4)
+
+comb <- merge(comb, gdp_weights_spread, by = c('iso2c', 'year'), all.x = T)
+comb <- merge(comb, gdp_weights_volatility, by = c('iso2c', 'year'), all.x = T)
+
+# Create geographic region --------------------------
+region_weights_spread <- monadic_spatial_weights(comb, id_var = 'iso2c', 
+                                              location_var = 'region',
+                                              y_var = 'bond_spread_fred', 
+                                              time = 'year', mc_cores = 4)
+
+region_weights_volatility <- monadic_spatial_weights(comb, id_var = 'iso2c', 
+                                                  location_var = 'region',
+                                                  y_var = 'lt_ratecov_fred', 
+                                                  time = 'year', mc_cores = 4)
+
+comb <- merge(comb, region_weights_spread, by = c('iso2c', 'year'), all.x = T)
+comb <- merge(comb, region_weights_volatility, by = c('iso2c', 'year'), 
+              all.x = T)
+
 
 # Create lags and changes --------------
-vars <- names(comb)[5:ncol(comb)]
+vars <- names(comb)[6:ncol(comb)]
 
 for (i in vars) {
     message(i)
@@ -321,4 +359,4 @@ FindDups(comb_full, c('iso2c', 'year'))
 rmExcept('comb_full')
 
 # Save
-foreign::write.dta(comb_full, file = 'paper/analysis/frt08_16_v1.dta')
+foreign::write.dta(comb_full, file = 'paper/analysis/frt08_16_v2.dta')

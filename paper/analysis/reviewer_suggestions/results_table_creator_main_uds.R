@@ -1,5 +1,5 @@
 ################################################################################
-# Create LaTeX tables from Stata output for models with executive election year
+# Create LaTeX tables from Stata output for models with democracy level
 # Christopher Gandrud
 # MIT License
 ################################################################################

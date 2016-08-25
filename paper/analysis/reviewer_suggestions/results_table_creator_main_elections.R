@@ -53,7 +53,8 @@ CleanUp <- data.frame(
              'l_vix', 'd_vix',
              'l_country_growth', 'd_country_growth',
              'eurozone',
-             'l_exec_election_yr', 'd_exec_election_yr'
+             'l_exec_election_yr', 'd_exec_election_yr',
+             'l_dpi_left'
     ),
     to = c('', '', 'Constant', 'Countries', 'Observations', 'Adjusted R-squared',
            '$\\\\Delta$ HRV * $\\\\Delta$ Public debt/GDP', 'HRV$_{t-1}$ * Public debt/GDP (\\\\%)$_{t-1}$',
@@ -73,7 +74,8 @@ CleanUp <- data.frame(
            'VIX index$_{t-1}$', '$\\\\Delta$ VIX index',
            'Domestic GDP growth (\\\\%)$_{t-1}$', '$\\\\Delta$ Domestic GDP growth (\\\\%)',
            'Eurozone Member',
-           'Exec. Election$_{t-1}$', '$\\\\Delta$ Exec. Election'
+           'Exec. Election$_{t-1}$', '$\\\\Delta$ Exec. Election',
+           'Left Executive$_{t-1}$'
     )
 )
 
@@ -83,7 +85,8 @@ outputFRT <- CombineFiles(filesFRT, start = 'FRT_1_elections.dta')
 outputFRT <- FindReplace(outputFRT, Var = 'var', replaceData = CleanUp,
                          exact = F)
 
-outputFRT <- outputFRT[c(87:88, 85:86, 1:36, 84:81, 37:38, 44, 40, 48), ]
+outputFRT <- outputFRT[c(88:87, 81:82, 1:28, 85:86, 83:84, 29:32,
+                         80:77, 33:34, 40, 36, 44), ]
 
 # Insert blank row for formatting
 blank <- c('', '', '', '', '')
