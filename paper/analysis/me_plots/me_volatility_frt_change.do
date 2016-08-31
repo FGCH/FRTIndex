@@ -11,7 +11,7 @@ set more off
 // Set working directory, change as needed/
 cd "/git_repositories/FRTIndex/paper/"
 
-use "analysis/frt04_16_v2.dta"
+use "analysis/frt08_16_v2.dta"
 
 * Create interactions
 gen l_frt2015xl_pub_gen = l_frt_2015 * l_pubdebtgdp_gen
@@ -58,7 +58,7 @@ while `iter'<`numparams' {
 
 xtreg d_lt_ratecov_fred d_frt_2015 d_pubdebtgdpa x1x2a l_lt_ratecov_fred l_frt_2015 l_pubdebtgdp_gen ///
 	l_frt2015xl_pub_gen l_infl d_infl l_cgdpgrowth d_cgdpgrowth ///
-	l_pcgdp2005l d_pcgdp2005l l_cgdpgrowth d_cgdpgrowth l_oecdgrowth d_oecdgrowth ///
+	l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth ///
 	l_us3mrate d_us3mrate l_vix d_vix if country != "United States", ///
 	cluster(imf_code) i(imf_code) fe vsquish noomit
 

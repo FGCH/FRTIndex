@@ -21,13 +21,14 @@ gen d_frt_2015xd_pubdebtgdp_gen = d_frt_2015 * d_pubdebtgdp_gen
 drop if country == "Russian Federation" | country == "South Africa" | country == "Japan"
 
 /* 3. Run standard regression. */
-
 xtreg d_bond_spread_fred l_bond_spread_fred l_frt_2015 d_frt_2015 l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_frt2015xl_pub_gen d_frt_2015xd_pubdebtgdp_gen l_infl d_infl ///
 	l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth ///
-	 l_us3mrate d_us3mrate l_vix d_vix if country!="United States", ///
+	 l_us3mrate d_us3mrate l_vix d_vix ///
+	 l_sp_wght_region_d_bnd_sprd_frd d_sp_wght_region_d_bnd_sprd_frd ///
+	 if country!="United States", ///
 	 cluster(imf_code) i(imf_code) fe vsquish noomit
-	 
+
 /* 4. Gather parameters, initialize matrix for runs */
 quietly summarize l_pubdebtgdp_gen if e(sample), detail /* Change x2 to variable that you want to appear on X-axis */
 local min=r(min)
@@ -60,7 +61,9 @@ while `iter'<`numparams' {
 xtreg d_bond_spread_fred l_frt_2015 l_pubdebtgdpa x1x2a l_bond_spread_fred d_frt_2015 d_pubdebtgdp_gen ///
 	d_frt_2015xd_pubdebtgdp_gen l_infl d_infl l_cgdpgrowth d_cgdpgrowth ///
 	l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth ///
-	l_us3mrate d_us3mrate l_vix d_vix if country != "United States", ///
+	l_us3mrate d_us3mrate l_vix d_vix ///
+	l_sp_wght_region_d_bnd_sprd_frd d_sp_wght_region_d_bnd_sprd_frd ///
+	if country != "United States", ///
 	cluster(imf_code) i(imf_code) fe vsquish noomit
 
 matrix betas=e(b)                /* Stop alterations. */
@@ -92,4 +95,4 @@ twoway (connect points1 points2 points3 points4, mcolor(navy maroon navy)/*
 */  xsca(titlegap(2)) yscal(titlegap(2))/*
 */  legend(off) scheme(s2mono) graphregion(color(white))
 
-graph export paper_plots/me_level_frt_spreads.pdf, replace
+graph export paper_plots/reviewer_suggestions/me_level_frt_spreads_reg_peer.pdf, replace

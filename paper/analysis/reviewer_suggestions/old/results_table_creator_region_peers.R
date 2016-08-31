@@ -55,8 +55,8 @@ CleanUp <- data.frame(
              'eurozone',
              'l_exec_election_yr', 'd_exec_election_yr',
              'l_uds', 'd_uds',
-             'l_sp_weights_regin_bnd_sprd_frd', 'd_sp_weights_regin_bnd_sprd_frd',
-             'l_sp_weights_region_lt_rtcv_frd', 'd_sp_weights_region_lt_rtcv_frd'
+             'l_sp_wght_region_d_bnd_sprd_frd', 'd_sp_wght_region_d_bnd_sprd_frd',
+             'l_sp_wght_region_d_lt_ratcv_frd', 'd_sp_wght_region_d_lt_ratcv_frd'
     ),
     to = c('', '', 'Constant', 'Countries', 'Observations', 'Adjusted R-squared',
            '$\\\\Delta$ HRV * $\\\\Delta$ Public debt/GDP', 'HRV$_{t-1}$ * Public debt/GDP (\\\\%)$_{t-1}$',
@@ -89,8 +89,8 @@ outputFRT <- CombineFiles(filesFRT, start = 'FRT_1_region_peer.dta')
 outputFRT <- FindReplace(outputFRT, Var = 'var', replaceData = CleanUp,
                          exact = F)
 
-outputFRT <- outputFRT[c(92:91, 81:82, 1:32, 89:90, 87:88, 85:86, 83:84, 80:77, 
-                         33:34, 40, 36, 44), ]
+outputFRT <- outputFRT[c(92:91, 81:82, 1:32, 89:90, 87:88, 85:86, 83:84, 80,77, 
+                         78:79, 33:34, 40, 36, 44), ]
 
 # Insert blank row for formatting
 blank <- c('', '', '', '', '')

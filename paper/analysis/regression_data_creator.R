@@ -1,8 +1,8 @@
-# ---------------------------------------------------------------------------- #
+# ---------------------------------------------------------------------------- 
 # Regression data set creator for FRT bond spreads paper
 # Christopher Gandrud
 # MIT LICENSE
-# ---------------------------------------------------------------------------- #
+# ---------------------------------------------------------------------------- 
 
 library(rio)
 library(dplyr)
@@ -24,6 +24,11 @@ setwd('/git_repositories/FRTIndex/')
 # Bond yields, spreads, and coefficient of variation --------------
 source('paper/analysis/bond_data_creator.R')
 
+# Treat all US bond spreads as "missing" 
+# (spread created as difference of US and others)
+spread_vars <- names(bonds)[grep('spread', names(bonds))]
+for (i in spread_vars) bonds[bonds$iso2c == 'US', i] <- NA
+
 # Load frt (v2016) -------------------
 frt <- import('IndexData/FRTIndex_v2.csv')
 frt <- frt %>% select(iso2c, year, median) %>% rename(frt = median)
@@ -38,6 +43,12 @@ hrv <- import('source/Hollyer_et_al_Compare/hrv_means.csv')
 
 # OECD membership dummy ----------------
 source('https://gist.githubusercontent.com/christophergandrud/ca640f6effcdd9fedc3a6452de7c9f48/raw/6d8f0ef8081ea02221a79eb7f4b451699725800a/oecd_membership_dummy.R')
+
+# Eurozone membership dummy
+euro <- import('https://raw.githubusercontent.com/christophergandrud/euro_membership/master/data/euro_membership_data.csv') %>% 
+    select(-country)
+
+euro$euro_member <- 1
 
 # Download data from WDI data ---------------
 max_year <- max(frt$year)
@@ -246,10 +257,36 @@ uds$iso2c <- countrycode(uds$country, origin = 'country.name',
 
 uds <- uds %>% select(iso2c, year, mean) %>% rename(uds = mean)
 
+# Fitch Sovereign Bond Ratings -------------------------------------------------
+## Downloaded from: https://www.fitchratings.com/web_content/ratings/sovereign_ratings_history.xls
+fitch <- import('paper/analysis/data_and_misc/sovereign_ratings_history.xls',
+                skip = 4)
+fitch <- fitch[, 1:3] %>% setNames(c('country', 'date', 'fitch_lt_rating'))
+
+# Keep last rating per year
+fitch$year <- fitch$date %>% ymd %>% year
+fitch <- fitch[!duplicated(fitch[, c('country', 'year')], fromLast = TRUE), ] 
+
+fitch$iso2c <- countrycode(fitch$country, origin = 'country.name', 
+                           destination = 'iso2c')
+fitch <- fitch %>% select(iso2c, year, fitch_lt_rating) %>% arrange(iso2c, year)
+fitch$fitch_lt_rating[fitch$fitch_lt_rating == '-'] <- NA
+fitch$fitch_lt_rating[fitch$fitch_lt_rating == 'withdrawn'] <- NA
+fitch$fitch_lt_rating <- gsub('-', '_minus', fitch$fitch_lt_rating)
+fitch$fitch_lt_rating <- gsub('\\+', '_plus', fitch$fitch_lt_rating)
+fitch <- DropNA(fitch, c('iso2c', 'year'))
+
+fitch <- TimeExpand(fitch, GroupVar = 'iso2c', TimeVar = 'year')
+fitch <- fitch %>% group_by(iso2c) %>% 
+            mutate(fitch_lt_rating = FillDown(Var = fitch_lt_rating))
+
+fitch$fitch_lt_rating <- factor(fitch$fitch_lt_rating)
+
 # Combine ------------
 comb <- merge(frt, frt_2015, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, hrv, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, oecd_members, c('iso2c', 'year'), all.x = T)
+comb <- merge(comb, euro, c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, bonds, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, debt_comb, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, wdi, by = c('iso2c', 'year'), all.x = T)
@@ -258,62 +295,125 @@ comb <- merge(comb, fiscal_trans, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, elections, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, dpi, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, uds, by = c('iso2c', 'year'), all.x = T)
+comb <- merge(comb, fitch, by = c('iso2c', 'year'), all.x = T)
 
+# Remove Cyprus (often duplicated and lacks FRED bond spread data)
+comb <- subset(comb, iso2c != 'CY')
+
+# Clean up Euro membership
+comb$euro_member[is.na(comb$euro_member)] <- 0
 
 comb$year <- comb$year %>% as.numeric
 comb <- comb %>% arrange(iso2c, year)
+
+# Create ESM rules dummy 
+comb$esm_rules <- 0
+comb$esm_rules[comb$euro_member == 1 & comb$year >= 2011] <-1
+
 comb$oecd_member[is.na(comb$oecd_member)] <- 0
-comb <- comb %>% MoveFront(c('income', 'region', 'oecd_member'))
+comb <- comb %>% MoveFront(c('iso2c', 'year', 'income', 'region', 
+                             'oecd_member', 'euro_member', 'esm_rules'))
+
+# Create lags and changes --------------
+vars <- names(comb)[6:ncol(comb)] # include Euro_member and ESM lags
+
+lag_changes_creator <- function(comb, vars) {
+    for (i in vars) {
+        message(i)
+        new_lag <- paste0('l_', i)
+        new_d <- paste0('d_', i)
+        comb <- slide(comb, Var = i, TimeVar = 'year', GroupVar = 'iso2c',
+                      NewVar = new_lag)
+        comb <- change(comb, Var = i, TimeVar = 'year', GroupVar = 'iso2c',
+                       NewVar = new_d, type = 'absolute')
+        comb[, new_lag][comb[, new_lag] == -Inf] <- NA
+        comb[, new_lag][comb[, new_lag] == Inf] <- NA
+        comb[, new_lag][is.nan(comb[, new_lag])] <- NA
+        
+        comb[, new_d][comb[, new_d] == -Inf] <- NA
+        comb[, new_d][comb[, new_d] == Inf] <- NA
+        comb[, new_d][is.nan(comb[, new_d])] <- NA
+    }
+    return(comb)
+}
+
+comb <- lag_changes_creator(comb = comb, vars = vars)
 
 # Create spatial weigths (GDP per capita) --------------------------
 gdp_weights_spread <- monadic_spatial_weights(comb, id_var = 'iso2c', 
-                                location_var = 'pcgdp2005l',
-                                y_var = 'bond_spread_fred', 
-                                time = 'year', mc_cores = 4)
+                                              location_var = 'pcgdp2005l',
+                                              y_var = 'd_bond_spread_fred', 
+                                              time = 'year', mc_cores = 1)
 
 gdp_weights_volatility <- monadic_spatial_weights(comb, id_var = 'iso2c', 
-                                              location_var = 'pcgdp2005l',
-                                              y_var = 'lt_ratecov_fred', 
-                                              time = 'year', mc_cores = 4)
+                                                  location_var = 'pcgdp2005l',
+                                                  y_var = 'd_lt_ratecov_fred', 
+                                                  time = 'year', mc_cores = 1)
 
 comb <- merge(comb, gdp_weights_spread, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, gdp_weights_volatility, by = c('iso2c', 'year'), all.x = T)
 
 # Create geographic region --------------------------
 region_weights_spread <- monadic_spatial_weights(comb, id_var = 'iso2c', 
-                                              location_var = 'region',
-                                              y_var = 'bond_spread_fred', 
-                                              time = 'year', mc_cores = 4)
+                                                 location_var = 'region',
+                                                 y_var = 'd_bond_spread_fred', 
+                                                 time = 'year', mc_cores = 1,
+                                                 location_var_class = 'categorical')
 
 region_weights_volatility <- monadic_spatial_weights(comb, id_var = 'iso2c', 
-                                                  location_var = 'region',
-                                                  y_var = 'lt_ratecov_fred', 
-                                                  time = 'year', mc_cores = 4)
+                                                     location_var = 'region',
+                                                     y_var = 'd_lt_ratecov_fred', 
+                                                     time_var = 'year', mc_cores = 1,
+                                                     location_var_class = 'categorical')
+# Euro membership spatial weights
+euro_weights_spread <- monadic_spatial_weights(df = comb, id_var = 'iso2c', 
+                                                 location_var = 'euro_member',
+                                                 y_var = 'd_bond_spread_fred', 
+                                                 time_var = 'year', mc_cores = 1, 
+                                                 morans_i = F,
+                                                 location_var_class = 'categorical')
+
+euro_weights_volatility <- monadic_spatial_weights(comb, id_var = 'iso2c', 
+                                                     location_var = 'euro_member',
+                                                     y_var = 'd_lt_ratecov_fred', 
+                                                     time = 'year', mc_cores = 1,
+                                                     morans_i = F,
+                                                     location_var_class = 'categorical')
 
 comb <- merge(comb, region_weights_spread, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, region_weights_volatility, by = c('iso2c', 'year'), 
               all.x = T)
+comb <- merge(comb, euro_weights_spread, by = c('iso2c', 'year'), all.x = T)
+comb <- merge(comb, euro_weights_volatility, by = c('iso2c', 'year'), 
+              all.x = T)
 
+# Create Fitch credit rating peers --------------------------
+fitch_weights_spread <- monadic_spatial_weights(comb, id_var = 'iso2c', 
+                                                 location_var = 'fitch_lt_rating',
+                                                 y_var = 'd_bond_spread_fred', 
+                                                 time = 'year', mc_cores = 1,
+                                                 location_var_class = 'categorical')
 
-# Create lags and changes --------------
-vars <- names(comb)[6:ncol(comb)]
+fitch_weights_volatility <- monadic_spatial_weights(comb, id_var = 'iso2c', 
+                                                     location_var = 'fitch_lt_rating',
+                                                     y_var = 'd_lt_ratecov_fred', 
+                                                     time_var = 'year', mc_cores = 1,
+                                                     location_var_class = 'categorical')
 
-for (i in vars) {
-    message(i)
-    new_lag <- paste0('l_', i)
-    new_d <- paste0('d_', i)
-    comb <- slide(comb, Var = i, TimeVar = 'year', GroupVar = 'iso2c',
-                  NewVar = new_lag)
-    comb <- change(comb, Var = i, TimeVar = 'year', GroupVar = 'iso2c',
-                   NewVar = new_d, type = 'absolute')
-    comb[, new_lag][comb[, new_lag] == -Inf] <- NA
-    comb[, new_lag][comb[, new_lag] == Inf] <- NA
-    comb[, new_lag][is.nan(comb[, new_lag])] <- NA
+comb <- merge(comb, fitch_weights_spread, by = c('iso2c', 'year'), all.x = T)
+comb <- merge(comb, fitch_weights_volatility, by = c('iso2c', 'year'), 
+              all.x = T)
 
-    comb[, new_d][comb[, new_d] == -Inf] <- NA
-    comb[, new_d][comb[, new_d] == Inf] <- NA
-    comb[, new_d][is.nan(comb[, new_d])] <- NA
-}
+comb <- lag_changes_creator(comb = comb, 
+                            vars = c('sp_wght_pcgdp2005l_d_bond_spread_fred',
+                                     'sp_wght_pcgdp2005l_d_lt_ratecov_fred',
+                                     'sp_wght_region_d_bond_spread_fred', 
+                                     'sp_wght_region_d_lt_ratecov_fred',
+                                     'sp_wght_euro_member_d_bond_spread_fred',
+                                     'sp_wght_euro_member_d_lt_ratecov_fred',
+                                     'sp_wght_fitch_lt_rating_d_bond_spread_fred',
+                                     'sp_wght_fitch_lt_rating_d_lt_ratecov_fred'
+                                     ))
 
 comb_full <- comb
 

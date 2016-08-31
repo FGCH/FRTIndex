@@ -25,11 +25,13 @@ drop if country == "Russian Federation" | country == "South Africa" | country ==
 xtreg d_bond_spread_fred l_bond_spread_fred l_frt_2015 d_frt_2015 l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_frt2015xl_pub_gen d_frt_2015xd_pubdebtgdp_gen l_infl d_infl ///
 	l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth ///
-	 l_us3mrate d_us3mrate l_vix d_vix if country!="United States", ///
+	 l_us3mrate d_us3mrate l_vix d_vix ///
+	 l_sp_wght_region_d_bnd_sprd_frd d_sp_wght_region_d_bnd_sprd_frd ///
+	 if country!="United States", ///
 	 cluster(imf_code) i(imf_code) fe vsquish noomit
-	 
+
 /* 4. Gather parameters, initialize matrix for runs */
-quietly summarize l_pubdebtgdp_gen if e(sample), detail /* Change x2 to variable that you want to appear on X-axis */
+quietly summarize d_pubdebtgdp_gen  if e(sample), detail /* Change x2 to variable that you want to appear on X-axis */
 local min=r(min)
 local max=r(max)
 local cen10=r(p10)
@@ -52,27 +54,28 @@ local order=1  /* Replace this number with a number that will tell Stata which I
 
 /* 5. Calculate coefficients for x1 across range of x2, store in matrix foo2 */
 while `iter'<`numparams' {
-   gen l_pubdebtgdpa= l_pubdebtgdp_gen-`min'-(`inc'*`iter')  /* Alter these four lines to fit your model. */
-   summarize l_pubdebtgdpa
-   gen x1x2a= l_frt_2015 * l_pubdebtgdpa
+   gen d_pubdebtgdpa=d_pubdebtgdp_gen-`min'-(`inc'*`iter')  /* Alter these four lines to fit your model. */
+   summarize d_pubdebtgdpa
+   gen x1x2a=d_frt_2015 * d_pubdebtgdpa
 
-
-xtreg d_bond_spread_fred l_frt_2015 l_pubdebtgdpa x1x2a l_bond_spread_fred d_frt_2015 d_pubdebtgdp_gen ///
-	d_frt_2015xd_pubdebtgdp_gen l_infl d_infl l_cgdpgrowth d_cgdpgrowth ///
+xtreg d_bond_spread_fred d_frt_2015 d_pubdebtgdpa x1x2a l_bond_spread_fred l_frt_2015 l_pubdebtgdp_gen ///
+	l_frt2015xl_pub_gen l_infl d_infl l_cgdpgrowth d_cgdpgrowth ///
 	l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth ///
-	l_us3mrate d_us3mrate l_vix d_vix if country != "United States", ///
+	l_us3mrate d_us3mrate l_vix d_vix ///
+	l_sp_wght_region_d_bnd_sprd_frd d_sp_wght_region_d_bnd_sprd_frd ///
+	if country != "United States", ///
 	cluster(imf_code) i(imf_code) fe vsquish noomit
 
 matrix betas=e(b)                /* Stop alterations. */
-   scalar l_frtcoef=betas[1,`order']
+   scalar d_frtcoef=betas[1,`order']
    matrix ses=e(V)
-   scalar l_frtse=sqrt(ses[`order',`order'])
+   scalar d_frtse=sqrt(ses[`order',`order'])
    local obs=e(N)                   /* Calculate 95% confidence intervals.  Assumes t-tests for signif.; */
    scalar ci95=invnorm(0.975) /* if using procedure that produces z-tests, use invnorm(0.975) */
    local xval = `min'+(`inc'*`iter')
-   matrix foo = l_frtcoef-ci95*l_frtse, l_frtcoef, l_frtcoef+ci95*l_frtse, `xval'
+   matrix foo = d_frtcoef-ci95*d_frtse, d_frtcoef, d_frtcoef+ci95*d_frtse, `xval'
    matrix foo2 = foo2 \ foo
-   drop l_pubdebtgdpa x1x2a
+   drop d_pubdebtgdpa x1x2a
    local iter=`iter'+1
    }
 
@@ -85,11 +88,11 @@ svmat points
 /* Change titles, labels, etc., to fit your particular needs */
 twoway (connect points1 points2 points3 points4, mcolor(navy maroon navy)/*
 */ clcolor(black maroon black) lpattern(dash solid dash) lwidth(medium medthick medium) msize(small small small) msym(i D i))/*
-*/(histogram l_pubdebtgdp_gen if e(sample), bin(50) yaxis(2) blcolor(gray) bfcolor(none)), ytitle(Histogram of/*
+*/(histogram d_pubdebtgdp_gen if e(sample), bin(50) yaxis(2) blcolor(gray) bfcolor(none)), ytitle(Histogram of/*
 */ X-axis var, axis(2) size(3))/*
 */ ytitle("Coefficients and 95% CIs", size(4))/*
-*/ xlab(`min' "Minimum" `cen50' "Median" `max' "Maximum") ylabel(, labsize(4)) yline(0, lwidth(medthick)) title("Coefficient on FRT", size(3)) xtitle("Public Debt/GDP (%)", size(3)) xscal(titlegap(2)) yscal(titlegap(2))/*
+*/ xlab(`min' "Minimum" `cen50' "Median" `max' "Maximum") ylabel(, labsize(4)) yline(0, lwidth(medthick)) title("Coefficient on FRT", size(3)) xtitle("Change in Public Debt/GDP (%)", size(3)) xscal(titlegap(2)) yscal(titlegap(2))/*
 */  xsca(titlegap(2)) yscal(titlegap(2))/*
 */  legend(off) scheme(s2mono) graphregion(color(white))
 
-graph export paper_plots/me_level_frt_spreads.pdf, replace
+graph export paper_plots/reviewer_suggestions/me_changefrt_spreads_reg_peer.pdf, replace

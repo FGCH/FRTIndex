@@ -27,7 +27,7 @@ keep if country != "Russian Federation" & country != "South Africa" & country !=
 xtreg d_bond_spread_fred l_bond_spread_fred l_frt_2015 d_frt_2015 l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l ///
 	l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix ///
-	l_sp_wghts_pcgdp2005l_bnd_sprd_ d_sp_wghts_pcgdp2005l_bnd_sprd_ ///
+	l_sp_wght_pcgdp2005l_d_bnd_spr_ d_sp_wght_pcgdp2005l_d_bnd_spr_ ///
 	if country!="United States", cluster(imf_code) i(imf_code) fe vsquish noomit
 
 regsave using "tables/reviewer_suggestions/FRT_1_gdp_peer.dta", detail(all) replace table(nonInteractSpread, ///
@@ -38,7 +38,7 @@ xtreg d_bond_spread_fred l_bond_spread_fred l_frt_2015 d_frt_2015 l_pubdebtgdp_g
 	l_frt2015xl_pub_gen d_frt_2015xd_pubdebtgdp_gen l_infl d_infl ///
 	l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth ///
 	l_us3mrate d_us3mrate l_vix d_vix ///
-	l_sp_wghts_pcgdp2005l_bnd_sprd_ d_sp_wghts_pcgdp2005l_bnd_sprd_ ///
+	l_sp_wght_pcgdp2005l_d_bnd_spr_ d_sp_wght_pcgdp2005l_d_bnd_spr_ ///
 	if country!="United States", ///
 	cluster(imf_code) i(imf_code) fe vsquish noomit
 
@@ -50,7 +50,7 @@ regsave using "tables/reviewer_suggestions/FRT_2_gdp_peer.dta", detail(all) repl
 xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_frt_2015 d_frt_2015 l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l ///
 	d_pcgdp2005l l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix ///
-	l_sp_wghts_pcgdp2005l_lt_rtcv_f d_sp_wghts_pcgdp2005l_lt_rtcv_f, ///
+	l_sp_wght_pcgdp2005l_d_lt_rtcv_ d_sp_wght_pcgdp2005l_d_lt_rtcv_, ///
 	cluster(imf_code) i(imf_code) fe vsquish noomit
 
 regsave using "tables/reviewer_suggestions/FRT_3_gdp_peer.dta", detail(all) replace table(frt1, ///
@@ -61,9 +61,9 @@ regsave using "tables/reviewer_suggestions/FRT_3_gdp_peer.dta", detail(all) repl
 xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_frt_2015 d_frt_2015 l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_frt2015xl_pub_gen d_frt_2015xd_pubdebtgdp_gen ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l ///
-	l_cgdpgrowth d_cgdpgrowth l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate ///
+	l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate ///
 	l_vix d_vix ///
-	l_sp_wghts_pcgdp2005l_lt_rtcv_f d_sp_wghts_pcgdp2005l_lt_rtcv_f, ///
+	l_sp_wght_pcgdp2005l_d_lt_rtcv_ d_sp_wght_pcgdp2005l_d_lt_rtcv_, ///
 	cluster(imf_code) i(imf_code) fe vsquish noomit
 
 regsave using "tables/reviewer_suggestions/FRT_4_gdp_peer.dta", detail(all) replace table(frt2, ///
