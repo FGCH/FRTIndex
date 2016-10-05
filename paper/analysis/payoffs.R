@@ -7,11 +7,11 @@
 # Set working directory. Change as needed.
 setwd('/git_repositories/FRTIndex/paper/')
 
-# Load required packages
+# Load required package
 library(dplyr)
 
 # Payoff matrix for costless transparency
-# Create scenarios -----------------
+# Create scenarios -------------------------------------------------------------
 payoff <- data.frame(
     x = rep(1:3, 2), # 1 = L, 2 = H, 3 = V
     gamma = c(rep(0, 3), rep(1, 3)) # 0 = L, 1 = H
@@ -46,7 +46,6 @@ payoff$r <- payoff$D_I_belief
 # Government's utility
 payoff$u_g <- 1 - payoff$r
 payoff$u_i <- payoff$r - payoff$D_actual
-
 
 # ---------------------------------------------------------------------------- #
 # Preferred strategies for the government with costly transparency + 
@@ -103,7 +102,7 @@ scen <- scen %>% filter(x1 == x2 |
                     (x1 == 'H' & x2 == 'L')
 )
 
-# Find investor's interest rate choice -----------------------
+# Find interest rate choice ----------------------------------------------------
 for (i in 1:nrow(scen)) {
     for (u in 1:2) {
         # Low explicit debt
@@ -160,21 +159,34 @@ for (i in 1:nrow(scen)) {
 # Find changes from stages 1 to 2 ---------
 scen$delta_r = scen$r2 - scen$r1
 
-# Gov. Utilities: Costless scenario (Stage 1) ---------------
+# Gov. Utilities: Costless transparency change scenario (Stage 1) --------------
 scen$u1 = 1 - scen$r1
+
+# Gov. interest rate ceiling cost of 0.5 for x = V and gamma = H (Stage 1) -----
+for (i in 1:nrow(scen)) {
+    if (scen[i, 'x1'] == 'V' & scen[i, 'gamma1'] == 'H') {
+        scen[i, 'u1'] <- scen[i, 'u1'] - 0.5
+    }
+}
 
 # Gov. Utilities: Constant change cost = -1 (Stage 1)  ------
 scen$u1_costly <- scen$u1
 for (i in 1:nrow(scen)) scen[i, 'u1_costly'] <- scen[i, 'u1'] + -1
 
 # Gov. Utilities: Constant change benefit = +1 (Stage 1) --- 
-scen$u2_benefit <- scen$u2
 for (i in 1:nrow(scen)) scen[i, 'u1_benefit'] <- scen[i, 'u1'] + 1
 
-# Gov. Utilities: Costless scenario (Stage 2) ---------------
+# Gov. Utilities: Costless scenario (Stage 2) ----------------------------------
 scen$u2 = 1 - scen$r2
 
-# Gov. Utilities: Constant change cost = -1 (Stage 2)  ------
+# Gov. interest rate ceiling cost of 0.5 for x = V and gamma = H (Stage 2) -----
+for (i in 1:nrow(scen)) {
+    if (scen[i, 'x2'] == 'V' & scen[i, 'gamma2'] == 'H') {
+        scen[i, 'u2'] <- scen[i, 'u2'] - 0.5
+    }
+}
+
+# Gov. Utilities: Constant change cost = -1 (Stage 2)  -------------------------
 scen$u2_costly <- scen$u2
 for (i in 1:nrow(scen)) {
     if (scen[i, 'trans1'] != scen[i, 'trans2']) {
@@ -182,7 +194,7 @@ for (i in 1:nrow(scen)) {
     }
 }
 
-# Gov. Utilities: Constant change benefit = +1 (Stage 2) --- 
+# Gov. Utilities: Constant change benefit = +1 (Stage 2) -----------------------
 scen$u2_benefit <- scen$u2
 for (i in 1:nrow(scen)) {
     if (scen[i, 'trans1'] != scen[i, 'trans2']) {
@@ -191,7 +203,8 @@ for (i in 1:nrow(scen)) {
 }
 
 # Find preferred strategies -----------------------
-scen$scenario_id_2 <- with(scen, paste(x1, x2, gamma1, gamma2, trans1, sep = '_'))
+scen$scenario_id_2 <- with(scen, paste(x1, x2, gamma1, gamma2, trans1, 
+                                       sep = '_'))
 
 preferred <- function(x, t1, t2) {
     x <- x == max(x)
@@ -223,8 +236,9 @@ scen$forced[scen$trans1 == 'HIDE' & scen$trans2 == 'REVEAL' &
 # Export as LaTeX table -----------------------
 library(xtable)
 
-scen$scenario_id_2 <- scen$scenario_id %>% 
-                        factor(levels = unique(scen$scenario_id_2)) %>% as.numeric
+scen$scenario_id_2 <- scen$scenario_id_2 %>% 
+                        factor(levels = unique(scen$scenario_id_2)) %>% 
+                        as.numeric
 
 sub <- scen %>% select(scenario_id_2, x1, x2, gamma1, gamma2, trans1, trans2, 
                        r1, r2, u2, u2_costly, u2_benefit, 
@@ -237,8 +251,9 @@ names(sub) <- c('ID', '$X_{1}$', '$X_{2}$', '$\\Gamma_{1}$', '$\\Gamma_{2}$',
                 '$U^{G}_{c = 1}$', '$P^{G}_{c=0}$', '$P^{G}_{c = -1}$',
                 '$P^{G}_{c = 1}$', 'Forced?'
                 )
+sub$ID <- as.character(sub$ID)
 
-print(xtable(sub, digits = 0, caption = 'Extensive Form Government Payoffs for All Valid Scenarios in 2 Stage Transparency Games',
+print(xtable(sub, digits = 1, caption = 'Extensive Form Government Payoffs for All Valid Scenarios in 2 Stage Transparency Games',
              label = 'truthtable'), 
       size = 'tiny', 
       sanitize.colnames.function = identity, include.rownames = FALSE,
@@ -250,18 +265,24 @@ print(xtable(sub, digits = 0, caption = 'Extensive Form Government Payoffs for A
 
 # Switched to forced opening as the preferred scenario, when applicable -----
 forced <- scen %>% as.data.frame
-for (i in c('preferred2_costless', 'preferred2_costly', 'preferred2_benefit')) {
-    message(i)
-    forced[, i][forced$trans2 == 'HIDE' & forced$r2 == 3 & 
-                    !(forced$x1 == 'V' & forced$x2 == 'H') & 
-                    !(forced$x1 == 'H' & forced$x2 == 'L') 
+
+plot_forced <- FALSE # Set to TRUE for a plot of interest rates with forced REVEAL 
+
+if (plot_forced) {
+    for (i in c('preferred2_costless', 'preferred2_costly', 'preferred2_benefit')) {
+        message(i)
+        forced[, i][forced$trans2 == 'HIDE' & forced$r2 == 3 & 
+                        !(forced$x1 == 'V' & forced$x2 == 'H') & 
+                        !(forced$x1 == 'H' & forced$x2 == 'L') 
                     ] <- ''
-    forced[, i][forced$trans1 == 'HIDE' & forced$trans2 == 'REVEAL' 
+        forced[, i][forced$trans1 == 'HIDE' & forced$trans2 == 'REVEAL' 
                     & forced$r2 == 3 &
-                    !(forced$x1 == 'V' & forced$x2 == 'H') & 
-                    !(forced$x1 == 'H' & forced$x2 == 'L') 
-                ] <- 'P'
+                        !(forced$x1 == 'V' & forced$x2 == 'H') & 
+                        !(forced$x1 == 'H' & forced$x2 == 'L') 
+                    ] <- 'P'
+    }    
 }
+
 
 # Find interest rates in first stage
 library(DataCombine)

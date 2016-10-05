@@ -269,7 +269,8 @@ fitch <- fitch[!duplicated(fitch[, c('country', 'year')], fromLast = TRUE), ]
 
 fitch$iso2c <- countrycode(fitch$country, origin = 'country.name', 
                            destination = 'iso2c')
-fitch <- fitch %>% select(iso2c, year, fitch_lt_rating) %>% arrange(iso2c, year)
+fitch <- fitch %>% select(iso2c, year, fitch_lt_rating) %>% 
+    arrange(iso2c, year)
 fitch$fitch_lt_rating[fitch$fitch_lt_rating == '-'] <- NA
 fitch$fitch_lt_rating[fitch$fitch_lt_rating == 'withdrawn'] <- NA
 fitch$fitch_lt_rating <- gsub('-', '_minus', fitch$fitch_lt_rating)
@@ -278,9 +279,39 @@ fitch <- DropNA(fitch, c('iso2c', 'year'))
 
 fitch <- TimeExpand(fitch, GroupVar = 'iso2c', TimeVar = 'year')
 fitch <- fitch %>% group_by(iso2c) %>% 
-            mutate(fitch_lt_rating = FillDown(Var = fitch_lt_rating))
+    mutate(fitch_lt_rating = FillDown(Var = fitch_lt_rating))
+
+fitch$fitch_lt_reduced <- NA
+fitch$fitch_lt_reduced[grepl('A', fitch$fitch_lt_rating)] <- 'A_minus_to_AAA'
+fitch$fitch_lt_reduced[grepl('B', fitch$fitch_lt_rating)] <- 'B_minus_to_BBB'
+fitch$fitch_lt_reduced[grepl('C', fitch$fitch_lt_rating)] <- 'C_to_CCC'
+fitch$fitch_lt_reduced[grepl('D', fitch$fitch_lt_rating)] <- 'D_to_DDD'
+fitch$fitch_lt_reduced[grepl('RD', fitch$fitch_lt_rating)] <- 'RD'
+
+# Convert to factors
+fitch$fitch_lt_reduced <- factor(fitch$fitch_lt_reduced)
 
 fitch$fitch_lt_rating <- factor(fitch$fitch_lt_rating)
+ratings <- c('AAA', 'AA_plus', 'AA', 'AA_minus', 
+             'A_plus', 'A', 'A_minus', 
+             'BBB_plus', 'BBB', 'BBB_minus', 
+             'BB_plus', 'BB',
+             'BB_minus', 'B_plus', 'B', 'B_minus', 
+             'CCC_plus', 'CCC', 'CCC_minus', 'C',
+             'DDD', 'DD', 'D', 'RD')
+fitch$fitch_lt_rating_labelled <- factor(fitch$fitch_lt_rating, 
+                                         levels = rev(ratings))
+
+
+# FinStress measure of financial market stress ---------------------------------
+URL <- 'https://raw.githubusercontent.com/christophergandrud/EIUCrisesMeasure/master/data/FinStress.csv'
+finstress_index <- import(URL) %>% select(-country)
+
+finstress_index$year <- year(finstress_index$date)
+
+finstress_index <- finstress_index %>% group_by(iso2c, year) %>%
+                        summarise(finstress = mean(FinStress)) %>%
+                        select(iso2c, year, finstress)
 
 # Combine ------------
 comb <- merge(frt, frt_2015, by = c('iso2c', 'year'), all.x = T)
@@ -296,6 +327,7 @@ comb <- merge(comb, elections, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, dpi, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, uds, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, fitch, by = c('iso2c', 'year'), all.x = T)
+comb <- merge(comb, finstress_index, by = c('iso2c', 'year'), all.x = T)
 
 # Remove Cyprus (often duplicated and lacks FRED bond spread data)
 comb <- subset(comb, iso2c != 'CY')
@@ -389,16 +421,16 @@ comb <- merge(comb, euro_weights_volatility, by = c('iso2c', 'year'),
 
 # Create Fitch credit rating peers --------------------------
 fitch_weights_spread <- monadic_spatial_weights(comb, id_var = 'iso2c', 
-                                                 location_var = 'fitch_lt_rating',
-                                                 y_var = 'd_bond_spread_fred', 
-                                                 time = 'year', mc_cores = 1,
-                                                 location_var_class = 'categorical')
+                                            location_var = 'fitch_lt_reduced',
+                                            y_var = 'd_bond_spread_fred', 
+                                            time = 'year', mc_cores = 1,
+                                            location_var_class = 'categorical')
 
 fitch_weights_volatility <- monadic_spatial_weights(comb, id_var = 'iso2c', 
-                                                     location_var = 'fitch_lt_rating',
-                                                     y_var = 'd_lt_ratecov_fred', 
-                                                     time_var = 'year', mc_cores = 1,
-                                                     location_var_class = 'categorical')
+                                            location_var = 'fitch_lt_reduced',
+                                            y_var = 'd_lt_ratecov_fred', 
+                                            time_var = 'year', mc_cores = 1,
+                                            location_var_class = 'categorical')
 
 comb <- merge(comb, fitch_weights_spread, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, fitch_weights_volatility, by = c('iso2c', 'year'), 
@@ -411,8 +443,8 @@ comb <- lag_changes_creator(comb = comb,
                                      'sp_wght_region_d_lt_ratecov_fred',
                                      'sp_wght_euro_member_d_bond_spread_fred',
                                      'sp_wght_euro_member_d_lt_ratecov_fred',
-                                     'sp_wght_fitch_lt_rating_d_bond_spread_fred',
-                                     'sp_wght_fitch_lt_rating_d_lt_ratecov_fred'
+                                     'sp_wght_fitch_lt_reduced_d_bond_spread_fred',
+                                     'sp_wght_fitch_lt_reduced_d_lt_ratecov_fred'
                                      ))
 
 comb_full <- comb
@@ -450,6 +482,12 @@ comb_full$country <- countrycode(comb_full$iso2c, origin = 'iso2c',
 comb_full$imf_code <- countrycode(comb_full$iso2c, origin = 'iso2c',
                                  destination = 'imf')
 
+comb_full$l_fitch_lt_reduced <- factor(comb_full$l_fitch_lt_reduced,
+                                       labels = c('A_minus_to_AAA', 
+                                                  'B_minus_to_BBB', 'C_to_CCC',
+                                                  'D_to_DDD', 'RD'))
+comb_full$l_fitch_lt_reduced <- as.character(comb_full$l_fitch_lt_reduced)
+
 
 comb_full <- MoveFront(comb_full, c('country', 'iso2c', 'imf_code',
                                     'year', 'oecd_member', 'income', 'frt'))
@@ -460,3 +498,4 @@ rmExcept('comb_full')
 
 # Save
 foreign::write.dta(comb_full, file = 'paper/analysis/frt08_16_v2.dta')
+

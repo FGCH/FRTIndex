@@ -1,34 +1,33 @@
 ################################################################################
-# Create LaTeX tables from Stata output
+# Create LaTeX tables from Stata output for models with IMF programme
 # Christopher Gandrud
 # MIT License
 ################################################################################
 
 # Load packages
 library(dplyr)
-library(foreign)
+library(rio)
 library(DataCombine)
 library(xtable)
-library(rio)
 
-# Raw tables created with bond_models_frt_vs_hrv.do in Stata 12.1
+# Raw tables created with reviewer_suggestions/frt_imf_program.do in Stata 12.1
 
 # Don't clean LaTeX syntax
 options(xtable.sanitize.text.function = identity)
 options(xtable.sanitize.colnames.function = identity)
 
 # Set working directory. Change as needed
-setwd('/git_repositories/FRTIndex/source/Hollyer_et_al_Compare/')
+setwd('/git_repositories/FRTIndex/paper/')
 
 # Get list of individual model tables
-AllFiles <- list.files('tables/')
+AllFiles <- list.files('tables/reviewer_suggestions/')
 
-filesHRV <- AllFiles[grep('^HRV', AllFiles)]
+filesFRT <- AllFiles[grep('^FRT_[1-4]_imf.dta', AllFiles)]
 
 # Combine into data frames
 CombineFiles <- function(file_list, start){
     for (i in file_list) {
-        temp <- import(paste0('tables/', i))
+        temp <- import(paste0('tables/reviewer_suggestions/', i))
         if (i == start) out <- temp
         else out <- merge(out, temp, by = 'var', all = TRUE, sort = FALSE)
     }
@@ -37,15 +36,13 @@ CombineFiles <- function(file_list, start){
 
 CleanUp <- data.frame(
     from = c('^.*?_stderr', '_coef', '_cons', 'N_clust', 'N$', 'r2_a',
-             'l_frt_residuals', 'd_frt_residuals',
-             'l_frt_residxlpub', 'd_frt_residxdpub',
-             'd_hrvxd_pubdebtgdp_gen', 'l_hrvxl_pub_gen',
-             'd_frtxd_pub', 'l_frtxl_pub',
+             'd_hrvxd_pub', 'l_hrvxl_pub',
+             'd_frt_2015xd_pubdebtgdp_gen', 'l_frt2015xl_pub_gen',
              'l_cgdpgrowth', 'd_cgdpgrowth',
              'l_pcgdp2005l', 'd_pcgdp2005l',
-             '^d_bond_spread_fred', '^l_bond_spread_fred',
+             'd_bond_spread_fred', '^l_bond_spread_fred',
              '^lltrate$', '^lltspreadus$', '^l_lt_ratecov_fred$',
-             '^l_frt$', '^d_frt$',
+             '^l_frt_2015$', '^d_frt_2015$',
              '^l_frt_log$', '^d_frt_log$',
              'l_hrv_mean', 'd_hrv_mean',
              'l_strucbalgdp', 'd_strucbalgdp',
@@ -63,8 +60,6 @@ CleanUp <- data.frame(
              'imf_program_lag'
     ),
     to = c('', '', 'Constant', 'Countries', 'Observations', 'Adjusted R-squared',
-           'FRT Residuals$_{t-1}$', '$\\\\Delta$ FRT Residuals',
-           'FRT Residuals$_{t-1}$ * Public debt/GDP (\\\\%)$_{t-1}$', '$\\\\Delta$ FRT Residuals * $\\\\Delta$ Public debt/GDP',
            '$\\\\Delta$ HRV * $\\\\Delta$ Public debt/GDP', 'HRV$_{t-1}$ * Public debt/GDP (\\\\%)$_{t-1}$',
            '$\\\\Delta$ FRT * $\\\\Delta$ Public debt/GDP', 'FRT$_{t-1}$ * Public debt/GDP (\\\\%)$_{t-1}$',
            'GDP Growth$_{t-1}$', '$\\\\Delta$ GDP Growth',
@@ -91,29 +86,29 @@ CleanUp <- data.frame(
 )
 
 
-outputHRV <- CombineFiles(filesHRV, start = 'HRV_1.dta')
-outputHRV <- FindReplace(outputHRV, Var = 'var', replaceData = CleanUp,
-                         exact = FALSE)
-outputHRV <- outputHRV[c(77:78, 85:86, 79:82, 1:32, 84:83, 87:86, 91:90, 93:92, 
-                         33:34, 40, 36, 44
-                         ), ]
+#### FRT Interacted ####
+outputFRT <- CombineFiles(filesFRT, start = 'FRT_1_imf.dta')
+outputFRT <- FindReplace(outputFRT, Var = 'var', replaceData = CleanUp,
+                         exact = F)
+
+outputFRT <- outputFRT[c(89:90, 87:88, 1:38, 84:83, 86:85, 39:40,
+                         46, 42, 50), ]
 
 # Insert blank row for formatting
-blank <- c('', '', '', '', '', '')
-row.names(outputHRV) <- 1:nrow(outputHRV)
-outputHRV <- InsertRow(outputHRV, New = blank, RowNum = 51)
-outputHRV <- InsertRow(outputHRV, New = blank, RowNum = 51)
+blank <- c('', '', '', '', '')
+row.names(outputFRT) <- 1:nrow(outputFRT)
+outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 49)
+outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 49)
 
-names(outputHRV) <- c('',
-                      '$\\Delta$ Long-term (10-year) bond spread (US 10-year bond, \\%)',
-                      '$\\Delta$ Long-term (10-year) bond spread (US 10-year bond, \\%)',
-                      '$\\Delta$ Coefficient of variation, LT bond yields (annual, based on monthly data)',
-                      '$\\Delta$ Coefficient of variation, LT bond yields (annual, based on monthly data)',
-                      '$\\Delta$ Long-term (10-year) bond spread (US 10-year bond, \\%)'
+names(outputFRT) <- c('',
+                    '$\\Delta$ Long-term (10-year) bond spread (US 10-year bond, \\%)',
+                    '$\\Delta$ Long-term (10-year) bond spread (US 10-year bond, \\%)',
+                    '$\\Delta$ Coefficient of variation, LT bond yields (annual, based on monthly data)',
+                    '$\\Delta$ Coefficient of variation, LT bond yields (annual, based on monthly data)'
 )
 
 # Output
-tableHRV <- xtable(outputHRV, dcolumn = TRUE, booktabs = TRUE)
-align(tableHRV) <- 'llp{3cm}p{3cm}p{3cm}p{3cm}p{3cm}'
-print(tableHRV, include.rownames = FALSE, floating = FALSE, size = 'tiny',
-      file = 'tables/hrv_bond_results.tex')
+tableFRT_imf <- xtable(outputFRT, dcolumn = TRUE, booktabs = TRUE)
+align(tableFRT_imf) <- 'llp{3cm}p{3cm}p{3cm}p{3cm}'
+print(tableFRT_imf, include.rownames = FALSE, floating = FALSE, size = 'tiny',
+      file = 'tables/frt_bond_results_imf.tex')
