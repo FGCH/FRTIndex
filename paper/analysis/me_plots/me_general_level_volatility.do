@@ -11,7 +11,7 @@ set more off
 // Set working directory, change as needed/
 cd "/git_repositories/FRTIndex/paper/"
 
-use "analysis/frt08_16_v2.dta"
+use "analysis/frt10_16_v1.dta"
 
 * Create interactions
 gen l_frt2015xl_pub_gen = l_frt_2015 * l_pubdebtgdp_gen

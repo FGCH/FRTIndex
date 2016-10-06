@@ -1,5 +1,5 @@
 /*
-FRT/Debt regressions, including IMF programme dummies and democracy level
+FRT/Debt regressions, including Z-Scores
 October 2016
 */
 
@@ -42,12 +42,11 @@ xtreg d_bond_spread_fred l_bond_spread_fred l_frt_2015 d_frt_2015 ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l ///
 	l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix ///
 	l_uds d_uds imf_program_lag ///
+	l_zscore d_zscore ///
 	if country!="United States", cluster(imf_code) i(imf_code) fe vsquish noomit
-
-regsave using "tables/stata_intermediate_files/FRT_1.dta", detail(all) replace table(nonInteractSpread, ///
-        order(regvars r2) format(%5.2f) paren(stderr) asterisk())
-
-* Spreads interactive
+	
+	
+* Spreads interactive	
 xtreg d_bond_spread_fred l_bond_spread_fred ///
 	l_frt_2015 d_frt_2015 ///
 	l_pubdebtgdp_gen d_pubdebtgdp_gen ///
@@ -58,29 +57,22 @@ xtreg d_bond_spread_fred l_bond_spread_fred ///
 	l_oecdgrowth d_oecdgrowth ///
 	l_us3mrate d_us3mrate l_vix d_vix ///
 	l_uds d_uds imf_program_lag ///
+	l_zscore d_zscore ///
+	l_zscore d_zscore ///
 	if country!="United States", ///
 	cluster(imf_code) i(imf_code) fe vsquish noomit
-
-	test l_frt_2015 d_frt_2015 l_pubdebtgdp_gen d_pubdebtgdp_gen ///
-		l_frt2015xl_pub_gen d_frt_2015xd_pubdebtgdp_gen ///
-		l_frt2015xd_pubdebtgdp_gen d_frt_2015xl_pub_gen
-
-	regsave using "tables/stata_intermediate_files/FRT_2.dta", detail(all) replace table(InteractSpread, ///
-	        order(regvars r2) format(%5.2f) paren(stderr) asterisk())
-
+	
 /************ Volatility ******************/
 * Volatility non-interactive
 xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_frt_2015 d_frt_2015 ///
 	l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l ///
 	d_pcgdp2005l l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix ///
-	l_uds d_uds imf_program_lag, ///
+	l_uds d_uds imf_program_lag ///
+	l_zscore d_zscore, ///
 	cluster(imf_code) i(imf_code) fe vsquish noomit
-
-regsave using "tables/stata_intermediate_files/FRT_3.dta", detail(all) replace table(nonInteractVolatility, ///
-        order(regvars r2) format(%5.2f) paren(stderr) asterisk())
-
-* Volatility interactive
+	
+	
 xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_frt_2015 d_frt_2015 ///
 	l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_frt2015xl_pub_gen d_frt_2015xd_pubdebtgdp_gen ///
@@ -88,12 +80,6 @@ xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_frt_2015 d_frt_2015 ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l ///
 	l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate ///
 	l_vix d_vix ///
-	l_uds d_uds imf_program_lag, ///
+	l_uds d_uds imf_program_lag ///
+	l_zscore d_zscore, ///
 	cluster(imf_code) i(imf_code) fe vsquish noomit
-
-	test l_frt_2015 d_frt_2015 l_pubdebtgdp_gen d_pubdebtgdp_gen ///
-		l_frt2015xl_pub_gen d_frt_2015xd_pubdebtgdp_gen ///
-		l_frt2015xd_pubdebtgdp_gen d_frt_2015xl_pub_gen
-
-regsave using "tables/stata_intermediate_files/FRT_4.dta", detail(all) replace table(InteractVolatility, ///
-        order(regvars r2) format(%5.2f) paren(stderr) asterisk())

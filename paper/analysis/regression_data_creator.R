@@ -313,6 +313,18 @@ finstress_index <- finstress_index %>% group_by(iso2c, year) %>%
                         summarise(finstress = mean(FinStress)) %>%
                         select(iso2c, year, finstress)
 
+# Z-scores (from Mark Copelovitch)
+zscores <- import('paper/analysis/data_and_misc/zscore_tier1_v12.dta')
+
+zscores$iso2c <- countrycode(zscores$sname, origin = 'country.name', 
+                             destination = 'iso2c')
+
+zscores <- zscores %>% select(iso2c, year, zscore_com) %>% 
+                rename(zscore = zscore_com)
+zscores$zscore[is.nan(zscores$zscore)] <- NA
+zscores <- DropNA(zscores, 'zscore')
+
+
 # Combine ------------
 comb <- merge(frt, frt_2015, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, hrv, by = c('iso2c', 'year'), all.x = T)
@@ -328,6 +340,7 @@ comb <- merge(comb, dpi, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, uds, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, fitch, by = c('iso2c', 'year'), all.x = T)
 comb <- merge(comb, finstress_index, by = c('iso2c', 'year'), all.x = T)
+comb <- merge(comb, zscores, by = c('iso2c', 'year'), all.x = T)
 
 # Remove Cyprus (often duplicated and lacks FRED bond spread data)
 comb <- subset(comb, iso2c != 'CY')
@@ -441,8 +454,6 @@ comb <- lag_changes_creator(comb = comb,
                                      'sp_wght_pcgdp2005l_d_lt_ratecov_fred',
                                      'sp_wght_region_d_bond_spread_fred', 
                                      'sp_wght_region_d_lt_ratecov_fred',
-                                     'sp_wght_euro_member_d_bond_spread_fred',
-                                     'sp_wght_euro_member_d_lt_ratecov_fred',
                                      'sp_wght_fitch_lt_reduced_d_bond_spread_fred',
                                      'sp_wght_fitch_lt_reduced_d_lt_ratecov_fred'
                                      ))
@@ -497,5 +508,5 @@ FindDups(comb_full, c('iso2c', 'year'))
 rmExcept('comb_full')
 
 # Save
-foreign::write.dta(comb_full, file = 'paper/analysis/frt08_16_v2.dta')
+foreign::write.dta(comb_full, file = 'paper/analysis/frt10_16_v1.dta')
 
