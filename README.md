@@ -1,4 +1,4 @@
-Financial Regulatory Transparency Index
+Financial Reporting Transparency Index
 ========
 
 **Version:** 2.1
@@ -7,7 +7,7 @@ Financial Regulatory Transparency Index
 [Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
 
 Funding generously provided by the
-[Deutsche Forschungsgemeinschaft](http://www.dfg.de/en/).
+[Deutsche Forschungsgemeinschaft](http://www.dfg.de/en/) (Grant No. HA5996/2-1).
 
 **Work In Progress**
 
@@ -19,7 +19,7 @@ Why do countries release data on their financial systems to international
 organizations, such as the IMF and World Bank? What are the consequences of
 releasing this data for the stability of their financial systems?
 
-To address these questions we are developing a **Financial Regulatory
+To address these questions we are developing a **Financial Reporting
 Transparency Index**. The new Index we make it possible to compare the
 willingness of governments to credibly reveal the structure of their financial
 systems through international institutions, allowing them to be scrutinized by
