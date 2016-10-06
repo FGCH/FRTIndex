@@ -54,7 +54,8 @@ xtreg d_bond_spread_fred l_bond_spread_fred ///
 	l_frt2015xl_pub_gen d_frt_2015xd_pubdebtgdp_gen ///
 	l_frt2015xd_pubdebtgdp_gen d_frt_2015xl_pub_gen ///
 	l_infl d_infl ///
-	l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth ///
+	l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l ///
+	l_oecdgrowth d_oecdgrowth ///
 	l_us3mrate d_us3mrate l_vix d_vix ///
 	l_uds d_uds imf_program_lag ///
 	if country!="United States", ///
@@ -69,7 +70,8 @@ xtreg d_bond_spread_fred l_bond_spread_fred ///
 
 /************ Volatility ******************/
 * Volatility non-interactive
-xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_frt_2015 d_frt_2015 l_pubdebtgdp_gen d_pubdebtgdp_gen ///
+xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_frt_2015 d_frt_2015 ///
+	l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l ///
 	d_pcgdp2005l l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix ///
 	l_uds d_uds imf_program_lag, ///
@@ -84,7 +86,7 @@ xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_frt_2015 d_frt_2015 ///
 	l_frt2015xl_pub_gen d_frt_2015xd_pubdebtgdp_gen ///
 	l_frt2015xd_pubdebtgdp_gen d_frt_2015xl_pub_gen ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l ///
-	l_cgdpgrowth d_cgdpgrowth l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate ///
+	l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate ///
 	l_vix d_vix ///
 	l_uds d_uds imf_program_lag, ///
 	cluster(imf_code) i(imf_code) fe vsquish noomit

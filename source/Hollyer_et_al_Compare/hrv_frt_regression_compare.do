@@ -16,6 +16,9 @@ use "/git_repositories/FRTIndex/paper/analysis/frt08_16_v2.dta"
 gen l_hrvxl_pub_gen = l_hrv_mean * l_pubdebtgdp_gen
 gen d_hrvxd_pubdebtgdp_gen = d_hrv_mean * d_pubdebtgdp_gen
 
+gen l_hrvxd_pub_gen = l_hrv_mean * d_pubdebtgdp_gen
+gen d_hrvxl_pub_gen = d_hrv_mean * l_pubdebtgdp_gen
+
 * Subset sample to OECD/non-Japan (other countries lack FRED bond yield data)
 keep if country != "Russian Federation" & country != "South Africa" & country != "Japan"
 
@@ -41,7 +44,8 @@ by imf_code: gen imf_under_program_lag = imf_under_program[_n-1]
 
 //////// Examine Change in long-term rate spread
 // HRV
-xtreg d_bond_spread_fred l_bond_spread_fred l_hrv_mean d_hrv_mean l_pubdebtgdp_gen d_pubdebtgdp_gen ///
+xtreg d_bond_spread_fred l_bond_spread_fred l_hrv_mean d_hrv_mean ///
+	l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l ///
 	l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix ///
 	l_uds d_uds ///
@@ -50,8 +54,11 @@ xtreg d_bond_spread_fred l_bond_spread_fred l_hrv_mean d_hrv_mean l_pubdebtgdp_g
     regsave using "tables/HRV_1.dta", detail(all) replace ///
     	table(ChangeLongRunRate, order(regvars r2) format(%5.2f) paren(stderr) asterisk())
 
-xtreg d_bond_spread_fred l_bond_spread_fred l_hrv_mean d_hrv_mean l_pubdebtgdp_gen d_pubdebtgdp_gen ///
-	l_hrvxl_pub_gen d_hrvxd_pubdebtgdp_gen l_infl d_infl ///
+xtreg d_bond_spread_fred l_bond_spread_fred l_hrv_mean d_hrv_mean ///
+	l_pubdebtgdp_gen d_pubdebtgdp_gen ///
+	l_hrvxl_pub_gen d_hrvxd_pubdebtgdp_gen ///
+	l_hrvxd_pub_gen d_hrvxl_pub_gen ///
+	l_infl d_infl ///
 	l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth ///
 	 l_us3mrate d_us3mrate l_vix d_vix ///
 	 l_uds d_uds ///
@@ -64,7 +71,8 @@ xtreg d_bond_spread_fred l_bond_spread_fred l_hrv_mean d_hrv_mean l_pubdebtgdp_g
 
 //////// Examine Spread volatility
 // HRV
-xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_hrv_mean d_hrv_mean l_pubdebtgdp_gen d_pubdebtgdp_gen ///
+xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_hrv_mean d_hrv_mean ///
+	l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l ///
 	d_pcgdp2005l l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix ///
 	l_uds d_uds, ///
@@ -73,8 +81,10 @@ xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_hrv_mean d_hrv_mean l_pubdebtgdp_gen
     regsave using "tables/HRV_3.dta", detail(all) replace ///
     	table(Volatility, order(regvars r2) format(%5.2f) paren(stderr) asterisk())
 
-xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_hrv_mean d_hrv_mean l_pubdebtgdp_gen d_pubdebtgdp_gen ///
+xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_hrv_mean d_hrv_mean ///
+	l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_hrvxl_pub_gen d_hrvxd_pubdebtgdp_gen ///
+	l_hrvxd_pub_gen d_hrvxl_pub_gen ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l ///
 	l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate ///
 	l_vix d_vix l_uds d_uds, cluster(imf_code) i(imf_code) fe vsquish noomit
@@ -94,11 +104,16 @@ predict d_frt_residuals, residuals
 gen l_frt_residxlpub = l_frt_residuals * l_pubdebtgdp_gen
 gen d_frt_residxdpub = d_frt_residuals * d_pubdebtgdp_gen
 
+gen l_frt_residxdpub = l_frt_residuals * d_pubdebtgdp_gen
+gen d_frt_residxlpub = d_frt_residuals * l_pubdebtgdp_gen
+
 xtreg d_bond_spread_fred l_bond_spread_fred l_frt_residuals d_frt_residuals ///
-	l_pubdebtgdp_gen d_pubdebtgdp_gen l_frt_residxlpub d_frt_residxdpub l_inf d_infl ///
+	l_pubdebtgdp_gen d_pubdebtgdp_gen l_frt_residxlpub d_frt_residxdpub ///
+	l_frt_residxdpub d_frt_residxlpub ///
+	l_inf d_infl ///
 	l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth ///
-	 l_us3mrate d_us3mrate l_vix d_vix l_uds d_uds if country != "United States", ///
-	 cluster(imf_code) i(imf_code) fe vsquish noomit
+	l_us3mrate d_us3mrate l_vix d_vix l_uds d_uds if country != "United States", ///
+	cluster(imf_code) i(imf_code) fe vsquish noomit
 	
 	regsave using "tables/HRV_5.dta", detail(all) replace ///
 		table(residuals, order(regvars r2) format(%5.2f) paren(stderr) asterisk())

@@ -38,6 +38,7 @@ CleanUp <- data.frame(
     from = c('^.*?_stderr', '_coef', '_cons', 'N_clust', 'N$', 'r2_a',
              'd_hrvxd_pub', 'l_hrvxl_pub',
              'd_frt_2015xd_pubdebtgdp_gen', 'l_frt2015xl_pub_gen',
+             'l_frt2015xd_pubdebtgdp_gen', 'd_frt_2015xl_pub_gen',
              'l_cgdpgrowth', 'd_cgdpgrowth',
              'l_pcgdp2005l', 'd_pcgdp2005l',
              'd_bond_spread_fred', '^l_bond_spread_fred',
@@ -53,12 +54,16 @@ CleanUp <- data.frame(
              'l_vix', 'd_vix',
              'l_country_growth', 'd_country_growth',
              'eurozone',
+             'l_uds', 'd_uds',
              'l_exec_election_yr', 'd_exec_election_yr',
-             'l_dpi_left'
+             'l_dpi_left', 
+             'esm_rules',
+             'imf_program_lag'
     ),
     to = c('', '', 'Constant', 'Countries', 'Observations', 'Adjusted R-squared',
            '$\\\\Delta$ HRV * $\\\\Delta$ Public debt/GDP', 'HRV$_{t-1}$ * Public debt/GDP (\\\\%)$_{t-1}$',
            '$\\\\Delta$ FRT * $\\\\Delta$ Public debt/GDP', 'FRT$_{t-1}$ * Public debt/GDP (\\\\%)$_{t-1}$',
+           'FRT$_{t-1}$ * $\\\\Delta$ Public debt/GDP', '$\\\\Delta$ FRT * Public debt/GDP (\\\\%)$_{t-1}$',
            'GDP Growth$_{t-1}$', '$\\\\Delta$ GDP Growth',
            'Per Capita GDP$_{t-1}$', '$\\\\Delta$ Per Capita GDP',
            '$\\\\Delta$ Bond Spread', 'Bond Spread$_{t-1}$',
@@ -74,8 +79,11 @@ CleanUp <- data.frame(
            'VIX index$_{t-1}$', '$\\\\Delta$ VIX index',
            'Domestic GDP growth (\\\\%)$_{t-1}$', '$\\\\Delta$ Domestic GDP growth (\\\\%)',
            'Eurozone Member',
+           'Democracy (UDS)$_{t-1}$', '$\\\\Delta$ Democracy (UDS)',
            'Exec. Election$_{t-1}$', '$\\\\Delta$ Exec. Election',
-           'Left Executive$_{t-1}$'
+           'Left Executive$_{t-1}$',
+           'ESM Rules Period',
+           'IMF Program Start$_{t-1}$'
     )
 )
 
@@ -85,14 +93,14 @@ outputFRT <- CombineFiles(filesFRT, start = 'FRT_1_elections.dta')
 outputFRT <- FindReplace(outputFRT, Var = 'var', replaceData = CleanUp,
                          exact = F)
 
-outputFRT <- outputFRT[c(88:87, 81:82, 1:28, 85:86, 83:84, 29:32,
-                         80:77, 33:34, 40, 36, 44), ]
+outputFRT <- outputFRT[c(91:92, 89:90, 1:32, 88:81, 37:38,
+                        40, 44, 48), ]
 
 # Insert blank row for formatting
 blank <- c('', '', '', '', '')
 row.names(outputFRT) <- 1:nrow(outputFRT)
-outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 47)
-outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 47)
+outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 51)
+outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 51)
 
 names(outputFRT) <- c('',
                     '$\\Delta$ Long-term (10-year) bond spread (US 10-year bond, \\%)',

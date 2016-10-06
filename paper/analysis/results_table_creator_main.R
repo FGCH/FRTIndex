@@ -20,14 +20,14 @@ options(xtable.sanitize.colnames.function = identity)
 setwd('/git_repositories/FRTIndex/paper/')
 
 # Get list of individual model tables
-AllFiles <- list.files('tables/')
+AllFiles <- list.files('tables/stata_intermediate_files')
 
 filesFRT <- AllFiles[grep('^FRT_', AllFiles)]
 
 # Combine into data frames
 CombineFiles <- function(file_list, start){
     for (i in file_list) {
-        temp <- import(paste0('tables/', i))
+        temp <- import(paste0('tables/stata_intermediate_files/', i))
         if (i == start) out <- temp
         else out <- merge(out, temp, by = 'var', all = TRUE, sort = FALSE)
     }
@@ -38,6 +38,7 @@ CleanUp <- data.frame(
     from = c('^.*?_stderr', '_coef', '_cons', 'N_clust', 'N$', 'r2_a',
              'd_hrvxd_pub', 'l_hrvxl_pub',
              'd_frt_2015xd_pubdebtgdp_gen', 'l_frt2015xl_pub_gen',
+             'l_frt2015xd_pubdebtgdp_gen', 'd_frt_2015xl_pub_gen',
              'l_cgdpgrowth', 'd_cgdpgrowth',
              'l_pcgdp2005l', 'd_pcgdp2005l',
              'd_bond_spread_fred', '^l_bond_spread_fred',
@@ -52,11 +53,17 @@ CleanUp <- data.frame(
              'l_oecdgrowth', 'd_oecdgrowth',
              'l_vix', 'd_vix',
              'l_country_growth', 'd_country_growth',
-             'eurozone'
+             'eurozone',
+             'l_uds', 'd_uds',
+             'l_exec_election_yr', 'd_exec_election_yr',
+             'l_dpi_left', 
+             'esm_rules',
+             'imf_program_lag'
     ),
     to = c('', '', 'Constant', 'Countries', 'Observations', 'Adjusted R-squared',
            '$\\\\Delta$ HRV * $\\\\Delta$ Public debt/GDP', 'HRV$_{t-1}$ * Public debt/GDP (\\\\%)$_{t-1}$',
            '$\\\\Delta$ FRT * $\\\\Delta$ Public debt/GDP', 'FRT$_{t-1}$ * Public debt/GDP (\\\\%)$_{t-1}$',
+           'FRT$_{t-1}$ * $\\\\Delta$ Public debt/GDP', '$\\\\Delta$ FRT * Public debt/GDP (\\\\%)$_{t-1}$',
            'GDP Growth$_{t-1}$', '$\\\\Delta$ GDP Growth',
            'Per Capita GDP$_{t-1}$', '$\\\\Delta$ Per Capita GDP',
            '$\\\\Delta$ Bond Spread', 'Bond Spread$_{t-1}$',
@@ -71,7 +78,12 @@ CleanUp <- data.frame(
            'OECD average GDP growth$_{t-1}$', '$\\\\Delta$ OECD average GDP growth',
            'VIX index$_{t-1}$', '$\\\\Delta$ VIX index',
            'Domestic GDP growth (\\\\%)$_{t-1}$', '$\\\\Delta$ Domestic GDP growth (\\\\%)',
-           'Eurozone Member'
+           'Eurozone Member',
+           'Democracy (UDS)$_{t-1}$', '$\\\\Delta$ Democracy (UDS)',
+           'Exec. Election$_{t-1}$', '$\\\\Delta$ Exec. Election',
+           'Left Executive$_{t-1}$',
+           'ESM Rules Period',
+           'IMF Program Start$_{t-1}$'
     )
 )
 
@@ -81,14 +93,14 @@ outputFRT <- CombineFiles(filesFRT, start = 'FRT_1.dta')
 outputFRT <- FindReplace(outputFRT, Var = 'var', replaceData = CleanUp,
                          exact = F)
 
-outputFRT <- outputFRT[c(84, 83, 81:82, 1:32, 80, 77, 78, 79, 33:34,
-                         40, 36, 44), ]
+outputFRT <- outputFRT[c(93:94, 91:92, 1:38, 88:87, 90:89, 86:83, 39:40, 46,
+                         42, 50), ]
 
 # Insert blank row for formatting
 blank <- c('', '', '', '', '')
 row.names(outputFRT) <- 1:nrow(outputFRT)
-outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 43)
-outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 43)
+outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 53)
+outputFRT <- InsertRow(outputFRT, New = blank, RowNum = 53)
 
 names(outputFRT) <- c('',
                     '$\\Delta$ Long-term (10-year) bond spread (US 10-year bond, \\%)',
