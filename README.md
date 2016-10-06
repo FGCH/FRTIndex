@@ -7,7 +7,7 @@ Financial Reporting Transparency Index
 [Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
 
 Funding generously provided by the
-[Deutsche Forschungsgemeinschaft](http://www.dfg.de/en/).
+[Deutsche Forschungsgemeinschaft](http://www.dfg.de/en/) (Grant No. HA5996/2-1).
 
 **Work In Progress**
 
