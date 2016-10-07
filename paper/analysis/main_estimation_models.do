@@ -36,7 +36,7 @@ by imf_code: gen imf_program_lag = imf_program[_n-1]
 /* ECM Models */
 
 /************** Spreads ********************/
-* Spreads non-interactive
+* Spreads non-interactive -----------------------------------------
 xtreg d_bond_spread_fred l_bond_spread_fred l_frt_2015 d_frt_2015 ///
  	l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l ///
@@ -44,10 +44,12 @@ xtreg d_bond_spread_fred l_bond_spread_fred l_frt_2015 d_frt_2015 ///
 	l_uds d_uds imf_program_lag ///
 	if country!="United States", cluster(imf_code) i(imf_code) fe vsquish noomit
 
-regsave using "tables/stata_intermediate_files/FRT_1.dta", detail(all) replace table(nonInteractSpread, ///
-        order(regvars r2) format(%5.2f) paren(stderr) asterisk())
+	* Save results for coefficient table
+	regsave using "tables/stata_intermediate_files/FRT_1.dta", detail(all) ///
+		replace table(nonInteractSpread, order(regvars r2) format(%5.2f) ///
+		paren(stderr) asterisk())
 
-* Spreads interactive
+* Spreads interactive -----------------------------------------
 xtreg d_bond_spread_fred l_bond_spread_fred ///
 	l_frt_2015 d_frt_2015 ///
 	l_pubdebtgdp_gen d_pubdebtgdp_gen ///
@@ -64,12 +66,24 @@ xtreg d_bond_spread_fred l_bond_spread_fred ///
 	test l_frt_2015 d_frt_2015 l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 		l_frt2015xl_pub_gen d_frt_2015xd_pubdebtgdp_gen ///
 		l_frt2015xd_pubdebtgdp_gen d_frt_2015xl_pub_gen
-
-	regsave using "tables/stata_intermediate_files/FRT_2.dta", detail(all) replace table(InteractSpread, ///
+		
+	* Save results for coefficient table
+	regsave using "tables/stata_intermediate_files/FRT_2.dta", detail(all) ///
+			replace table(InteractSpread, ///
 	        order(regvars r2) format(%5.2f) paren(stderr) asterisk())
+	        
+	* Save results for quantity of interest simulation *
+	* Coefficient Estiamtes
+	mat beta_spreads = e(b)
+	mat varcov_spreads = e(V)
+	
+	mat2txt, matrix(beta_spreads) saving("analysis/sim_plots/estimates/spreads_coef.txt") replace
+	mat2txt, matrix(varcov_spreads) saving("analysis/sim_plots/estimates/spreads_varcovf.txt") replace
+
+
 
 /************ Volatility ******************/
-* Volatility non-interactive
+* Volatility non-interactive -----------------------------------------
 xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_frt_2015 d_frt_2015 ///
 	l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l ///
@@ -77,10 +91,12 @@ xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_frt_2015 d_frt_2015 ///
 	l_uds d_uds imf_program_lag, ///
 	cluster(imf_code) i(imf_code) fe vsquish noomit
 
-regsave using "tables/stata_intermediate_files/FRT_3.dta", detail(all) replace table(nonInteractVolatility, ///
+	* Save results for coefficient table
+	regsave using "tables/stata_intermediate_files/FRT_3.dta", detail(all) replace ///
+		table(nonInteractVolatility, ///
         order(regvars r2) format(%5.2f) paren(stderr) asterisk())
 
-* Volatility interactive
+* Volatility interactive -----------------------------------------
 xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_frt_2015 d_frt_2015 ///
 	l_pubdebtgdp_gen d_pubdebtgdp_gen ///
 	l_frt2015xl_pub_gen d_frt_2015xd_pubdebtgdp_gen ///
@@ -95,5 +111,15 @@ xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_frt_2015 d_frt_2015 ///
 		l_frt2015xl_pub_gen d_frt_2015xd_pubdebtgdp_gen ///
 		l_frt2015xd_pubdebtgdp_gen d_frt_2015xl_pub_gen
 
-regsave using "tables/stata_intermediate_files/FRT_4.dta", detail(all) replace table(InteractVolatility, ///
+	regsave using "tables/stata_intermediate_files/FRT_4.dta", detail(all) replace ///
+		table(InteractVolatility, ///
         order(regvars r2) format(%5.2f) paren(stderr) asterisk())
+        
+       
+    * Save results for quantity of interest simulation *
+	* Coefficient Estiamtes
+	mat beta_volatility = e(b)
+	mat varcov_volatility = e(V)
+	
+	mat2txt, matrix(beta_volatility) saving("analysis/sim_plots/estimates/volatility_coef.txt") replace
+	mat2txt, matrix(varcov_volatility) saving("analysis/sim_plots/estimates/volatility_varcovf.txt") replace
