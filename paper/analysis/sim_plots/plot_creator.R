@@ -9,6 +9,7 @@ library(MASS)
 library(ecmSim) # if not installed use first: devtools::install_github('christophergandrud/ecmSim')
 library(ggplot2)
 library(gridExtra)
+library(grid)
 theme_set(theme_bw())
 
 
@@ -42,7 +43,7 @@ main <- subset(main, !(country %in% c("Russian Federation", "South Africa",
                                       "Japan")))
 
 
-# ECM simulations -----------
+# ECM simulation Functions-----------
 common_shock_FUN <- function(x, only_shocked = TRUE, iv_s = 0, iv2_s = 0,
                              mu, Sigma) {
     sims <- ecm_builder(mu = spreads_coef,
@@ -57,7 +58,7 @@ common_shock_FUN <- function(x, only_shocked = TRUE, iv_s = 0, iv2_s = 0,
                         d_iv_d_iv2_interaction = 'd_frt_2015xd_pubdebtgdp_gen',
                         lag_iv_d_iv2_interaction = 'l_frt2015xd_pubdebtgdp_gen',
                         d_iv_lag_iv2_interaction = 'd_frt_2015xl_pub_gen',
-                        t_extent = 15, slim = FALSE, ci = 0.9, nsim = 1000,
+                        t_extent = 15, slim = FALSE, ci = 0.9, nsim = 5000,
                         qi_d_dv = FALSE
     )
     if (only_shocked) sims <- subset(sims, is_shocked == TRUE)
@@ -65,7 +66,7 @@ common_shock_FUN <- function(x, only_shocked = TRUE, iv_s = 0, iv2_s = 0,
 }
 
 sims_plotter <- function(x, main) {
-    out_plot <- ggplot(x, aes(time__, l_bond_spread_fred)) +
+    out_plot <- ggplot(x, aes(time__, dv_)) +
         geom_line(aes(group = sim_id__), alpha = 0.1) +
         scale_y_continuous(limits = c(0, 10)) +
         ggtitle(main) +
@@ -76,186 +77,184 @@ quantile_num <- function(x, prob){
     quantile(x, probs = prob, na.rm = TRUE) %>% as.numeric
 }
 
+grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1,
+                                       position = c("bottom", "right")) {
 
-medians_plotter <- function(mu, Sigma, debt_level, change = TRUE) {
+    plots <- list(...)
+    position <- match.arg(position)
+    g <- ggplotGrob(plots[[1]] + theme(legend.position = position))$grobs
+    legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
+    lheight <- sum(legend$height)
+    lwidth <- sum(legend$width)
+    gl <- lapply(plots, function(x) x + theme(legend.position="none"))
+    gl <- c(gl, ncol = ncol, nrow = nrow)
+
+    combined <- switch(position,
+                       "bottom" = arrangeGrob(do.call(arrangeGrob, gl),
+                                              legend,
+                                              ncol = 1,
+                                              heights = unit.c(unit(1, "npc") - lheight, lheight)),
+                       "right" = arrangeGrob(do.call(arrangeGrob, gl),
+                                             legend,
+                                             ncol = 2,
+                                             widths = unit.c(unit(1, "npc") - lwidth, lwidth)))
+    grid.newpage()
+    grid.draw(combined)
+}
+
+
+medians_finder <- function(mu, Sigma, debt_level, iv_s = 0, dv_) {
+    colnames(Sigma)[1] <- 'dv_'
     vlow <- data.frame(
-        l_bond_spread_fred = mean(main$l_bond_spread_fred, na.rm = TRUE),
+        dv_ = median(main[, dv_], na.rm = TRUE),
         l_frt_2015 =  quantile_num(main$l_frt_2015, prob = 0.1),
         l_pubdebtgdp_gen = debt_level
     )
 
     low <- data.frame(
-        l_bond_spread_fred = mean(main$l_bond_spread_fred, na.rm = TRUE),
+        dv_ = median(main[, dv_], na.rm = TRUE),
         l_frt_2015 =  quantile_num(main$l_frt_2015, prob = 0.25),
         l_pubdebtgdp_gen = debt_level
     )
 
     median_frt <- data.frame(
-        l_bond_spread_fred = mean(main$l_bond_spread_fred, na.rm = TRUE),
+        dv_ = median(main[, dv_], na.rm = TRUE),
         l_frt_2015 =  median(main$l_frt_2015, na.rm = TRUE),
         l_pubdebtgdp_gen = debt_level
     )
 
     high <- data.frame(
-        l_bond_spread_fred = mean(main$l_bond_spread_fred, na.rm = TRUE),
+        dv_ = median(main[, dv_], na.rm = TRUE),
         l_frt_2015 =  quantile_num(main$l_frt_2015, prob = 0.75),
         l_pubdebtgdp_gen = debt_level
     )
 
     vhigh <- data.frame(
-        l_bond_spread_fred = mean(main$l_bond_spread_fred, na.rm = TRUE),
+        dv_ = median(main[, dv_], na.rm = TRUE),
         l_frt_2015 =  quantile_num(main$l_frt_2015, prob = 0.90),
         l_pubdebtgdp_gen = debt_level
     )
 
-    sims_vlow <- common_shock_FUN(vlow, mu = mu, Sigma = Sigma)
+    sims_vlow <- common_shock_FUN(vlow, mu = mu, Sigma = Sigma, iv_s = iv_s)
     sims_vlow$scenario <- 'FRT (lag) 10% Percentile'
-    sims_low <- common_shock_FUN(low, mu = mu, Sigma = Sigma)
+    sims_low <- common_shock_FUN(low, mu = mu, Sigma = Sigma, iv_s = iv_s)
     sims_low$scenario <- 'FRT (lag) 25% Percentile'
-    sims_median <- common_shock_FUN(median_frt, mu = mu, Sigma = Sigma)
+    sims_median <- common_shock_FUN(median_frt, mu = mu, Sigma = Sigma,
+                                    iv_s = iv_s)
     sims_median$scenario <- 'FRT (lag) Median'
-    sims_high <- common_shock_FUN(high, mu = mu, Sigma = Sigma)
+    sims_high <- common_shock_FUN(high, mu = mu, Sigma = Sigma, iv_s = iv_s)
     sims_high$scenario <- 'FRT (lag) 75% Percentile'
-    sims_vhigh <- common_shock_FUN(vhigh, mu = mu, Sigma = Sigma)
+    sims_vhigh <- common_shock_FUN(vhigh, mu = mu, Sigma = Sigma, iv_s = iv_s)
     sims_vhigh$scenario <- 'FRT (lag) 90% Percentile'
 
-    sims_debt_low <- rbind(sims_vlow, sims_low, sims_median, sims_high,
+    sims_comb <- rbind(sims_vlow, sims_low, sims_median, sims_high,
                            sims_vhigh)
 
-    sims_low_sum <- sims_debt_low %>% group_by(scenario, time__) %>%
-        summarise(l_spreads_mediam = median(l_bond_spread_fred))
+    sims_comb <- sims_comb %>% group_by(scenario, time__) %>%
+        summarise(dv_median = median(dv_))
 
-    sims_low_sum$scenario <- factor(sims_low_sum$scenario, levels = c(
+    sims_comb$scenario <- factor(sims_comb$scenario, levels = c(
         'FRT (lag) 10% Percentile', 'FRT (lag) 25% Percentile',
         'FRT (lag) Median', 'FRT (lag) 75% Percentile',
         'FRT (lag) 90% Percentile'))
 
-    p <- ggplot(sims_low_sum, aes(time__, l_spreads_mediam, linetype = scenario)) +
-        geom_line() + xlab('\n Years')
-
-    return(p)
+    return(sims_comb)
 }
 
-p_spreads_low_debt <- medians_plotter(mu = spreads_coef, Sigma = spreads_varcov,
-                                      debt_level = 30) +
-                                    scale_y_continuous(limits = c(0, 6)) +
-                                    ylab('10-yr Bond Spread\n') +
-                                    ggtitle('Debt/GDP: 30%')
+# Spreads -----------
+frt_levels <- c('Debt/GDP: 30%', 'Debt/GDP: 100%')
 
-p_spreads_high_debt <- medians_plotter(mu = spreads_coef, Sigma = spreads_varcov,
-                                      debt_level = 100) +
-                                    scale_y_continuous(limits = c(0, 6)) +
-                                    ylab('10-yr Bond Spread\n') +
-                                    ggtitle('Debt/GDP: 100%')
+# Spreads no FRT Shock
+spreads_low_debt <- medians_finder(mu = spreads_coef, Sigma = spreads_varcov,
+                                      debt_level = 30,
+                                      dv_ = 'l_bond_spread_fred')
+spreads_low_debt$main_scenario <- 'Debt/GDP: 30%'
 
-grid.arrange(p_spreads_low_debt, p_spreads_high_debt, nrow = 1)
+spreads_high_debt <- medians_finder(mu = spreads_coef, Sigma = spreads_varcov,
+                                     debt_level = 100,
+                                     dv_ = 'l_bond_spread_fred')
+spreads_high_debt$main_scenario <- 'Debt/GDP: 100%'
 
+comb_spreads <- rbind(spreads_low_debt, spreads_high_debt)
+comb_spreads$main_scenario <- factor(comb_spreads$main_scenario,
+                                       levels = frt_levels)
 
+p_spreads <- ggplot(comb_spreads, aes(time__, dv_median, linetype = scenario)) +
+    facet_wrap(~main_scenario) +
+    geom_line(alpha = 0.7) +
+    ylab('10-yr Bond Spread\n') + xlab('') +
+    ggtitle('No FRT Shock')
 
+# Spreads FRT Shock
+spreads_low_debt_s <- medians_finder(mu = spreads_coef, Sigma = spreads_varcov,
+                                   debt_level = 30, iv_s = -1,
+                                   dv_ = 'l_bond_spread_fred')
+spreads_low_debt_s$main_scenario <- 'Debt/GDP: 30%'
 
+spreads_high_debt_s <- medians_finder(mu = spreads_coef, Sigma = spreads_varcov,
+                                    debt_level = 100, iv_s = -1,
+                                    dv_ = 'l_bond_spread_fred')
+spreads_high_debt_s$main_scenario <- 'Debt/GDP: 100%'
 
+comb_spreads_s <- rbind(spreads_low_debt_s, spreads_high_debt_s)
+comb_spreads_s$main_scenario <- factor(comb_spreads_s$main_scenario,
+                                        levels = frt_levels)
 
+p_spreads_s <- ggplot(comb_spreads_s, aes(time__, dv_median, linetype = scenario)) +
+    facet_wrap(~main_scenario) +
+    geom_line(alpha = 0.7) +
+    ylab('10-yr Bond Spread\n') + xlab('') +
+    ggtitle('-1 FRT Shock')
 
+grid_arrange_shared_legend(p_spreads, p_spreads_s, position = 'right')
 
+# Volatility ------------------------
+# Spreads no FRT Shock
+volatility_low_debt <- medians_finder(mu = volatility_coef,
+                                      Sigma = volatility_varcov,
+                                      debt_level = 30,
+                                   dv_ = 'l_bond_spread_fred')
+volatility_low_debt$main_scenario <- 'Debt/GDP: 30%'
 
-    # High Debt
+volatility_high_debt <- medians_finder(mu = volatility_coef,
+                                       Sigma = volatility_varcov,
+                                       debt_level = 100,
+                                    dv_ = 'l_bond_spread_fred')
+volatility_high_debt$main_scenario <- 'Debt/GDP: 100%'
 
+comb_volatility <- rbind(volatility_low_debt, volatility_high_debt)
+comb_volatility$main_scenario <- factor(comb_volatility$main_scenario,
+                                        levels = frt_levels)
 
+p_volatility <- ggplot(comb_volatility, aes(time__, dv_median, linetype = scenario)) +
+    facet_wrap(~main_scenario) +
+    geom_line(alpha = 0.7) +
+    ylab('Bond Spread Volatility (coefficient of variation)\n') + xlab('') +
+    ggtitle('No FRT Shock')
 
+# Spreads FRT Shock
+volatility_low_debt_s <- medians_finder(mu = volatility_coef,
+                                        Sigma = volatility_varcov,
+                                        debt_level = 30, iv_s = -1,
+                                     dv_ = 'l_bond_spread_fred')
+volatility_low_debt_s$main_scenario <- 'Debt/GDP: 30%'
 
+volatility_high_debt_s <- medians_finder(mu = volatility_coef,
+                                         Sigma = volatility_varcov,
+                                         debt_level = 100, iv_s = -1,
+                                      dv_ = 'l_bond_spread_fred')
+volatility_high_debt_s$main_scenario <- 'Debt/GDP: 100%'
 
-baseline_frt_low_debt_high <- data.frame(
-        l_bond_spread_fred = mean(main$l_bond_spread_fred, na.rm = TRUE),
-        l_frt_2015 =  quantile_num(main$l_frt_2015, prob = 0.25),
-        l_pubdebtgdp_gen = 100
-    )
+comb_volatility_s <- rbind(volatility_low_debt_s, volatility_high_debt_s)
+comb_volatility_s$main_scenario <- factor(comb_volatility_s$main_scenario,
+                                        levels = frt_levels)
 
-    baseline_frt_median_debt_high<- data.frame(
-        l_bond_spread_fred = mean(main$l_bond_spread_fred, na.rm = TRUE),
-        l_frt_2015 =  median(main$l_frt_2015, na.rm = TRUE),
-        l_pubdebtgdp_gen = 100
-    )
+p_volatility_s <- ggplot(comb_volatility_s, aes(time__, dv_median, linetype = scenario)) +
+    facet_wrap(~main_scenario) +
+    geom_line(alpha = 0.7) +
+    ylab('Bond Spread Volatility (coefficient of variation)\n') + xlab('') +
+    ggtitle('-1 FRT Shock')
 
-    baseline_frt_high_debt_high <- data.frame(
-        l_bond_spread_fred = mean(main$l_bond_spread_fred, na.rm = TRUE),
-        l_frt_2015 = quantile_num(main$l_frt_2015, prob = 0.75),
-        l_pubdebtgdp_gen = 100
-    )
+grid_arrange_shared_legend(p_volatility, p_volatility_s, position = 'right')
 
-
-    sims_low_debt_high <- common_shock_FUN(baseline_frt_low_debt_high, mu = spreads_coef,
-                                           Sigma = spreads_varcov)
-    sims_low_debt_high$scenario <- 'FRT (lag) 1st Quartile'
-    sims_medium_debt_high <- common_shock_FUN(baseline_frt_median_debt_high, mu = spreads_coef,
-                                              Sigma = spreads_varcov)
-    sims_medium_debt_high$scenario <- 'FRT (lag) Median'
-    sims_high_debt_high <- common_shock_FUN(baseline_frt_high_debt_high, mu = spreads_coef,
-                                            Sigma = spreads_varcov)
-    sims_high_debt_high$scenario <- 'FRT (lag) 3rd Quartile'
-
-    sims_debt_high <- rbind(sims_high_debt_high, sims_medium_debt_high, sims_low_debt_high)
-
-    sims_high_sum <- sims_debt_high %>% group_by(scenario, time__) %>%
-        summarise(l_spreads_mediam = median(l_bond_spread_fred))
-
-    sims_high_sum$scenario <- factor(sims_low_sum$scenario, levels = c(
-        'FRT (lag) 3rd Quartile', 'FRT (lag) Median', 'FRT (lag) 1st Quartile'
-
-    ))
-
-    ggplot(sims_high_sum, aes(time__, l_spreads_mediam, linetype = scenario)) +
-        geom_line()
-}
-
-
-
-
-
-
-
-first_diff <- sims_low$l_bond_spread_fred[sims_low$time__ == 2] -
-                    sims_high$l_bond_spread_fred[sims_high$time__ == 2]
-hist(first_diff)
-
-
-
-
-
-low_debt_not_shocked <- subset(low_debt, is_shocked == FALSE)
-ggplot(low_debt_not_shocked, aes(time__, l_bond_spread_fred)) +
-    geom_line(aes(group = sim_id__), alpha = 0.2) +
-    theme_bw()
-
-
-ggplot(low_debt, aes(time__, qi_median, group = is_shocked, fill = is_shocked)) +
-    geom_line(aes(colour = is_shocked)) +
-    geom_ribbon(aes(ymin = qi_min, ymax = qi_max), alpha = 0.2) +
-    ylab('10-year Bond Spread Chagne\n') + xlab('\nSimulation Time') +
-    theme_bw()
-
-# High debt ----------
-baseline_scen_high <- data.frame(
-    l_bond_spread_fred = median(main$l_bond_spread_fred, na.rm = TRUE),
-    l_frt_2015 =  median(main$l_frt_2015, na.rm = TRUE),
-    l_pubdebtgdp_gen = 100
-)
-
-high_debt <- ecm_builder(mu = spreads_coef,
-                        Sigma = spreads_varcov,
-                        baseline_df = baseline_scen_high,
-                        lag_iv = 'l_frt_2015', d_iv = 'd_frt_2015', iv_shock = -1,
-                        lag_iv_2 = 'l_pubdebtgdp_gen', d_iv_2 = 'd_pubdebtgdp_gen',
-                        lag_iv_lag_iv2_interaction = 'l_frt2015xl_pub_gen',
-                        d_iv_d_iv2_interaction = 'd_frt_2015xd_pubdebtgdp_gen',
-                        lag_iv_d_iv2_interaction = 'l_frt2015xd_pubdebtgdp_gen',
-                        d_iv_lag_iv2_interaction = 'd_frt_2015xl_pub_gen',
-                        t_extent = 15, slim = TRUE, ci = 0.95, nsim = 5000
-)
-
-
-ggplot(high_debt, aes(time__, qi_median, group = is_shocked, fill = is_shocked)) +
-    geom_line(aes(colour = is_shocked)) +
-    geom_ribbon(aes(ymin = qi_min, ymax = qi_max), alpha = 0.2) +
-    ylab('10-year Bond Spread Change\n') + xlab('\nSimulation Time') +
-    theme_bw()
 
