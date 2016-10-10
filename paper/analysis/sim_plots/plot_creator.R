@@ -13,19 +13,19 @@ library(grid)
 theme_set(theme_bw())
 
 
-setwd('/git_repositories/FRTIndex/paper/analysis/sim_plots/')
+setwd('/git_repositories/FRTIndex/paper/')
 
 # Load parameter estimates and variance-covariance matrix estimated with Stata ----
 # Spreads
-spreads_coef <- import('estimates/spreads_coef.txt') %>%
+spreads_coef <- import('analysis/sim_plots/estimates/spreads_coef.txt') %>%
     dplyr::select(-V1, -V27)
-spreads_varcov <- import('estimates/spreads_varcovf.txt') %>%
+spreads_varcov <- import('analysis/sim_plots/estimates/spreads_varcovf.txt') %>%
     dplyr::select(-V1, -V27) %>% rename(intercept_ = `_cons`)
 
 # Volatility
-volatility_coef <- import('estimates/volatility_coef.txt') %>%
+volatility_coef <- import('analysis/sim_plots/estimates/volatility_coef.txt') %>%
     dplyr::select(-V1, -V27)
-volatility_varcov <- import('estimates/volatility_varcovf.txt') %>%
+volatility_varcov <- import('analysis/sim_plots/estimates/volatility_varcovf.txt') %>%
     dplyr::select(-V1, -V27) %>% rename(intercept_ = `_cons`)
 
 # Clean for mvrnorm
@@ -35,7 +35,7 @@ volatility_coef <- as.numeric(volatility_coef[1, ])
 volatility_varcov <- as.matrix(volatility_varcov[, 1:ncol(volatility_varcov)])
 
 # Create scenarios
-main <- import('/git_repositories/FRTIndex/paper/analysis/frt10_16_v1.dta')
+main <- import('analysis/frt10_16_v1.dta')
 
 # Subset to OECD, not Japan
 main <- subset(main, oecd_member = 1)
@@ -136,27 +136,27 @@ medians_finder <- function(mu, Sigma, debt_level, iv_s = 0, dv_) {
     )
 
     sims_vlow <- common_shock_FUN(vlow, mu = mu, Sigma = Sigma, iv_s = iv_s)
-    sims_vlow$scenario <- 'FRT (lag) 10% Percentile'
+    sims_vlow$`FRT (lag)` <- '10th Percentile'
     sims_low <- common_shock_FUN(low, mu = mu, Sigma = Sigma, iv_s = iv_s)
-    sims_low$scenario <- 'FRT (lag) 25% Percentile'
+    sims_low$`FRT (lag)` <- '25th Percentile'
     sims_median <- common_shock_FUN(median_frt, mu = mu, Sigma = Sigma,
                                     iv_s = iv_s)
-    sims_median$scenario <- 'FRT (lag) Median'
+    sims_median$`FRT (lag)` <- 'Median'
     sims_high <- common_shock_FUN(high, mu = mu, Sigma = Sigma, iv_s = iv_s)
-    sims_high$scenario <- 'FRT (lag) 75% Percentile'
+    sims_high$`FRT (lag)` <- '75th Percentile'
     sims_vhigh <- common_shock_FUN(vhigh, mu = mu, Sigma = Sigma, iv_s = iv_s)
-    sims_vhigh$scenario <- 'FRT (lag) 90% Percentile'
+    sims_vhigh$`FRT (lag)` <- '90th Percentile'
 
     sims_comb <- rbind(sims_vlow, sims_low, sims_median, sims_high,
                            sims_vhigh)
 
-    sims_comb <- sims_comb %>% group_by(scenario, time__) %>%
+    sims_comb <- sims_comb %>% group_by(`FRT (lag)`, time__) %>%
         summarise(dv_median = median(dv_))
 
-    sims_comb$scenario <- factor(sims_comb$scenario, levels = c(
-        'FRT (lag) 10% Percentile', 'FRT (lag) 25% Percentile',
-        'FRT (lag) Median', 'FRT (lag) 75% Percentile',
-        'FRT (lag) 90% Percentile'))
+    sims_comb$`FRT (lag)` <- factor(sims_comb$`FRT (lag)`, levels = c(
+        '10th Percentile', '25th Percentile',
+        'Median', '75th Percentile',
+        '90th Percentile'))
 
     return(sims_comb)
 }
@@ -179,7 +179,8 @@ comb_spreads <- rbind(spreads_low_debt, spreads_high_debt)
 comb_spreads$main_scenario <- factor(comb_spreads$main_scenario,
                                        levels = frt_levels)
 
-p_spreads <- ggplot(comb_spreads, aes(time__, dv_median, linetype = scenario)) +
+p_spreads <- ggplot(comb_spreads, aes(time__, dv_median,
+                                      linetype = `FRT (lag)`)) +
     facet_wrap(~main_scenario) +
     geom_line(alpha = 0.7) +
     ylab('10-yr Bond Spread\n') + xlab('') +
@@ -200,13 +201,16 @@ comb_spreads_s <- rbind(spreads_low_debt_s, spreads_high_debt_s)
 comb_spreads_s$main_scenario <- factor(comb_spreads_s$main_scenario,
                                         levels = frt_levels)
 
-p_spreads_s <- ggplot(comb_spreads_s, aes(time__, dv_median, linetype = scenario)) +
+p_spreads_s <- ggplot(comb_spreads_s, aes(time__, dv_median,
+                                          linetype = `FRT (lag)`)) +
     facet_wrap(~main_scenario) +
     geom_line(alpha = 0.7) +
     ylab('10-yr Bond Spread\n') + xlab('') +
     ggtitle('-1 FRT Shock')
 
+# Need to save by hand 10.6 width 5.77 height
 grid_arrange_shared_legend(p_spreads, p_spreads_s, position = 'right')
+
 
 # Volatility ------------------------
 # Spreads no FRT Shock
@@ -226,7 +230,8 @@ comb_volatility <- rbind(volatility_low_debt, volatility_high_debt)
 comb_volatility$main_scenario <- factor(comb_volatility$main_scenario,
                                         levels = frt_levels)
 
-p_volatility <- ggplot(comb_volatility, aes(time__, dv_median, linetype = scenario)) +
+p_volatility <- ggplot(comb_volatility, aes(time__, dv_median,
+                                            linetype = `FRT (lag)`)) +
     facet_wrap(~main_scenario) +
     geom_line(alpha = 0.7) +
     ylab('Bond Spread Volatility (coefficient of variation)\n') + xlab('') +
@@ -249,12 +254,14 @@ comb_volatility_s <- rbind(volatility_low_debt_s, volatility_high_debt_s)
 comb_volatility_s$main_scenario <- factor(comb_volatility_s$main_scenario,
                                         levels = frt_levels)
 
-p_volatility_s <- ggplot(comb_volatility_s, aes(time__, dv_median, linetype = scenario)) +
+p_volatility_s <- ggplot(comb_volatility_s, aes(time__, dv_median,
+                                                linetype = `FRT (lag)`)) +
     facet_wrap(~main_scenario) +
     geom_line(alpha = 0.7) +
     ylab('Bond Spread Volatility (coefficient of variation)\n') + xlab('') +
     ggtitle('-1 FRT Shock')
 
+# Need to save by hand 10.6 width 5.77 height
 grid_arrange_shared_legend(p_volatility, p_volatility_s, position = 'right')
 
 
