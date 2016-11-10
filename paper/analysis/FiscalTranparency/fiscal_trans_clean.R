@@ -18,7 +18,7 @@ library(rio)
 setwd('/git_repositories/FRTIndex/')
 
 # Load Alt et al. Fiscal Transparency Data
-fiscal <- 'source/FiscalTranparency/Alt_et_al_aggregated_fiscal_transparency.csv' %>%
+fiscal <- 'paper/analysis/FiscalTranparency/Alt_et_al_aggregated_fiscal_transparency.csv' %>%
         read.csv(stringsAsFactors = F)
 
 fiscal$iso2c <- countrycode(fiscal$worldbank_code, origin = 'wb',
@@ -32,7 +32,7 @@ fiscal <- change(fiscal, Var = 'obi3', TimeVar = 'year', GroupVar = 'iso2c',
                      NewVar = 'dobi3', type = 'proportion')
 
 # Raw OBI index
-obi <- read.csv('source/FiscalTranparency/ibp_data_summary.csv',
+obi <- read.csv('paper/analysis/FiscalTranparency/ibp_data_summary.csv',
                 stringsAsFactors = F) %>%
                 dplyr::select(-RANK)
 names(obi) <- c('iso2c', 'year', 'obi_raw')
@@ -72,7 +72,7 @@ growth <- PercChange(growth, Var = 'country_growth', TimeVar = 'year', GroupVar 
                   NewVar = 'dcountry_growth', type = 'proportion')
 
 #### Load main data
-main <- read.dta('source/Hollyer_et_al_Compare/frt_hrv_bond.dta')
+main <- read.dta('paper/analysis/Hollyer_et_al_Compare/frt_hrv_bond.dta')
 
 # Merge in fiscal transparency data
 comb <- merge(main, fiscal, all.x = T)

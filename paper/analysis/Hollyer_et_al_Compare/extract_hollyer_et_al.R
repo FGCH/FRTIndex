@@ -41,23 +41,23 @@ gathered$year <- gathered$year %>% gsub('x', '', .) %>% as.numeric()
 gathered$iso2c <- countrycode(gathered$country, origin = 'country.name',
                              destination = 'iso2c')
 gathered <- gathered %>% select(-country) %>% arrange(iso2c, year)
-gathered <- slide(gathered, Var = 'hrv_mean', GroupVar = 'iso2c', 
+gathered <- slide(gathered, Var = 'hrv_mean', GroupVar = 'iso2c',
                   TimeVar = 'year', NewVar = 'lhrv_mean')
-gathered <- PercChange(gathered, Var = 'hrv_mean', GroupVar = 'iso2c', 
+gathered <- PercChange(gathered, Var = 'hrv_mean', GroupVar = 'iso2c',
                        NewVar = 'dhrv_mean', type = 'proportion',
                        TimeVar = 'year')
 
 # Save basic Hollyer et al. medians
 simple <- gathered %>% select(iso2c, year, hrv_mean)
-export(simple, file = paste0(sd, 'source/Hollyer_et_al_Compare/hrv_means.csv'), 
+export(simple, file = paste0(sd, 'paper/analysis/Hollyer_et_al_Compare/hrv_means.csv'), 
        row.names = F)
 
 #### Merge with bond spread data set ####
 frt <- import(sprintf('%s/paper/analysis/frt0526.csv', sd))
 frt$iso2c <- countrycode(frt$wbcode, origin = 'wb',
-                         destination = 'iso2c') 
+                         destination = 'iso2c')
 frt <- frt %>% select(-country)
-frt$country <- countrycode(frt$iso2c, origin = 'iso2c', 
+frt$country <- countrycode(frt$iso2c, origin = 'iso2c',
                            destination = 'country.name')
 
 comb <- merge(frt, gathered, all.x = T)
@@ -69,4 +69,3 @@ comb <- MoveFront(comb, c('iso2c', 'ccode1', 'country', 'year', 'frt', 'dfrt',
 # Save
 export(comb, file = paste0(sd, 'source/Hollyer_et_al_Compare/frt_hrv_bond.csv'),
        na = '')
-

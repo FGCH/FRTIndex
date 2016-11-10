@@ -18,7 +18,7 @@ options(xtable.sanitize.text.function = identity)
 options(xtable.sanitize.colnames.function = identity)
 
 # Set working directory. Change as needed
-setwd('/git_repositories/FRTIndex/source/Hollyer_et_al_Compare/')
+setwd('/git_repositories/FRTIndex/paper/analysis/Hollyer_et_al_Compare/')
 
 # Get list of individual model tables
 AllFiles <- list.files('tables/')
@@ -60,7 +60,7 @@ CleanUp <- data.frame(
              'eurozone',
              'l_uds', 'd_uds',
              'l_exec_election_yr', 'd_exec_election_yr',
-             'l_dpi_left', 
+             'l_dpi_left',
              'esm_rules',
              'imf_program_lag'
     ),
@@ -99,7 +99,7 @@ outputHRV <- CombineFiles(filesHRV, start = 'HRV_1.dta')
 outputHRV <- FindReplace(outputHRV, Var = 'var', replaceData = CleanUp,
                          exact = FALSE)
 
-outputHRV <- outputHRV[c(77:78, 89:90, 79:82, 1:32, 88:85, 84:83, 91:92, 
+outputHRV <- outputHRV[c(77:78, 89:90, 79:82, 1:32, 88:85, 84:83, 91:92,
                          95:98, 99:102, 94:93, 33:34, 40, 36, 44
                          ), ]
 

@@ -7,7 +7,7 @@
 clear
 
 // Set working directory, change as needed/
-cd "/git_repositories/FRTIndex/source/Hollyer_et_al_Compare/"
+cd "/git_repositories/FRTIndex/paper/analysis/Hollyer_et_al_Compare/"
 
 // Load data
 use "/git_repositories/FRTIndex/paper/analysis/frt08_16_v2.dta"
@@ -63,8 +63,8 @@ xtreg d_bond_spread_fred l_bond_spread_fred l_hrv_mean d_hrv_mean ///
 	 l_us3mrate d_us3mrate l_vix d_vix ///
 	 l_uds d_uds ///
 	 if country!="United States", ///
-	 cluster(imf_code) i(imf_code) fe vsquish noomit    
-    
+	 cluster(imf_code) i(imf_code) fe vsquish noomit
+
     regsave using "tables/HRV_2.dta", detail(all) replace ///
     	table(ChangeLongRunRate, order(regvars r2) format(%5.2f) paren(stderr) asterisk())
 
@@ -76,8 +76,8 @@ xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_hrv_mean d_hrv_mean ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l ///
 	d_pcgdp2005l l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate l_vix d_vix ///
 	l_uds d_uds, ///
-	cluster(imf_code) i(imf_code) fe vsquish noomit    
-    
+	cluster(imf_code) i(imf_code) fe vsquish noomit
+
     regsave using "tables/HRV_3.dta", detail(all) replace ///
     	table(Volatility, order(regvars r2) format(%5.2f) paren(stderr) asterisk())
 
@@ -88,7 +88,7 @@ xtreg d_lt_ratecov_fred l_lt_ratecov_fred l_hrv_mean d_hrv_mean ///
 	l_infl d_infl l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l ///
 	l_oecdgrowth d_oecdgrowth l_us3mrate d_us3mrate ///
 	l_vix d_vix l_uds d_uds, cluster(imf_code) i(imf_code) fe vsquish noomit
-	
+
 	regsave using "tables/HRV_4.dta", detail(all) replace ///
 		table(Volatility, order(regvars r2) format(%5.2f) paren(stderr) asterisk())
 
@@ -114,6 +114,6 @@ xtreg d_bond_spread_fred l_bond_spread_fred l_frt_residuals d_frt_residuals ///
 	l_cgdpgrowth d_cgdpgrowth l_pcgdp2005l d_pcgdp2005l l_oecdgrowth d_oecdgrowth ///
 	l_us3mrate d_us3mrate l_vix d_vix l_uds d_uds if country != "United States", ///
 	cluster(imf_code) i(imf_code) fe vsquish noomit
-	
+
 	regsave using "tables/HRV_5.dta", detail(all) replace ///
 		table(residuals, order(regvars r2) format(%5.2f) paren(stderr) asterisk())
