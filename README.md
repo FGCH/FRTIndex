@@ -1,7 +1,10 @@
-Financial Reporting Transparency Index
+Financial Data Transparency Index
 ========
 
-**Version:** 2.1
+**Version:** 3
+
+Note: The Index was previously called the FRT and is still referred to as such throughout 
+much of the replication material.
 
 **Maintainer:**
 [Christopher Gandrud](http://christophergandrud.blogspot.de/p/biocontact.html)
@@ -19,18 +22,18 @@ Why do countries release data on their financial systems to international
 organizations, such as the IMF and World Bank? What are the consequences of
 releasing this data for the stability of their financial systems?
 
-To address these questions we are developing a **Financial Reporting
+To address these questions we are developed a **Financial Data
 Transparency Index**. The new Index we make it possible to compare the
 willingness of governments to credibly reveal the structure of their financial
 systems through international institutions, allowing them to be scrutinized by
 market participants and citizens.
 
-We presented an early draft of a research using the FRT at the 2015 Political
+We presented an early draft of a research using the FDT at the 2015 Political
 Economy of International Organizations conference. The working paper can be
 found
 [here](http://wp.peio.me/wp-content/uploads/PEIO8/Copelovitch,%20Gandrud,%20Hallerberg%203.2.2015.pdf).
 
-## The FRT Index
+## The FDT Index
 
 The current draft version of the Index is located in the *IndexData* directory
 in a CSV formatted file called:
@@ -39,9 +42,9 @@ in a CSV formatted file called:
 It covers the **68 countries** classified by the World Bank as
 '**High Income**', [EMBI](http://en.wikipedia.org/wiki/JPMorgan_EMBI) countries, China, and India for the years **1990 through 2011**.
 
-#### FRT Index Scores for selected years
+#### FDT Index Scores for selected years
 
-![FRT Overview](FRT_overview.png)
+![FDT Overview](FRT_overview.png)
 
 The file `FRTIndex.csv` contains the following variables:
 
@@ -49,10 +52,10 @@ The file `FRTIndex.csv` contains the following variables:
 | ------------- | ---------------------------------------------------------- |
 | country       | country name                                               |
 | iso2c         | [ISO 2 letter country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) |
-| year          | year of the FRT score                                      |
+| year          | year of the FDT score                                      |
 | lower_95      | lower bound of the 95% highest probability density interval|
 | lower_90      | lower bound of the 90% highest probability density interval|
-| median        | median of the FRT index posterior distribution             |
+| median        | median of the FDT index posterior distribution             |
 | upper_90      | upper bound of the 90% highest probability density interval|
 | upper_95      | upper bound of the 95% highest probability density interval|
 | se            | standard error of the posterior distribution               |
@@ -70,7 +73,7 @@ frt_index <- rio::import(URL)
 
 ## Estimation Model
 
-The FRT Index is created using a
+The FDT Index is created using a
 [Bayesian Item Response Theory](http://en.wikipedia.org/wiki/Item_response_theory)
 model of high income countries's reporting of [financial industry indicators](https://github.com/FGCH/FRTIndex/blob/master/source/IndicatorDescript/IncludedIndicators.csv)
 to the World Bank's
