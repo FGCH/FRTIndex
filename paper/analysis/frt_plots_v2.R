@@ -115,7 +115,7 @@ dev.off()
 #### Compare FRT to Proportion Reported method ---------------------------------
 # Load data
 BaseSub <- import('source/RawData/wdi_fred_combined_GFDDv2015.csv')
-#### Keep only countries that report at least 1 item for the entire period 
+#### Keep only countries that report at least 1 item for the entire period
 source('source/miscFunctions/report_min_once.R')
 dropped <- report_min_once(BaseSub, drop_names = TRUE)
 
@@ -239,7 +239,7 @@ dev.off()
 
 #### Compare FRT to Hollyer et al. 2014 ----------------------------------------
 # Load HRV means
-hrv <- import('source/Hollyer_et_al_Compare/hrv_means.csv')
+hrv <- import('paper/analysis/Hollyer_et_al_Compare/hrv_means.csv')
 
 # Standardise & merge
 hrv$hrv_median_rescale <- rescale(hrv$hrv_mean)
