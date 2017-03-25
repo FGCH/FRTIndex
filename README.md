@@ -1,8 +1,6 @@
 Financial Data Transparency Index
 ========
 
-**Version:** 3
-
 **Note: The Index was previously called the FRT and is still referred to as such throughout 
 much of the replication material.**
 
